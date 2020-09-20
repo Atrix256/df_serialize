@@ -1,0 +1,54 @@
+<html>
+<style>
+table, th, td, tr
+{
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+</style>
+
+<h1>Enums</h1>
+<table>
+<tr><th>Lifeforms::DietType</th></tr>
+<tr><td>Herbivore</td></tr>
+<tr><td>Carnivore</td></tr>
+<tr><td>Omnivore</td></tr>
+<tr><td>Photosynthesis</td></tr>
+</table>
+<br/>
+
+<h1>Structs</h1>
+<table>
+<tr><th colspan=3>Lifeforms::Lifeform</th></tr>
+<tr><td>std::string name</td><td>""</td><td>The name of the life form.</td></tr>
+<tr><td>std::string description</td><td>""</td><td>A description of the life form.</td></tr>
+</table>
+<br/>
+
+<table>
+<tr><th colspan=3>Lifeforms::Plant - Inherits from Lifeforms::Lifeform</th></tr>
+<tr><td>DietType dietType</td><td>Lifeforms::DietType::Photosynthesis</td><td>What type of food the plant eats.</td></tr>
+<tr><td>float edibleMatter</td><td>1.0f</td><td>The number of kilograms of edible matter on the plant.</td></tr>
+<tr><td>bool poisonous</td><td>false</td><td>Whether the plant is poisonous</td></tr>
+</table>
+<br/>
+
+<table>
+<tr><th colspan=3>Lifeforms::Animal - Inherits from Lifeforms::Lifeform</th></tr>
+<tr><td>DietType dietType</td><td>Lifeforms::DietType::Herbivore</td><td>What type of food the plant eats.</td></tr>
+<tr><td>float aggression</td><td>0.5f</td><td>The probability of the animal to attack an animal it sees as equal.</td></tr>
+<tr><td>float meat</td><td>1.0f</td><td>The number of kilograms of meat on the animal.</td></tr>
+<tr><td>int litterMin</td><td>1</td><td>The minimum number of babies in a litter.</td></tr>
+<tr><td>int litterMax</td><td>1</td><td>The maximum number of bablies in a litter.</td></tr>
+</table>
+<br/>
+
+<table>
+<tr><th colspan=3>Lifeforms::Root</th></tr>
+<tr><td>Plant plants[]</td><td></td><td>The full list of plants</td></tr>
+<tr><td>Animal animals[]</td><td></td><td>The full list of animals</td></tr>
+</table>
+<br/>
+
+
+</html>

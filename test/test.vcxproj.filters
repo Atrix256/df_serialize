@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="schemas">
+      <UniqueIdentifier>{b99fd76c-a6aa-41e7-a19b-632c8a9d8538}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="df_serialize">
+      <UniqueIdentifier>{ce43b05b-ed74-4507-9df5-75c62f67fbb7}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="schemas\schemas.h">
+      <Filter>schemas</Filter>
+    </ClInclude>
+    <ClInclude Include="schemas\schema_plant.h">
+      <Filter>schemas</Filter>
+    </ClInclude>
+    <ClInclude Include="schemas\schema_animal.h">
+      <Filter>schemas</Filter>
+    </ClInclude>
+    <ClInclude Include="..\df_serialize\MakeTypes.h">
+      <Filter>df_serialize</Filter>
+    </ClInclude>
+    <ClInclude Include="types.h" />
+    <ClInclude Include="..\df_serialize\_common.h">
+      <Filter>df_serialize</Filter>
+    </ClInclude>
+    <ClInclude Include="..\df_serialize\MakeHTMLHeader.h">
+      <Filter>df_serialize</Filter>
+    </ClInclude>
+    <ClInclude Include="..\df_serialize\MakeHTMLFooter.h">
+      <Filter>df_serialize</Filter>
+    </ClInclude>
+    <ClInclude Include="html.h" />
+    <ClInclude Include="json.h" />
+    <ClInclude Include="..\df_serialize\MakeJSONReadFooter.h">
+      <Filter>df_serialize</Filter>
+    </ClInclude>
+    <ClInclude Include="..\df_serialize\MakeJSONReadHeader.h">
+      <Filter>df_serialize</Filter>
+    </ClInclude>
+    <ClInclude Include="..\df_serialize\MakeJSONWriteFooter.h">
+      <Filter>df_serialize</Filter>
+    </ClInclude>
+    <ClInclude Include="..\df_serialize\MakeJSONWriteHeader.h">
+      <Filter>df_serialize</Filter>
+    </ClInclude>
+    <ClInclude Include="..\df_serialize\MakeEqualityTests.h">
+      <Filter>df_serialize</Filter>
+    </ClInclude>
+    <ClInclude Include="binary.h" />
+    <ClInclude Include="..\df_serialize\MakeBinaryWriteFooter.h">
+      <Filter>df_serialize</Filter>
+    </ClInclude>
+    <ClInclude Include="..\df_serialize\MakeBinaryWriteHeader.h">
+      <Filter>df_serialize</Filter>
+    </ClInclude>
+    <ClInclude Include="..\df_serialize\MakeBinaryReadFooter.h">
+      <Filter>df_serialize</Filter>
+    </ClInclude>
+    <ClInclude Include="..\df_serialize\MakeBinaryReadHeader.h">
+      <Filter>df_serialize</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

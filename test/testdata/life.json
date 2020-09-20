@@ -1,0 +1,22 @@
+{
+    "plants":
+    [
+        {
+            "name": "poison sumac",
+            "poisonous" : true
+        },
+        {
+            "name": "Venus Fly Trap",
+            "dietType" : "Carnivore"
+        }
+    ],
+    "animals":
+    [
+        {
+            "name" : "bobcat",
+            "dietType" : "Carnivore",
+            "aggression" : 0.75,
+            "litterMax" : 10
+        }
+    ]
+}
