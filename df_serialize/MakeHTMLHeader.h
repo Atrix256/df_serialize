@@ -18,11 +18,11 @@ inline bool WriteHTML(const char* fileName)
 
 #define ENUM_BEGIN(_NAMESPACE, _NAME) enums << \
     "<table>\n" \
-    "<tr><th>" #_NAMESPACE "::" #_NAME "</th></tr>\n" \
+    "<tr><th colspan=2>" #_NAMESPACE "::" #_NAME "</th></tr>\n" \
     ;
 
-#define ENUM_ITEM(_NAME) enums << \
-    "<tr><td>" #_NAME "</td></tr>\n" \
+#define ENUM_ITEM(_NAME, _DESCRIPTION) enums << \
+    "<tr><td>" #_NAME "</td><td>" _DESCRIPTION "</td></tr>\n" \
     ;
 
 #define ENUM_END() enums << \

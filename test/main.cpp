@@ -2,8 +2,6 @@
 #include "html.h"
 
 #define MAKE_JSON_LOG(...) printf(__VA_ARGS__);
-#include "rapidjson/document.h"
-#include "rapidjson/error/en.h"
 #include "json.h"
 
 #define MAKE_BINARY_LOG(...) printf(__VA_ARGS__);

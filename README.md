@@ -141,6 +141,16 @@ The basic built in type serialization functions (like ints, strings, etc) are fo
 file.  You can add more basic types by following the patterns there, either in that file, or in your own files.
 The Header.h should be included before the schemas and Footer.h should be included after the schemas.
 
+JSON Reading
+
+All fields are optional.  Unrecognized fields are ignored. Enum values are read as strings.
+
+JSON Writing
+
+Only fields that are not the default value are written out. Enum values are written as strings. Trailing commas
+are generated, but hopefully that is ok, as rapidjson allows you to specify that trailing commas are ok.  White
+space (indentation) is written out.
+
 **MakeEqualityTest.h**
 
 This makes == and != operators for all the types
@@ -152,7 +162,21 @@ macro MAKE_BINARY_LOG(...) to recieve log messages about failures.
 The basic built in type serialization functions (like ints, strings, etc) are found at the bottom of the Header.h
 file.  You can add more basic types by following the patterns there, either in that file, or in your own files.
 The Header.h should be included before the schemas and Footer.h should be included after the schemas.
+
 NOTE: A better binary serializer would read and write the whole structure in a single read or write operation
 with pointer fixup after read (for the case of read) and pointer un-fixup before write.  It may also
 not store enums as strings, but then would have to deal with enum re-ordering versioning. Calling this good enough
 for now, but I would definitely accept a more bare metal binary serializer if someone feels like making one.
+
+Binary Reading
+
+A single fread() is done to get the binary file into memory, then each value is pulled out from that memory
+buffer individually, and recursively.  Enum values are read as null terminated strings. std::string is
+read as null terminated strings.
+
+Binary Writing
+
+A memory buffer is built up by visiting all data items recursively, and having each basic type grow a std::vector
+and put their binary representation into the buffer.  When this is done, that binary buffer is written to disk
+in a single fwrite(). Enum values are written as null terminated strings.  std::string is written as null
+terminated strings. All fields are written.

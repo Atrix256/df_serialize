@@ -6,7 +6,7 @@
 
 #define ENUM_BEGIN(_NAMESPACE, _NAME)
 
-#define ENUM_ITEM(_NAME)
+#define ENUM_ITEM(_NAME, _DESCRIPTION)
 
 #define ENUM_END()
 

@@ -9,7 +9,7 @@ bool WriteTextFile(const char* fileName, const std::string& data)
     return true;
 }
 
-// Read a structure from a JSON string
+// Write a structure to a JSON string
 template<typename TROOT>
 void WriteToJSON(TROOT& root, std::string& data)
 {
@@ -18,7 +18,7 @@ void WriteToJSON(TROOT& root, std::string& data)
     data = output.str();
 }
 
-// Read a structure from a JSON file
+// Write a structure to a JSON file
 template<typename TROOT>
 bool WriteToJSON(TROOT& root, const char* fileName)
 {

@@ -15,7 +15,7 @@ void WriteToBinary(TROOT& root, std::vector<char>& output)
     BinaryWrite(root, output);
 }
 
-// Read a structure from a JSON file
+// Write a structure to a binary file
 template<typename TROOT>
 bool WriteToBinary(TROOT& root, const char* fileName)
 {

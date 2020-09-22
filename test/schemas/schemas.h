@@ -7,10 +7,10 @@
 
 // an enum used by both plants and animals
 ENUM_BEGIN(Lifeforms, DietType)
-    ENUM_ITEM(Herbivore)
-    ENUM_ITEM(Carnivore)
-    ENUM_ITEM(Omnivore)
-    ENUM_ITEM(Photosynthesis)
+    ENUM_ITEM(Herbivore, "Eats plants")
+    ENUM_ITEM(Carnivore, "Eats animals")
+    ENUM_ITEM(Omnivore, "Eats both plants and animals")
+    ENUM_ITEM(Photosynthesis, "Uses sublight to produce sugars")
 ENUM_END()
 
 SCHEMA_BEGIN(Lifeforms, Lifeform)

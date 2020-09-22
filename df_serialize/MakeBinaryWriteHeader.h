@@ -18,7 +18,7 @@
         switch(value) \
         { \
 
-#define ENUM_ITEM(_NAME) \
+#define ENUM_ITEM(_NAME, _DESCRIPTION) \
             case EnumType::_NAME: BinaryWrite(std::string(#_NAME), output); break; \
 
 #define ENUM_END() \
@@ -45,6 +45,15 @@
 
 #define SCHEMA_END() \
     }
+
+// A catch all template type to make compile errors about unsupported types easier to understand
+
+template <typename T>
+bool BinaryWrite(const T& value, std::vector<char>& output)
+{
+    static_assert(false, __FUNCSIG__ ": Unsupported type encountered!");
+    return false;
+}
 
 // Built in types
 

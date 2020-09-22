@@ -29,7 +29,7 @@
         } \
         const char* stringValue = document.GetString();
 
-#define ENUM_ITEM(_NAME) \
+#define ENUM_ITEM(_NAME, _DESCRIPTION) \
         if (!_stricmp(stringValue, #_NAME)) \
         { \
             value = EnumType::_NAME; \
@@ -86,6 +86,15 @@
 #define SCHEMA_END() \
         return true; \
     }
+
+// A catch all template type to make compile errors about unsupported types easier to understand
+
+template <typename T, typename U>
+bool JSONRead(T& value, U& document)
+{
+    static_assert(false, __FUNCSIG__ ": Unsupported type encountered!");
+    return false;
+}
 
 // Built in types
 

@@ -7,7 +7,7 @@
 
 #define ENUM_BEGIN(_NAMESPACE, _NAME) namespace _NAMESPACE {  enum class _NAME : int32_t {
 
-#define ENUM_ITEM(_NAME) _NAME,
+#define ENUM_ITEM(_NAME, _DESCRIPTION) _NAME,
 
 #define ENUM_END() }; };
 

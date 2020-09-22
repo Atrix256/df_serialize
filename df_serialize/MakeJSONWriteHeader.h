@@ -21,7 +21,7 @@
         switch(value) \
         { \
 
-#define ENUM_ITEM(_NAME) \
+#define ENUM_ITEM(_NAME, _DESCRIPTION) \
             case EnumType::_NAME: output << "\"" #_NAME "\""; break;
 
 #define ENUM_END() \
@@ -92,6 +92,15 @@ void WriteIndentation(std::stringstream& output, int indent)
 {
     for (int i = 0; i < indent; ++i)
         output << "    ";
+}
+
+// A catch all template type to make compile errors about unsupported types easier to understand
+
+template <typename T>
+void JSONWrite(T value, std::stringstream& output, int indent)
+{
+    static_assert(false, __FUNCSIG__ ": Unsupported type encountered!");
+    return false;
 }
 
 // Built in types
