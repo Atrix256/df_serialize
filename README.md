@@ -64,7 +64,7 @@ Serialization is done via simple function calls
         return false;
     } 
     
-    // Read binary file
+    // Write binary file
     Lifeforms::Plant plant;
     if (!WriteToBinary(root, "plant.dat"))
     {
