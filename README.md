@@ -42,7 +42,7 @@ Serialization is done via simple function calls
 
     // Read JSON file
     Lifeforms::Plant plant;
-    if (!ReadFromJSON(root, "plant.json"))
+    if (!ReadFromJSON(plant, "plant.json"))
     {
         printf("Could not read plant.json!!\n");
         return false;
@@ -50,7 +50,7 @@ Serialization is done via simple function calls
     
     // Write JSON file
     Lifeforms::Plant plant;
-    if (!WriteToJSON(root, "plant.json"))
+    if (!WriteToJSON(plant, "plant.json"))
     {
         printf("Could not write plant.json!!\n");
         return false;
@@ -58,7 +58,7 @@ Serialization is done via simple function calls
 
     // Read binary file
     Lifeforms::Plant plant;
-    if (!ReadFromBinary(root, "plant.dat"))
+    if (!ReadFromBinary(plant, "plant.dat"))
     {
         printf("Could not read plant.dat!!\n");
         return false;
@@ -66,7 +66,7 @@ Serialization is done via simple function calls
     
     // Write binary file
     Lifeforms::Plant plant;
-    if (!WriteToBinary(root, "plant.dat"))
+    if (!WriteToBinary(plant, "plant.dat"))
     {
         printf("Could not write plant.dat!!\n");
         return false;
