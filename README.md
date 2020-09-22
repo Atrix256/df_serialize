@@ -112,19 +112,19 @@ even though std::vector is the default, you could explicitly set it to that like
 #define TDYNAMICARRAY std::vector
 ```
 
-**SCHEMA_END()**
+**`SCHEMA_END()`**
 
 This specifies the end of the schema definition.
 
-**ENUM_BEGIN(Namespace, Name)**
+**`ENUM_BEGIN(Namespace, Name)`**
 
 Defines an enum named "Name" in the namespace "Namespace"
 
-**ENUM_ITEM(Name)**
+**`ENUM_ITEM(Name)`**
 
 Defines an enum value
 
-**ENUM_END()**
+**`ENUM_END()`**
 
 The end of an enum definition
 
