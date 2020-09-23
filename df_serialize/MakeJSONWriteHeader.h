@@ -1,134 +1,102 @@
 // Generates code to write data to json files.
 
 #include "_common.h"
-#include <vector>
-#include <strstream>
-
-#ifndef MAKE_JSON_LOG
-#define MAKE_JSON_LOG(...)
-#endif
-
-// This is for debugging. put trace calls in the macros below to see info logged about what functions were called etc
-#define MAKE_JSON_TRACE(...)
-//MAKE_JSON_LOG(__VA_ARGS__)
 
 // Enums
 
-#define ENUM_BEGIN(_NAMESPACE, _NAME) \
-    void JSONWrite(const _NAMESPACE::_NAME& value, std::stringstream& output, int indent) \
+#define ENUM_BEGIN(_NAMESPACE, _NAME, _DESCRIPTION) \
+    rapidjson::Value MakeJSONValue(const _NAMESPACE::_NAME& value, rapidjson::Document::AllocatorType& allocator) \
     { \
         typedef _NAMESPACE::_NAME EnumType; \
         switch(value) \
-        { \
+        {
 
 #define ENUM_ITEM(_NAME, _DESCRIPTION) \
-            case EnumType::_NAME: output << "\"" #_NAME "\""; break;
+            case EnumType::_NAME: return MakeJSONValue(TSTRING(#_NAME), allocator); break;
 
 #define ENUM_END() \
+            default: return MakeJSONValue(TSTRING("<Unknown>"), allocator); break; \
         } \
     }
 
 // Structs
 
-#define SCHEMA_BEGIN(_NAMESPACE, _NAME) \
-    void JSONWrite(const _NAMESPACE::_NAME& value, std::stringstream& output, int indent, bool writeBraces = true) \
+#define SCHEMA_BEGIN(_NAMESPACE, _NAME, _DESCRIPTION) \
+    rapidjson::Value MakeJSONValue(const _NAMESPACE::_NAME& value, rapidjson::Document::AllocatorType& allocator) \
     { \
-        if(writeBraces) \
-        { \
-            WriteIndentation(output, indent); \
-            output << "{\n"; \
-            indent++; \
-        }
+        rapidjson::Value ret; \
+        ret.SetObject();
 
-#define SCHEMA_INHERIT_BEGIN(_NAMESPACE, _NAME, _BASE) \
-    void JSONWrite(const _NAMESPACE::_NAME& value, std::stringstream& output, int indent, bool writeBraces = true) \
+#define SCHEMA_INHERIT_BEGIN(_NAMESPACE, _NAME, _BASE, _DESCRIPTION) \
+    rapidjson::Value MakeJSONValue(const _NAMESPACE::_NAME& value, rapidjson::Document::AllocatorType& allocator) \
     { \
-        if(writeBraces) \
-        { \
-            WriteIndentation(output, indent); \
-            output << "{\n"; \
-            indent++; \
-        } \
-        JSONWrite(*(const _BASE*)&value, output, indent, false);
+        rapidjson::Value ret; \
+        ret.SetObject(); \
+        rapidjson::Value inheritedValues = MakeJSONValue(*(const _BASE*)&value, allocator); \
+        for (auto member = inheritedValues.MemberBegin(); member != inheritedValues.MemberEnd(); ++member) \
+            ret.AddMember(member->name, member->value, allocator);
 
 #define SCHEMA_FIELD(_TYPE, _NAME, _DEFAULT, _DESCRIPTION) \
         if (value._NAME != _DEFAULT) \
-        { \
-            WriteIndentation(output, indent); \
-            output << "\"" #_NAME "\": "; \
-            JSONWrite(value._NAME, output, indent); \
-            output << ",\n"; \
-        }
+            ret.AddMember(#_NAME, MakeJSONValue(value._NAME, allocator), allocator);
 
-#define SCHEMA_ARRAY(_TYPE, _NAME, _DESCRIPTION)\
+#define SCHEMA_DYNAMIC_ARRAY(_TYPE, _NAME, _DESCRIPTION) \
         if (value._NAME.size() > 0) \
         { \
-            WriteIndentation(output, indent); \
-            output << "\"" #_NAME "\": "; \
-            output << "[\n"; \
-            for (const auto& item : value._NAME) \
+            rapidjson::Value arr; \
+            arr.SetArray(); \
+            for (auto& item : value._NAME) \
+                arr.PushBack(MakeJSONValue(item, allocator), allocator); \
+            ret.AddMember(#_NAME, arr, allocator); \
+        }
+
+#define SCHEMA_STATIC_ARRAY(_TYPE, _NAME, _SIZE, _DEFAULT, _DESCRIPTION) \
+        { \
+            static const TSTATICARRAY<_TYPE, _SIZE> c_default = _DEFAULT; \
+            bool different = false; \
+            for (int i = 0; i < _SIZE; ++i) \
             { \
-                JSONWrite(item, output, indent + 1); \
-                output << "\n"; \
+                if (value._NAME[i] != c_default[i]) \
+                { \
+                    different = true; \
+                    break; \
+                } \
             } \
-            WriteIndentation(output, indent); \
-            output << "],\n"; \
+            if (different) \
+            { \
+                rapidjson::Value arr; \
+                arr.SetArray(); \
+                for (auto& item : value._NAME) \
+                    arr.PushBack(MakeJSONValue(item, allocator), allocator); \
+                ret.AddMember(#_NAME, arr, allocator); \
+            } \
         }
 
 #define SCHEMA_END() \
-        if (writeBraces) \
-        { \
-            indent--; \
-            WriteIndentation(output, indent); \
-            if (indent > 0) \
-                output << "},"; \
-            else \
-                output << "}"; \
-        } \
+        return ret; \
     }
 
 // Variants
 
-#define VARIANT_BEGIN(_NAMESPACE, _NAME) \
-    void JSONWrite(const _NAMESPACE::_NAME& value, std::stringstream& output, int indent, bool writeBraces = true) \
+#define VARIANT_BEGIN(_NAMESPACE, _NAME, _DESCRIPTION) \
+    rapidjson::Value MakeJSONValue(const _NAMESPACE::_NAME& value, rapidjson::Document::AllocatorType& allocator) \
     { \
-        using namespace _NAMESPACE; \
-        if(writeBraces) \
-        { \
-            WriteIndentation(output, indent); \
-            output << "{\n"; \
-            indent++; \
-        } \
-        WriteIndentation(output, indent); \
-        output << "\"_type\":\"" << TypeToString(value._type) << "\",\n";
+        typedef _NAMESPACE::_NAME ThisType; \
+        rapidjson::Value ret; \
+        ret.SetObject(); \
 
 #define VARIANT_TYPE(_TYPE, _NAME, _DEFAULT, _DESCRIPTION) \
-        if (value._type == c_type_##_TYPE && value._NAME != _DEFAULT) \
-            JSONWrite(value._NAME, output, indent, false); \
+        if (value._index == ThisType::c_index_##_NAME && value._NAME != _DEFAULT) \
+            ret.AddMember(#_NAME, MakeJSONValue(value._NAME, allocator), allocator);
 
 #define VARIANT_END() \
-        if (writeBraces) \
-        { \
-            indent--; \
-            WriteIndentation(output, indent); \
-            if (indent > 0) \
-                output << "},"; \
-            else \
-                output << "}"; \
-        } \
+        return ret; \
     }
-
-// indentation helper
-void WriteIndentation(std::stringstream& output, int indent)
-{
-    for (int i = 0; i < indent; ++i)
-        output << "    ";
-}
 
 // A catch all template type to make compile errors about unsupported types easier to understand
 
 template <typename T>
-void JSONWrite(T value, std::stringstream& output, int indent)
+rapidjson::Value MakeJSONValue(const T& value, rapidjson::Document::AllocatorType& allocator)
 {
     static_assert(false, __FUNCSIG__ ": Unsupported type encountered!");
     return false;
@@ -136,57 +104,79 @@ void JSONWrite(T value, std::stringstream& output, int indent)
 
 // Built in types
 
-void JSONWrite(uint8_t value, std::stringstream& output, int indent)
+rapidjson::Value MakeJSONValue(const uint8_t& value, rapidjson::Document::AllocatorType& allocator)
 {
-    output << value;
+    rapidjson::Value ret;
+    ret.SetUint(value);
+    return ret;
 }
 
-void JSONWrite(uint16_t value, std::stringstream& output, int indent)
+rapidjson::Value MakeJSONValue(const uint16_t& value, rapidjson::Document::AllocatorType& allocator)
 {
-    output << value;
+    rapidjson::Value ret;
+    ret.SetUint(value);
+    return ret;
 }
 
-void JSONWrite(uint32_t value, std::stringstream& output, int indent)
+rapidjson::Value MakeJSONValue(const uint32_t& value, rapidjson::Document::AllocatorType& allocator)
 {
-    output << value;
+    rapidjson::Value ret;
+    ret.SetUint(value);
+    return ret;
 }
 
-void JSONWrite(uint64_t value, std::stringstream& output, int indent)
+rapidjson::Value MakeJSONValue(const uint64_t& value, rapidjson::Document::AllocatorType& allocator)
 {
-    output << value;
+    rapidjson::Value ret;
+    ret.SetUint64(value);
+    return ret;
 }
 
-void JSONWrite(int8_t value, std::stringstream& output, int indent)
+rapidjson::Value MakeJSONValue(const int8_t& value, rapidjson::Document::AllocatorType& allocator)
 {
-    output << value;
+    rapidjson::Value ret;
+    ret.SetInt(value);
+    return ret;
 }
 
-void JSONWrite(int16_t value, std::stringstream& output, int indent)
+rapidjson::Value MakeJSONValue(const int16_t& value, rapidjson::Document::AllocatorType& allocator)
 {
-    output << value;
+    rapidjson::Value ret;
+    ret.SetInt(value);
+    return ret;
 }
 
-void JSONWrite(int32_t value, std::stringstream& output, int indent)
+rapidjson::Value MakeJSONValue(const int32_t& value, rapidjson::Document::AllocatorType& allocator)
 {
-    output << value;
+    rapidjson::Value ret;
+    ret.SetInt(value);
+    return ret;
 }
 
-void JSONWrite(int64_t value, std::stringstream& output, int indent)
+rapidjson::Value MakeJSONValue(const int64_t& value, rapidjson::Document::AllocatorType& allocator)
 {
-    output << value;
+    rapidjson::Value ret;
+    ret.SetInt64(value);
+    return ret;
 }
 
-void JSONWrite(float value, std::stringstream& output, int indent)
+rapidjson::Value MakeJSONValue(const float& value, rapidjson::Document::AllocatorType& allocator)
 {
-    output << value;
+    rapidjson::Value ret;
+    ret.SetDouble(value);
+    return ret;
 }
 
-void JSONWrite(bool value, std::stringstream& output, int indent)
+rapidjson::Value MakeJSONValue(const bool& value, rapidjson::Document::AllocatorType& allocator)
 {
-    output << (value ? "true" : "false");
+    rapidjson::Value ret;
+    ret.SetBool(value);
+    return ret;
 }
 
-void JSONWrite(const std::string& value, std::stringstream& output, int indent)
+rapidjson::Value MakeJSONValue(const TSTRING& value, rapidjson::Document::AllocatorType& allocator)
 {
-    output << "\"" << value << "\"";
+    rapidjson::Value ret;
+    ret.SetString(value.c_str(), allocator);
+    return ret;
 }

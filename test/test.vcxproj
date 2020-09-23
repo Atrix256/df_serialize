@@ -118,6 +118,7 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\df_serialize\Config.h" />
     <ClInclude Include="..\df_serialize\MakeBinaryReadFooter.h" />
     <ClInclude Include="..\df_serialize\MakeBinaryReadHeader.h" />
     <ClInclude Include="..\df_serialize\MakeBinaryWriteFooter.h" />
@@ -130,16 +131,14 @@
     <ClInclude Include="..\df_serialize\MakeJSONWriteFooter.h" />
     <ClInclude Include="..\df_serialize\MakeJSONWriteHeader.h" />
     <ClInclude Include="..\df_serialize\MakeTypes.h" />
-    <ClInclude Include="..\df_serialize\MakeTypeToStringFooter.h" />
-    <ClInclude Include="..\df_serialize\MakeTypeToStringHeader.h" />
     <ClInclude Include="..\df_serialize\_common.h" />
-    <ClInclude Include="..\df_serialize\_compile_time_crc32.h" />
     <ClInclude Include="binary.h" />
     <ClInclude Include="html.h" />
     <ClInclude Include="json.h" />
-    <ClInclude Include="schemas\schema_plant.h" />
     <ClInclude Include="schemas\schema_animal.h" />
     <ClInclude Include="schemas\schemas.h" />
+    <ClInclude Include="schemas\schema_plant.h" />
+    <ClInclude Include="stl_alternatives.h" />
     <ClInclude Include="types.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

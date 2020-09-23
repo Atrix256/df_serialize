@@ -4,27 +4,17 @@
 // RapidJSON Github:  https://github.com/Tencent/rapidjson/
 
 #include "_common.h"
-#include <vector>
-
-#ifndef MAKE_JSON_LOG
-#define MAKE_JSON_LOG(...)
-#endif
-
-// This is for debugging. put trace calls in the macros below to see info logged about what functions were called etc
-#define MAKE_JSON_TRACE(...)
-//MAKE_JSON_LOG(__VA_ARGS__)
 
 // Enums
 
-#define ENUM_BEGIN(_NAMESPACE, _NAME) \
+#define ENUM_BEGIN(_NAMESPACE, _NAME, _DESCRIPTION) \
     template <typename DOCUMENT> \
     bool JSONRead(_NAMESPACE::_NAME& value, DOCUMENT& document) \
     { \
-        MAKE_JSON_TRACE(__FUNCSIG__ "\n"); \
         typedef _NAMESPACE::_NAME EnumType; \
         if (!document.IsString()) \
         { \
-            MAKE_JSON_LOG("Trying to read a " #_NAMESPACE "::" #_NAME " but it wasn't a string\n"); \
+            DFS_LOG("Trying to read a " #_NAMESPACE "::" #_NAME " but it wasn't a string\n"); \
             return false; \
         } \
         const char* stringValue = document.GetString();
@@ -37,43 +27,64 @@
         }
 
 #define ENUM_END() \
-        MAKE_JSON_LOG("Unknown Enum Value: \"%s\"", stringValue); \
+        DFS_LOG("Unknown Enum Value: \"%s\"", stringValue); \
         return false; \
     }
 
 // Structs
 
-#define SCHEMA_BEGIN(_NAMESPACE, _NAME) \
+#define SCHEMA_BEGIN(_NAMESPACE, _NAME, _DESCRIPTION) \
     template <typename DOCUMENT> \
     bool JSONRead(_NAMESPACE::_NAME& value, DOCUMENT& document) \
-    { \
-        MAKE_JSON_TRACE(__FUNCSIG__ "\n");
+    {
 
-#define SCHEMA_INHERIT_BEGIN(_NAMESPACE, _NAME, _BASE) \
+#define SCHEMA_INHERIT_BEGIN(_NAMESPACE, _NAME, _BASE, _DESCRIPTION) \
     template <typename DOCUMENT> \
     bool JSONRead(_NAMESPACE::_NAME& value, DOCUMENT& document) \
     { \
-        MAKE_JSON_TRACE(__FUNCSIG__ "\n"); \
         if (!JSONRead(*(_BASE*)&value, document)) \
             return false;
 
 #define SCHEMA_FIELD(_TYPE, _NAME, _DEFAULT, _DESCRIPTION) \
         if (document.HasMember(#_NAME) && !JSONRead(value.##_NAME, document[#_NAME])) \
         { \
-            MAKE_JSON_LOG("Could not read member " #_NAME "\n"); \
+            DFS_LOG("Could not read member " #_NAME "\n"); \
             return false; \
         }
 
-#define SCHEMA_ARRAY(_TYPE, _NAME, _DESCRIPTION) \
+#define SCHEMA_DYNAMIC_ARRAY(_TYPE, _NAME, _DESCRIPTION) \
         if (document.HasMember(#_NAME)) \
         { \
             if (!document[#_NAME].IsArray()) \
             { \
-                MAKE_JSON_LOG("'" #_NAME "' is not an array.\n"); \
+                DFS_LOG("'" #_NAME "' is not an array.\n"); \
                 return false; \
             } \
             auto arr = document[#_NAME].GetArray(); \
             value._NAME.resize(arr.Size()); \
+            int index = 0; \
+            for (const rapidjson::Value& item : arr) \
+            { \
+                if(!JSONRead(value._NAME[index], item)) \
+                    return false; \
+                index++; \
+            } \
+        }
+
+#define SCHEMA_STATIC_ARRAY(_TYPE, _NAME, _SIZE, _DEFAULT, _DESCRIPTION) \
+        if (document.HasMember(#_NAME)) \
+        { \
+            if (!document[#_NAME].IsArray()) \
+            { \
+                DFS_LOG("'" #_NAME "' is not an array.\n"); \
+                return false; \
+            } \
+            auto arr = document[#_NAME].GetArray(); \
+            if (arr.Size() != _SIZE) \
+            { \
+                DFS_LOG("'" #_NAME "' array was not the correct size.\n"); \
+                return false; \
+            } \
             int index = 0; \
             for (const rapidjson::Value& item : arr) \
             { \
@@ -89,19 +100,19 @@
 
 // Variants
 
-#define VARIANT_BEGIN(_NAMESPACE, _NAME) \
+#define VARIANT_BEGIN(_NAMESPACE, _NAME, _DESCRIPTION) \
     template <typename DOCUMENT> \
     bool JSONRead(_NAMESPACE::_NAME& value, DOCUMENT& document) \
     { \
-        using namespace _NAMESPACE; \
-        std::string _type; \
-        if (document.HasMember("_type") && !JSONRead(_type, document["_type"])) \
-            return false; \
-        value._type = crc32_rec(1337, _type.c_str());
+        typedef _NAMESPACE::_NAME ThisType; \
 
 #define VARIANT_TYPE(_TYPE, _NAME, _DEFAULT, _DESCRIPTION) \
-        if (value._type == c_type_##_TYPE && !JSONRead(value._NAME, document)) \
-            return false;
+        if (document.HasMember(#_NAME)) \
+        { \
+            value._index = ThisType::c_index_##_NAME; \
+            if (!JSONRead(value._NAME, document[#_NAME])) \
+                return false; \
+        }
 
 #define VARIANT_END() \
         return true; \
@@ -123,7 +134,7 @@ bool JSONRead(uint8_t& value, T& document)
 {
     if (!document.IsInt())
     {
-        MAKE_JSON_LOG("Trying to read a uint8 but it wasn't an int\n");
+        DFS_LOG("Trying to read a uint8 but it wasn't an int\n");
         return false;
     }
 
@@ -136,7 +147,7 @@ bool JSONRead(uint16_t& value, T& document)
 {
     if (!document.IsInt())
     {
-        MAKE_JSON_LOG("Trying to read a uint16 but it wasn't an int\n");
+        DFS_LOG("Trying to read a uint16 but it wasn't an int\n");
         return false;
     }
 
@@ -149,7 +160,7 @@ bool JSONRead(uint32_t& value, T& document)
 {
     if (!document.IsInt())
     {
-        MAKE_JSON_LOG("Trying to read a uint32 but it wasn't an int\n");
+        DFS_LOG("Trying to read a uint32 but it wasn't an int\n");
         return false;
     }
 
@@ -162,7 +173,7 @@ bool JSONRead(uint64_t& value, T& document)
 {
     if (!document.IsInt64())
     {
-        MAKE_JSON_LOG("Trying to read a uint64 but it wasn't an int64\n");
+        DFS_LOG("Trying to read a uint64 but it wasn't an int64\n");
         return false;
     }
 
@@ -175,7 +186,7 @@ bool JSONRead(int8_t& value, T& document)
 {
     if (!document.IsInt())
     {
-        MAKE_JSON_LOG("Trying to read an int8 but it wasn't an int\n");
+        DFS_LOG("Trying to read an int8 but it wasn't an int\n");
         return false;
     }
 
@@ -188,7 +199,7 @@ bool JSONRead(int16_t& value, T& document)
 {
     if (!document.IsInt())
     {
-        MAKE_JSON_LOG("Trying to read an int16 but it wasn't an int\n");
+        DFS_LOG("Trying to read an int16 but it wasn't an int\n");
         return false;
     }
 
@@ -201,7 +212,7 @@ bool JSONRead(int32_t& value, T& document)
 {
     if (!document.IsInt())
     {
-        MAKE_JSON_LOG("Trying to read an int32 but it wasn't an int\n");
+        DFS_LOG("Trying to read an int32 but it wasn't an int\n");
         return false;
     }
 
@@ -214,7 +225,7 @@ bool JSONRead(int64_t& value, T& document)
 {
     if (!document.IsInt64())
     {
-        MAKE_JSON_LOG("Trying to read an int64 but it wasn't an int64\n");
+        DFS_LOG("Trying to read an int64 but it wasn't an int64\n");
         return false;
     }
 
@@ -234,7 +245,7 @@ bool JSONRead(float& value, T& document)
             return true;
         }
 
-        MAKE_JSON_LOG("Trying to read a float but it wasn't a float\n");
+        DFS_LOG("Trying to read a float but it wasn't a float\n");
         return false;
     }
 
@@ -247,7 +258,7 @@ bool JSONRead(bool& value, T& document)
 {
     if (!document.IsBool())
     {
-        MAKE_JSON_LOG("Trying to read a bool but it wasn't a bool\n");
+        DFS_LOG("Trying to read a bool but it wasn't a bool\n");
         return false;
     }
 
@@ -256,11 +267,11 @@ bool JSONRead(bool& value, T& document)
 }
 
 template <typename T>
-bool JSONRead(std::string& value, T& document)
+bool JSONRead(TSTRING& value, T& document)
 {
     if (!document.IsString())
     {
-        MAKE_JSON_LOG("Trying to read a string but it wasn't a string\n");
+        DFS_LOG("Trying to read a string but it wasn't a string\n");
         return false;
     }
 

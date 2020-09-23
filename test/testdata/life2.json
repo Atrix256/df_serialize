@@ -1,21 +1,27 @@
 {
     "lifeForms": [
         {
-            "_type":"Lifeforms::Plant",
-            "name": "poison sumac",
-            "poisonous": true,
+            "plant": {
+                "name": "poison sumac",
+                "edibleMatter": 100.0,
+                "poisonous": true
+            }
         },
         {
-            "_type":"Lifeforms::Plant",
-            "name": "Venus Fly Trap",
-            "dietType": "Carnivore",
+            "plant": {
+                "name": "Venus Fly Trap",
+                "dietType": "Carnivore",
+                "edibleMatter": 100.0
+            }
         },
         {
-            "_type":"Lifeforms::Animal",
-            "name": "bobcat",
-            "dietType": "Carnivore",
-            "aggression": 0.75,
-            "litterMax": 10,
-        },
-    ],
+            "animal": {
+                "name": "bobcat",
+                "dietType": "Carnivore",
+                "aggression": 0.75,
+                "meat": 0.0,
+                "litterMax": 10
+            }
+        }
+    ]
 }

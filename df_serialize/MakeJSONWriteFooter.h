@@ -1,4 +1,4 @@
-bool WriteTextFile(const char* fileName, const std::string& data)
+bool WriteTextFile(const char* fileName, const TSTRING& data)
 {
     FILE* file = nullptr;
     fopen_s(&file, fileName, "w+b");
@@ -11,23 +11,28 @@ bool WriteTextFile(const char* fileName, const std::string& data)
 
 // Write a structure to a JSON string
 template<typename TROOT>
-void WriteToJSON(TROOT& root, std::string& data)
+void WriteToJSONBuffer(TROOT& root, TSTRING& data)
 {
-    std::stringstream output;
-    JSONWrite(root, output, 0);
-    data = output.str();
+    // make the document
+    rapidjson::Document document;
+    rapidjson::Value rootValue = MakeJSONValue(root, document.GetAllocator());
+
+    // make the string
+    rapidjson::StringBuffer buffer;
+    rapidjson::PrettyWriter<rapidjson::StringBuffer> writer(buffer);
+    rootValue.Accept(writer);
+    data = buffer.GetString();
 }
 
 // Write a structure to a JSON file
 template<typename TROOT>
-bool WriteToJSON(TROOT& root, const char* fileName)
+bool WriteToJSONFile(TROOT& root, const char* fileName)
 {
-    std::string data;
-    WriteToJSON(root, data);
-
+    TSTRING data;
+    WriteToJSONBuffer(root, data);
     if (!WriteTextFile(fileName, data))
     {
-        MAKE_JSON_LOG("Could not write file %s", fileName);
+        DFS_LOG("Could not write file %s", fileName);
         return false;
     }
 

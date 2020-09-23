@@ -1,10 +1,31 @@
+// This switch is to show that it can work without STL
+#define ALLOW_STL false
+
+#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+
+// Include the files we need / do our setup for dynamic array, static array and dynamic string types
+
+#if ALLOW_STL
+
+#include <vector>
+#include <array>
+#include <string>
+
+#else
+
+#include "stl_alternatives.h"
+#define TDYNAMICARRAY MyVector
+#define TSTATICARRAY MyArray
+#define TSTRING MyString
+
+#endif
+
+// Expand the schemas
+
 #include "types.h"
 #include "html.h"
-
-#define MAKE_JSON_LOG(...) printf(__VA_ARGS__);
 #include "json.h"
-
-#define MAKE_BINARY_LOG(...) printf(__VA_ARGS__);
 #include "binary.h"
 
 int main(int argc, char** argv)
@@ -16,7 +37,7 @@ int main(int argc, char** argv)
     Lifeforms::Root root;
     {
         // Read some data in from a JSON file
-        if (!ReadFromJSON(root, "testdata/life.json"))
+        if (!ReadFromJSONFile(root, "testdata/life.json"))
         {
             printf("Could not read testdata/life.json!!\n");
             return 1;
@@ -25,16 +46,21 @@ int main(int argc, char** argv)
         // Modify the data
         for (Lifeforms::LifeformVariant& variant : root.lifeForms)
         {
-            switch (variant._type)
+            switch (variant._index)
             {
-                case Lifeforms::c_type_Plant:
+                case Lifeforms::LifeformVariant::c_index_plant:
                 {
-                    //variant.plant.edibleMatter = 100.0f;
+                    variant.plant.edibleMatter = 100.0f;
                     break;
                 }
-                case Lifeforms::c_type_Animal:
+                case Lifeforms::LifeformVariant::c_index_animal:
                 {
-                    //variant.animal.meat = 0.0f;
+                    variant.animal.meat = 0.0f;
+                    break;
+                }
+                case Lifeforms::LifeformVariant::c_index_None:
+                {
+                    // No type, this variant is null
                     break;
                 }
                 default:
@@ -46,7 +72,7 @@ int main(int argc, char** argv)
         }
 
         // write the modified data as JSON
-        if (!WriteToJSON(root, "testdata/life2.json"))
+        if (!WriteToJSONFile(root, "testdata/life2.json"))
         {
             printf("Could not write testdata/life2.json!!\n");
             return 1;
@@ -54,7 +80,7 @@ int main(int argc, char** argv)
 
         // Read the modified data as JSON
         Lifeforms::Root root2;
-        if (!ReadFromJSON(root2, "testdata/life2.json"))
+        if (!ReadFromJSONFile(root2, "testdata/life2.json"))
         {
             printf("Could not read testdata/life2.json!!\n");
             return 1;
@@ -68,7 +94,7 @@ int main(int argc, char** argv)
         }
 
         // Write the modified data as binary
-        if (!WriteToBinary(root, "testdata/life2.dat"))
+        if (!WriteToBinaryFile(root, "testdata/life2.dat"))
         {
             printf("Could not write testdata/life2.dat!!\n");
             return 1;
@@ -76,7 +102,7 @@ int main(int argc, char** argv)
 
         // Read the modified data
         Lifeforms::Root root3;
-        if (!ReadFromBinary(root3, "testdata/life2.dat"))
+        if (!ReadFromBinaryFile(root3, "testdata/life2.dat"))
         {
             printf("Could not read testdata/life2.dat!!\n");
             return 1;
@@ -90,5 +116,6 @@ int main(int argc, char** argv)
         }
     }
 
+    printf("Success!\n");
     return 0;
 }

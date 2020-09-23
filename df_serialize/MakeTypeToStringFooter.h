@@ -1,6 +1,0 @@
-        default:
-        {
-            return "<Unknown Type!>";
-        }
-    }
-}
