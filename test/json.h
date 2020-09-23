@@ -16,6 +16,11 @@
 #include "../df_serialize/MakeEqualityTests.h"
 #include "schemas/schemas.h"
 
+// TypeToString (used by json writing to write the name of types of variants)
+#include "../df_serialize/MakeTypeToStringHeader.h"
+#include "schemas/schemas.h"
+#include "../df_serialize/MakeTypeToStringFooter.h"
+
 // Writing
 #include "../df_serialize/MakeJSONWriteHeader.h"
 #include "schemas/schemas.h"

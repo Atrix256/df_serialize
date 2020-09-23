@@ -64,5 +64,14 @@
     <ClInclude Include="..\df_serialize\MakeBinaryReadHeader.h">
       <Filter>df_serialize</Filter>
     </ClInclude>
+    <ClInclude Include="..\df_serialize\_compile_time_crc32.h">
+      <Filter>df_serialize</Filter>
+    </ClInclude>
+    <ClInclude Include="..\df_serialize\MakeTypeToStringHeader.h">
+      <Filter>df_serialize</Filter>
+    </ClInclude>
+    <ClInclude Include="..\df_serialize\MakeTypeToStringFooter.h">
+      <Filter>df_serialize</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

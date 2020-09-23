@@ -12,9 +12,12 @@
         "%s"
         "<h1>Structs</h1>\n"
         "%s\n"
+        "<h1>Variants</h1>\n"
+        "%s\n"
         "</html>\n",
         enums.str().c_str(),
-        structs.str().c_str()
+        structs.str().c_str(),
+        variants.str().c_str()
     );
     fclose(file);
     return true;

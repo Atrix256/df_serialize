@@ -22,6 +22,7 @@ table, th, td, tr
 <tr><th colspan=3>Lifeforms::Lifeform</th></tr>
 <tr><td>std::string name</td><td>""</td><td>The name of the life form.</td></tr>
 <tr><td>std::string description</td><td>""</td><td>A description of the life form.</td></tr>
+<tr><td>uint64_t uniqueID</td><td>0</td><td>A unique identifier for the life form.</td></tr>
 </table>
 <br/>
 
@@ -45,8 +46,16 @@ table, th, td, tr
 
 <table>
 <tr><th colspan=3>Lifeforms::Root</th></tr>
-<tr><td>Plant plants[]</td><td></td><td>The full list of plants</td></tr>
-<tr><td>Animal animals[]</td><td></td><td>The full list of animals</td></tr>
+<tr><td>LifeformVariant lifeForms[]</td><td></td><td>The full list of life forms</td></tr>
+</table>
+<br/>
+
+
+<h1>Variants</h1>
+<table>
+<tr><th colspan=3>Lifeforms::LifeformVariant</th></tr>
+<tr><td>Plant plant</td><td>Plant{}</td><td>a plant</td></tr>
+<tr><td>Animal animal</td><td>Animal{}</td><td>an animal</td></tr>
 </table>
 <br/>
 

@@ -32,6 +32,18 @@
 #undef ENUM_END
 #endif
 
+#ifdef VARIANT_BEGIN
+#undef VARIANT_BEGIN
+#endif
+
+#ifdef VARIANT_TYPE
+#undef VARIANT_TYPE
+#endif
+
+#ifdef VARIANT_END
+#undef VARIANT_END
+#endif
+
 // By default, use a std::vector as the dynamic array type. You can define TDYNAMICARRAY
 // to another templated dynamic array type if you wish.
 #ifndef TDYNAMICARRAY

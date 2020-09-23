@@ -22,8 +22,30 @@ int main(int argc, char** argv)
             return 1;
         }
 
-        // Modify the data and write it as JSON
-        root.animals[0].meat = 0.0f;
+        // Modify the data
+        for (Lifeforms::LifeformVariant& variant : root.lifeForms)
+        {
+            switch (variant._type)
+            {
+                case Lifeforms::c_type_Plant:
+                {
+                    //variant.plant.edibleMatter = 100.0f;
+                    break;
+                }
+                case Lifeforms::c_type_Animal:
+                {
+                    //variant.animal.meat = 0.0f;
+                    break;
+                }
+                default:
+                {
+                    printf("Unknown variant type encountered!");
+                    return 1;
+                }
+            }
+        }
+
+        // write the modified data as JSON
         if (!WriteToJSON(root, "testdata/life2.json"))
         {
             printf("Could not write testdata/life2.json!!\n");

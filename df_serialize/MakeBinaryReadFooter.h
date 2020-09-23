@@ -31,7 +31,7 @@ template<typename TROOT>
 bool ReadFromBinary(TROOT& root, const char* fileName)
 {
     std::vector<char> fileData;
-    if (!LoadTextFile(fileName, fileData))
+    if (!LoadBinaryFile(fileName, fileData))
     {
         MAKE_BINARY_LOG("Could not read file %s", fileName);
         return false;

@@ -2,12 +2,10 @@
 
 #include "_common.h"
 #include <vector>
-#include <strstream>
 
 #ifndef MAKE_BINARY_LOG
 #define MAKE_BINARY_LOG(...)
 #endif
-
 
 // Enums
 
@@ -46,6 +44,21 @@
 #define SCHEMA_END() \
     }
 
+// Variants
+
+#define VARIANT_BEGIN(_NAMESPACE, _NAME) \
+    void BinaryWrite(const _NAMESPACE::_NAME& value, std::vector<char>& output) \
+    { \
+        using namespace _NAMESPACE; \
+        BinaryWrite(value._type, output);
+
+#define VARIANT_TYPE(_TYPE, _NAME, _DEFAULT, _DESCRIPTION) \
+        if (value._type == c_type_##_TYPE) \
+            BinaryWrite(value._NAME, output);
+
+#define VARIANT_END() \
+    }
+
 // A catch all template type to make compile errors about unsupported types easier to understand
 
 template <typename T>
@@ -57,11 +70,60 @@ bool BinaryWrite(const T& value, std::vector<char>& output)
 
 // Built in types
 
+void BinaryWrite(uint8_t value, std::vector<char>& output)
+{
+    size_t offset = output.size();
+    output.resize(offset + sizeof(value));
+    *((decltype(&value))(&output[offset])) = value;
+}
+
+void BinaryWrite(uint16_t value, std::vector<char>& output)
+{
+    size_t offset = output.size();
+    output.resize(offset + sizeof(value));
+    *((decltype(&value))(&output[offset])) = value;
+}
+
+void BinaryWrite(uint32_t value, std::vector<char>& output)
+{
+    size_t offset = output.size();
+    output.resize(offset + sizeof(value));
+    *((decltype(&value))(&output[offset])) = value;
+}
+
+void BinaryWrite(uint64_t value, std::vector<char>& output)
+{
+    size_t offset = output.size();
+    output.resize(offset + sizeof(value));
+    *((decltype(&value))(&output[offset])) = value;
+}
+
+void BinaryWrite(int8_t value, std::vector<char>& output)
+{
+    size_t offset = output.size();
+    output.resize(offset + sizeof(value));
+    *((decltype(&value))(&output[offset])) = value;
+}
+
+void BinaryWrite(int16_t value, std::vector<char>& output)
+{
+    size_t offset = output.size();
+    output.resize(offset + sizeof(value));
+    *((decltype(&value))(&output[offset])) = value;
+}
+
 void BinaryWrite(int32_t value, std::vector<char>& output)
 {
     size_t offset = output.size();
     output.resize(offset + sizeof(value));
-    *((int32_t*)(&output[offset])) = value;
+    *((decltype(&value))(&output[offset])) = value;
+}
+
+void BinaryWrite(int64_t value, std::vector<char>& output)
+{
+    size_t offset = output.size();
+    output.resize(offset + sizeof(value));
+    *((decltype(&value))(&output[offset])) = value;
 }
 
 void BinaryWrite(float value, std::vector<char>& output)

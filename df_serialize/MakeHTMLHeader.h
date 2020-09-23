@@ -12,7 +12,7 @@ inline bool WriteHTML(const char* fileName)
     if (!file)
         return false;
 
-    std::stringstream enums, structs;
+    std::stringstream enums, structs, variants;
 
 // Enums
 
@@ -52,6 +52,23 @@ inline bool WriteHTML(const char* fileName)
     ;
 
 #define SCHEMA_END() structs << \
+    "</table>\n" \
+    "<br/>\n" \
+    "\n" \
+    ;
+
+// Variants
+
+#define VARIANT_BEGIN(_NAMESPACE, _NAME) variants << \
+    "<table>\n" \
+    "<tr><th colspan=3>" #_NAMESPACE "::" #_NAME "</th></tr>\n" \
+    ;
+
+#define VARIANT_TYPE(_TYPE, _NAME, _DEFAULT, _DESCRIPTION) variants << \
+    "<tr><td>" #_TYPE " " #_NAME "</td><td>" #_DEFAULT "</td><td>" _DESCRIPTION "</td></tr>\n" \
+    ;
+
+#define VARIANT_END() variants << \
     "</table>\n" \
     "<br/>\n" \
     "\n" \

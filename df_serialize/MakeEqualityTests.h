@@ -4,11 +4,15 @@
 
 #include "_common.h"
 
+// Enums (they already have a == operator)
+
 #define ENUM_BEGIN(_NAMESPACE, _NAME)
 
 #define ENUM_ITEM(_NAME, _DESCRIPTION)
 
 #define ENUM_END()
+
+// Schemas
 
 #define SCHEMA_BEGIN(_NAMESPACE, _NAME) \
     bool operator == (const _NAMESPACE::_NAME& A, const _NAMESPACE::_NAME& B); \
@@ -44,5 +48,27 @@
         }
 
 #define SCHEMA_END() \
+        return true; \
+    }
+
+// Variants
+
+#define VARIANT_BEGIN(_NAMESPACE, _NAME) \
+    bool operator == (const _NAMESPACE::_NAME& A, const _NAMESPACE::_NAME& B); \
+    bool operator != (const _NAMESPACE::_NAME& A, const _NAMESPACE::_NAME& B) \
+    { \
+        return !(A==B); \
+    } \
+    bool operator == (const _NAMESPACE::_NAME& A, const _NAMESPACE::_NAME& B) \
+    { \
+        using namespace _NAMESPACE; \
+        if (A._type != B._type) \
+            return false;
+
+#define VARIANT_TYPE(_TYPE, _NAME, _DEFAULT, _DESCRIPTION) \
+        if (A._type == c_type_##_TYPE) \
+            return  A._NAME == B._NAME;
+
+#define VARIANT_END() \
         return true; \
     }

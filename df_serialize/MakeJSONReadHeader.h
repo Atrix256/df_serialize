@@ -87,6 +87,26 @@
         return true; \
     }
 
+// Variants
+
+#define VARIANT_BEGIN(_NAMESPACE, _NAME) \
+    template <typename DOCUMENT> \
+    bool JSONRead(_NAMESPACE::_NAME& value, DOCUMENT& document) \
+    { \
+        using namespace _NAMESPACE; \
+        std::string _type; \
+        if (document.HasMember("_type") && !JSONRead(_type, document["_type"])) \
+            return false; \
+        value._type = crc32_rec(1337, _type.c_str());
+
+#define VARIANT_TYPE(_TYPE, _NAME, _DEFAULT, _DESCRIPTION) \
+        if (value._type == c_type_##_TYPE && !JSONRead(value._NAME, document)) \
+            return false;
+
+#define VARIANT_END() \
+        return true; \
+    }
+
 // A catch all template type to make compile errors about unsupported types easier to understand
 
 template <typename T, typename U>
@@ -99,15 +119,106 @@ bool JSONRead(T& value, U& document)
 // Built in types
 
 template <typename T>
-bool JSONRead(int& value, T& document)
+bool JSONRead(uint8_t& value, T& document)
 {
     if (!document.IsInt())
     {
-        MAKE_JSON_LOG("Trying to read an int but it wasn't an int\n");
+        MAKE_JSON_LOG("Trying to read a uint8 but it wasn't an int\n");
         return false;
     }
 
     value = document.GetInt();
+    return true;
+}
+
+template <typename T>
+bool JSONRead(uint16_t& value, T& document)
+{
+    if (!document.IsInt())
+    {
+        MAKE_JSON_LOG("Trying to read a uint16 but it wasn't an int\n");
+        return false;
+    }
+
+    value = document.GetInt();
+    return true;
+}
+
+template <typename T>
+bool JSONRead(uint32_t& value, T& document)
+{
+    if (!document.IsInt())
+    {
+        MAKE_JSON_LOG("Trying to read a uint32 but it wasn't an int\n");
+        return false;
+    }
+
+    value = document.GetInt();
+    return true;
+}
+
+template <typename T>
+bool JSONRead(uint64_t& value, T& document)
+{
+    if (!document.IsInt64())
+    {
+        MAKE_JSON_LOG("Trying to read a uint64 but it wasn't an int64\n");
+        return false;
+    }
+
+    value = document.GetInt64();
+    return true;
+}
+
+template <typename T>
+bool JSONRead(int8_t& value, T& document)
+{
+    if (!document.IsInt())
+    {
+        MAKE_JSON_LOG("Trying to read an int8 but it wasn't an int\n");
+        return false;
+    }
+
+    value = document.GetInt();
+    return true;
+}
+
+template <typename T>
+bool JSONRead(int16_t& value, T& document)
+{
+    if (!document.IsInt())
+    {
+        MAKE_JSON_LOG("Trying to read an int16 but it wasn't an int\n");
+        return false;
+    }
+
+    value = document.GetInt();
+    return true;
+}
+
+template <typename T>
+bool JSONRead(int32_t& value, T& document)
+{
+    if (!document.IsInt())
+    {
+        MAKE_JSON_LOG("Trying to read an int32 but it wasn't an int\n");
+        return false;
+    }
+
+    value = document.GetInt();
+    return true;
+}
+
+template <typename T>
+bool JSONRead(int64_t& value, T& document)
+{
+    if (!document.IsInt64())
+    {
+        MAKE_JSON_LOG("Trying to read an int64 but it wasn't an int64\n");
+        return false;
+    }
+
+    value = document.GetInt64();
     return true;
 }
 

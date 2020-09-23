@@ -87,6 +87,37 @@
         } \
     }
 
+// Variants
+
+#define VARIANT_BEGIN(_NAMESPACE, _NAME) \
+    void JSONWrite(const _NAMESPACE::_NAME& value, std::stringstream& output, int indent, bool writeBraces = true) \
+    { \
+        using namespace _NAMESPACE; \
+        if(writeBraces) \
+        { \
+            WriteIndentation(output, indent); \
+            output << "{\n"; \
+            indent++; \
+        } \
+        WriteIndentation(output, indent); \
+        output << "\"_type\":\"" << TypeToString(value._type) << "\",\n";
+
+#define VARIANT_TYPE(_TYPE, _NAME, _DEFAULT, _DESCRIPTION) \
+        if (value._type == c_type_##_TYPE && value._NAME != _DEFAULT) \
+            JSONWrite(value._NAME, output, indent, false); \
+
+#define VARIANT_END() \
+        if (writeBraces) \
+        { \
+            indent--; \
+            WriteIndentation(output, indent); \
+            if (indent > 0) \
+                output << "},"; \
+            else \
+                output << "}"; \
+        } \
+    }
+
 // indentation helper
 void WriteIndentation(std::stringstream& output, int indent)
 {
@@ -105,7 +136,42 @@ void JSONWrite(T value, std::stringstream& output, int indent)
 
 // Built in types
 
-void JSONWrite(int value, std::stringstream& output, int indent)
+void JSONWrite(uint8_t value, std::stringstream& output, int indent)
+{
+    output << value;
+}
+
+void JSONWrite(uint16_t value, std::stringstream& output, int indent)
+{
+    output << value;
+}
+
+void JSONWrite(uint32_t value, std::stringstream& output, int indent)
+{
+    output << value;
+}
+
+void JSONWrite(uint64_t value, std::stringstream& output, int indent)
+{
+    output << value;
+}
+
+void JSONWrite(int8_t value, std::stringstream& output, int indent)
+{
+    output << value;
+}
+
+void JSONWrite(int16_t value, std::stringstream& output, int indent)
+{
+    output << value;
+}
+
+void JSONWrite(int32_t value, std::stringstream& output, int indent)
+{
+    output << value;
+}
+
+void JSONWrite(int64_t value, std::stringstream& output, int indent)
 {
     output << value;
 }

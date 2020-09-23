@@ -110,7 +110,7 @@ This specifies the end of the schema definition.
 
 Defines an enum named "Name" in the namespace "Namespace"
 
-**ENUM_ITEM(Name)**
+**ENUM_ITEM(Name, Description)**
 
 Defines an enum value
 

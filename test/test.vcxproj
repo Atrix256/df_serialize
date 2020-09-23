@@ -130,7 +130,10 @@
     <ClInclude Include="..\df_serialize\MakeJSONWriteFooter.h" />
     <ClInclude Include="..\df_serialize\MakeJSONWriteHeader.h" />
     <ClInclude Include="..\df_serialize\MakeTypes.h" />
+    <ClInclude Include="..\df_serialize\MakeTypeToStringFooter.h" />
+    <ClInclude Include="..\df_serialize\MakeTypeToStringHeader.h" />
     <ClInclude Include="..\df_serialize\_common.h" />
+    <ClInclude Include="..\df_serialize\_compile_time_crc32.h" />
     <ClInclude Include="binary.h" />
     <ClInclude Include="html.h" />
     <ClInclude Include="json.h" />

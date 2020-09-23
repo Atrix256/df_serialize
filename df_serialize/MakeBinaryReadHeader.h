@@ -74,6 +74,23 @@
         return true; \
     }
 
+// Variants
+
+#define VARIANT_BEGIN(_NAMESPACE, _NAME) \
+    bool BinaryRead(_NAMESPACE::_NAME& value, const std::vector<char>& data, size_t& offset) \
+    { \
+        using namespace _NAMESPACE; \
+        if(!BinaryRead(value._type, data, offset)) \
+            return false;
+
+#define VARIANT_TYPE(_TYPE, _NAME, _DEFAULT, _DESCRIPTION) \
+        if (value._type == c_type_##_TYPE && !BinaryRead(value._NAME, data, offset)) \
+            return false;
+
+#define VARIANT_END() \
+        return true; \
+    }
+
 // A catch all template type to make compile errors about unsupported types easier to understand
 
 template <typename T>
@@ -85,12 +102,89 @@ bool BinaryRead(T& value, const std::vector<char>& data, size_t& offset)
 
 // Built in types
 
-bool BinaryRead(int& value, const std::vector<char>& data, size_t& offset)
+bool BinaryRead(uint8_t& value, const std::vector<char>& data, size_t& offset)
 {
     if (offset + sizeof(value) > data.size())
         return false;
 
-    value = *(int*)&data[offset];
+    value = *(decltype(&value))&data[offset];
+    offset += sizeof(value);
+
+    return true;
+}
+
+bool BinaryRead(uint16_t& value, const std::vector<char>& data, size_t& offset)
+{
+    if (offset + sizeof(value) > data.size())
+        return false;
+
+    value = *(decltype(&value))&data[offset];
+    offset += sizeof(value);
+
+    return true;
+}
+
+bool BinaryRead(uint32_t& value, const std::vector<char>& data, size_t& offset)
+{
+    if (offset + sizeof(value) > data.size())
+        return false;
+
+    value = *(decltype(&value))&data[offset];
+    offset += sizeof(value);
+
+    return true;
+}
+
+bool BinaryRead(uint64_t& value, const std::vector<char>& data, size_t& offset)
+{
+    if (offset + sizeof(value) > data.size())
+        return false;
+
+    value = *(decltype(&value))&data[offset];
+    offset += sizeof(value);
+
+    return true;
+}
+
+bool BinaryRead(int8_t& value, const std::vector<char>& data, size_t& offset)
+{
+    if (offset + sizeof(value) > data.size())
+        return false;
+
+    value = *(decltype(&value))&data[offset];
+    offset += sizeof(value);
+
+    return true;
+}
+
+bool BinaryRead(int16_t& value, const std::vector<char>& data, size_t& offset)
+{
+    if (offset + sizeof(value) > data.size())
+        return false;
+
+    value = *(decltype(&value))&data[offset];
+    offset += sizeof(value);
+
+    return true;
+}
+
+bool BinaryRead(int32_t& value, const std::vector<char>& data, size_t& offset)
+{
+    if (offset + sizeof(value) > data.size())
+        return false;
+
+    value = *(decltype(&value))&data[offset];
+    offset += sizeof(value);
+
+    return true;
+}
+
+bool BinaryRead(int64_t& value, const std::vector<char>& data, size_t& offset)
+{
+    if (offset + sizeof(value) > data.size())
+        return false;
+
+    value = *(decltype(&value))&data[offset];
     offset += sizeof(value);
 
     return true;
