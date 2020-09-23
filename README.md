@@ -128,6 +128,23 @@ Defines an enum value
 
 The end of an enum definition
 
+**`VARIANT_BEGIN(Namespace, Name)`**
+
+This declares a variant named "Name" in the namespace "Namespace".  A variant is an object that can be one of multiple types
+where you specify for the variant what types it can be.  It's also possible for it to be no type, so a variant with one
+type in it is the same conceptually as a nullable, optional or maybe.  A variant has a "_type" field to tell you which type it is.
+
+**`VARIANT_TYPE(Type, Name, Default, Description)`**
+
+This adds a possible type to the variant of type "Type" with the name "Name".
+The type has a default value of "Default" and a description is available in reflected data named "Description".
+The type can be either other schema defined types (they need to be defined above this schema) or
+they can be types defined outside the schema: structs or PODs like ints and such.
+
+**`VARIANT_END()`**
+
+This specifies the end of the variant definition.
+
 ## Expanding Schemas
 
 The header files beginning with underscores are for internal use only. The header files without underscores are meant
@@ -136,6 +153,10 @@ to be used by users of the library, as needed.
 **`MakeTypes.h`**
 
 This expands the schemas into the types defined. You include this file before the schemas.
+
+Every enum, schema and variant also gets a uint32_t type id of the form NAMESPACE::c_type_NAME which is a compile
+time hash of the string "NAMESPACE::TYPE", so can be used as case labels in switch statements and similar.  These
+type ids are useful for working with variants, which have a "_type" member to tell you which type it is.
 
 **`MakeHTMLHeader.h` & `MakeHTMLFooter.h`**
 
@@ -160,6 +181,12 @@ JSON Writing
 Only fields that are not the default value are written out. Enum values are written as strings. Trailing commas
 are generated, but hopefully that is ok, as rapidjson allows you to specify that trailing commas are ok.  White
 space (indentation) is written out.
+
+**`MakeTypeToStringHeader.h` & `MakeTypeToStringFooter.h`**
+
+This creates a MakeTypeToString() function which takes a type id in and returns the type string that was hashed to make that id.
+
+This is used by json writing to write the type that a variant is.
 
 **`MakeEqualityTest.h`**
 
