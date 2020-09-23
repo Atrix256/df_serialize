@@ -184,7 +184,7 @@ space (indentation) is written out.
 
 **`MakeTypeToStringHeader.h` & `MakeTypeToStringFooter.h`**
 
-This creates a MakeTypeToString() function which takes a type id in and returns the type string that was hashed to make that id.
+This creates a `MakeTypeToString()` function which takes a type id in and returns the type string that was hashed to make that id.
 
 This is used by json writing to write the type that a variant is.
 
