@@ -2,7 +2,7 @@
 
 **Demofox Serialization Library**
 
-Minimal header only C++ library that allows you to define data schemas which then can be read or written in JSON or binary.  Nested structures, arrays, and struct inheritance and nullable variants are supported.
+Minimal header only C++ library that allows you to define data schemas which then can be read or written in JSON or binary.  Nested structures, arrays, and struct inheritance and nullable variants are supported.  By default, STL container types are used, but that can be configured in Config.h. STL is not a requirement.
 
 The test project shows how to use the library.
 
@@ -81,8 +81,6 @@ if (!WriteToBinaryFile.(plant, "plant.dat"))
 }
 ```
 
-By default, STL container types are used, but that can be configured in Config.h. STL is not a requirement.
-
 ## Schema Definitions
 
 The "Description" field in all the macros below are useful for reflection to documentation, or tooltips in
@@ -91,7 +89,7 @@ editors and similar.  Normal serialization operations ignore them.
 **`SCHEMA_BEGIN(NameSpace, Name, Description)`**
 
 This makes a struct named "Name" in the namespace "Namespace".
-The example makes a struct named LifeForms::Plant
+The example at the top of this file makes a struct named LifeForms::Plant.
 
 **`SCHEMA_INHERIT_BEGIN(NameSpace, Name, Base, Description)`**
 
@@ -99,21 +97,20 @@ Same as SCHEMA_BEGIN but makes the struct derive from Base class.  If the base c
 in this schema system, it will complain about not knowing how to serialize the base type and give a compile
 error saying "Unsupported type encountered".  If you make a serialization function for that type, even if it
 does nothing, that will satisfy the compiler.  That function doesn't have to be inside of df_serialize code,
-it just has to be defined before df_serialize headers are included so that they know a function exists to do
-the serialization for that type.
+it just has to be defined before df_serialize headers are included.
 
 **`SCHEMA_FIELD(Type, Name, Default, Description)`**
 
 This adds a field to the struct of type "Type" with the name "Name" and a default value of "Default".
 The first field in the example names a "std::string name" in the struct.
 Note that the type can be either other schema defined types (they need to be defined above this schema) or
-they can be types defined outside the schema: structs or PODs like ints and such.
+they can be types defined outside the schema: your own structs or PODs like ints and floats.
 
 **`SCHEMA_DYNAMIC_ARRAY(Type, Name, Description)`**
 
 This defines a field as a dynamic sized array of another type.
 Note that the type can be either other schema defined types (they need to be defined above this schema) or
-they can be types defined outside the schema: structs or PODs like ints and such.
+they can be types defined outside the schema: your own structs or PODs like ints and floats.
 When using arrays in schemas, they use a templated type TDYNAMICARRAY for the dynamic array.
 By default it defines this as std::vector, but you can change that in Config.h
 
@@ -140,14 +137,15 @@ The end of an enum definition
 **`VARIANT_BEGIN(NameSpace, Name, Description)`**
 
 This declares a new variant type.  Variant types are tagged unions and can be one of a list of types described as
-possibe for that variant. It can also be none of them, which can be thought of as the variant being nullable.
+possibe for that variant. It can also be none of them, which can be thought of as variants being nullable.
 
 If you are looking to keep a list of unknown size of objects, optionally sharing a base class, a dynamic array of a
-variant type will get you that.
+variant type will get you that. The test project shows how to do that.
 
 **`VARIANT_TYPE(_TYPE, _NAME, _DEFAULT, _DESCRIPTION)`**
 
-This declares an allowed type for a variant, and the name of the storage for that type.
+This declares an allowed type for a variant, and the name of the storage for that type, as well as the default value
+for that type.
 
 **`VARIANT_END()`**
 
