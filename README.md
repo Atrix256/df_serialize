@@ -2,7 +2,7 @@
 
 **Demofox Serialization Library**
 
-Minimal header only C++ library that allows you to define data schemas which then can be read or written in JSON or binary.  Nested structures, arrays, and struct inheritance are supported.
+Minimal header only C++ library that allows you to define data schemas which then can be read or written in JSON or binary.  Nested structures, arrays, and struct inheritance and nullable variants are supported.
 
 The test project shows how to use the library.
 
