@@ -74,7 +74,7 @@ if (!ReadFromBinaryFile(plant, "plant.dat"))
 
 // Write binary file
 Lifeforms::Plant plant;
-if (!WriteToBinaryFile.(plant, "plant.dat"))
+if (!WriteToBinaryFile(plant, "plant.dat"))
 {
     printf("Could not write plant.dat!!\n");
     return false;
