@@ -11,7 +11,7 @@ bool WriteTextFile(const char* fileName, const TSTRING& data)
 
 // Write a structure to a JSON string
 template<typename TROOT>
-void WriteToJSONBuffer(TROOT& root, TSTRING& data)
+void WriteToJSONBuffer(TROOT& root, TSTRING& data, bool minimize = false)
 {
     // make the document
     rapidjson::Document document;
@@ -19,17 +19,25 @@ void WriteToJSONBuffer(TROOT& root, TSTRING& data)
 
     // make the string
     rapidjson::StringBuffer buffer;
-    rapidjson::PrettyWriter<rapidjson::StringBuffer> writer(buffer);
-    rootValue.Accept(writer);
+    if (minimize)
+    {
+        rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+        rootValue.Accept(writer);
+    }
+    else
+    {
+        rapidjson::PrettyWriter<rapidjson::StringBuffer> writer(buffer);
+        rootValue.Accept(writer);
+    }
     data = buffer.GetString();
 }
 
 // Write a structure to a JSON file
 template<typename TROOT>
-bool WriteToJSONFile(TROOT& root, const char* fileName)
+bool WriteToJSONFile(TROOT& root, const char* fileName, bool minimize = false)
 {
     TSTRING data;
-    WriteToJSONBuffer(root, data);
+    WriteToJSONBuffer(root, data, minimize);
     if (!WriteTextFile(fileName, data))
     {
         DFS_LOG("Could not write file %s", fileName);

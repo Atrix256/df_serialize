@@ -20,27 +20,27 @@
 
 // Structs
 
-#define SCHEMA_BEGIN(_NAMESPACE, _NAME, _DESCRIPTION) \
+#define STRUCT_BEGIN(_NAMESPACE, _NAME, _DESCRIPTION) \
     void BinaryWrite(const _NAMESPACE::_NAME& value, TDYNAMICARRAY<char>& output) \
     { \
 
-#define SCHEMA_INHERIT_BEGIN(_NAMESPACE, _NAME, _BASE, _DESCRIPTION) \
+#define STRUCT_INHERIT_BEGIN(_NAMESPACE, _NAME, _BASE, _DESCRIPTION) \
     void BinaryWrite(const _NAMESPACE::_NAME& value, TDYNAMICARRAY<char>& output) \
     { \
         BinaryWrite(*(const _BASE*)&value, output);
 
-#define SCHEMA_FIELD(_TYPE, _NAME, _DEFAULT, _DESCRIPTION) BinaryWrite(value._NAME, output);
+#define STRUCT_FIELD(_TYPE, _NAME, _DEFAULT, _DESCRIPTION) BinaryWrite(value._NAME, output);
 
-#define SCHEMA_DYNAMIC_ARRAY(_TYPE, _NAME, _DESCRIPTION)\
+#define STRUCT_DYNAMIC_ARRAY(_TYPE, _NAME, _DESCRIPTION)\
         BinaryWrite((int32_t)value._NAME.size(), output); \
         for (const auto& item : value._NAME) \
             BinaryWrite(item, output); \
 
-#define SCHEMA_STATIC_ARRAY(_TYPE, _NAME, _SIZE, _DEFAULT, _DESCRIPTION)\
+#define STRUCT_STATIC_ARRAY(_TYPE, _NAME, _SIZE, _DEFAULT, _DESCRIPTION)\
         for (const auto& item : value._NAME) \
             BinaryWrite(item, output); \
 
-#define SCHEMA_END() \
+#define STRUCT_END() \
     }
 
 // Variants

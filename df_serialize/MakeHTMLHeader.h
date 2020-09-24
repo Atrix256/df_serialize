@@ -33,31 +33,31 @@ inline bool WriteHTML(const char* fileName)
 
 // Structs
 
-#define SCHEMA_BEGIN(_NAMESPACE, _NAME, _DESCRIPTION) structs += \
+#define STRUCT_BEGIN(_NAMESPACE, _NAME, _DESCRIPTION) structs += \
     "<b>" #_NAME " : " _DESCRIPTION "</b><br/><br/>\n" \
     "<table>\n" \
     "<tr><th colspan=3>" #_NAMESPACE "::" #_NAME "</th></tr>\n" \
     ;
 
-#define SCHEMA_INHERIT_BEGIN(_NAMESPACE, _NAME, _BASE, _DESCRIPTION) structs += \
+#define STRUCT_INHERIT_BEGIN(_NAMESPACE, _NAME, _BASE, _DESCRIPTION) structs += \
     "<b>" #_NAME " : " _DESCRIPTION "</b><br/><br/>\n" \
     "<table>\n" \
     "<tr><th colspan=3>" #_NAMESPACE "::" #_NAME " - Inherits from " #_BASE "</th></tr>\n" \
     ;
 
-#define SCHEMA_FIELD(_TYPE, _NAME, _DEFAULT, _DESCRIPTION) structs += \
+#define STRUCT_FIELD(_TYPE, _NAME, _DEFAULT, _DESCRIPTION) structs += \
     "<tr><td>" #_TYPE " " #_NAME "</td><td>" #_DEFAULT "</td><td>" _DESCRIPTION "</td></tr>\n" \
     ;
 
-#define SCHEMA_DYNAMIC_ARRAY(_TYPE, _NAME, _DESCRIPTION) structs += \
+#define STRUCT_DYNAMIC_ARRAY(_TYPE, _NAME, _DESCRIPTION) structs += \
     "<tr><td>" #_TYPE " " #_NAME "[]</td><td></td><td>" _DESCRIPTION "</td></tr>\n" \
     ;
 
-#define SCHEMA_STATIC_ARRAY(_TYPE, _NAME, _SIZE, _DEFAULT, _DESCRIPTION) structs += \
+#define STRUCT_STATIC_ARRAY(_TYPE, _NAME, _SIZE, _DEFAULT, _DESCRIPTION) structs += \
     "<tr><td>" #_TYPE " " #_NAME "[" #_SIZE "]</td><td>" STRIPCOMMASTRING(_DEFAULT) "</td><td>" _DESCRIPTION "</td></tr>\n" \
     ;
 
-#define SCHEMA_END() structs += \
+#define STRUCT_END() structs += \
     "</table>\n" \
     "<br/>\n" \
     "\n" \

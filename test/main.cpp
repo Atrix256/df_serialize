@@ -71,6 +71,20 @@ int main(int argc, char** argv)
             }
         }
 
+        // add a new variant entry to the life forms array
+        {
+            Lifeforms::LifeformVariant newLifeForm;
+            newLifeForm._index = Lifeforms::LifeformVariant::c_index_animal;
+            newLifeForm.animal.name = "wolf";
+            newLifeForm.animal.description = "runs in packs";
+            newLifeForm.animal.dietType = Lifeforms::DietType::Carnivore;
+            newLifeForm.animal.litterMin = 1;
+            newLifeForm.animal.litterMax = 5;
+            newLifeForm.animal.meat = 0.1f;
+            newLifeForm.animal.uniqueID = 3;
+            root.lifeForms.push_back(newLifeForm);
+        }
+
         // write the modified data as JSON
         if (!WriteToJSONFile(root, "testdata/life2.json"))
         {

@@ -29,24 +29,24 @@
 
 // Structs
 
-#define SCHEMA_BEGIN(_NAMESPACE, _NAME, _DESCRIPTION) \
+#define STRUCT_BEGIN(_NAMESPACE, _NAME, _DESCRIPTION) \
     bool BinaryRead(_NAMESPACE::_NAME& value, const TDYNAMICARRAY<char>& data, size_t& offset) \
     {
 
-#define SCHEMA_INHERIT_BEGIN(_NAMESPACE, _NAME, _BASE, _DESCRIPTION) \
+#define STRUCT_INHERIT_BEGIN(_NAMESPACE, _NAME, _BASE, _DESCRIPTION) \
     bool BinaryRead(_NAMESPACE::_NAME& value, const TDYNAMICARRAY<char>& data, size_t& offset) \
     { \
         if (!BinaryRead(*(_BASE*)&value, data, offset)) \
             return false;
 
-#define SCHEMA_FIELD(_TYPE, _NAME, _DEFAULT, _DESCRIPTION) \
+#define STRUCT_FIELD(_TYPE, _NAME, _DEFAULT, _DESCRIPTION) \
         if (!BinaryRead(value.##_NAME, data, offset)) \
         { \
             DFS_LOG("Could not read member " #_NAME "\n"); \
             return false; \
         }
 
-#define SCHEMA_DYNAMIC_ARRAY(_TYPE, _NAME, _DESCRIPTION) \
+#define STRUCT_DYNAMIC_ARRAY(_TYPE, _NAME, _DESCRIPTION) \
         { \
             int arrayCount = 0; \
             if (!BinaryRead(arrayCount, data, offset)) \
@@ -65,7 +65,7 @@
             } \
         }
 
-#define SCHEMA_STATIC_ARRAY(_TYPE, _NAME, _SIZE, _DEFAULT, _DESCRIPTION) \
+#define STRUCT_STATIC_ARRAY(_TYPE, _NAME, _SIZE, _DEFAULT, _DESCRIPTION) \
         { \
             for (auto& item : value._NAME) \
             { \
@@ -77,7 +77,7 @@
             } \
         }
 
-#define SCHEMA_END() \
+#define STRUCT_END() \
         return true; \
     }
 

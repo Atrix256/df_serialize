@@ -6,6 +6,7 @@
 
 #include "rapidjson/document.h"
 #include "rapidjson/error/en.h"
+#include "rapidjson/writer.h"
 #include "rapidjson/prettywriter.h"
 #include "rapidjson/stringbuffer.h"
 

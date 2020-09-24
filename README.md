@@ -2,19 +2,19 @@
 
 **Demofox Serialization Library**
 
-Minimal header only C++ library that allows you to define data schemas which then can be read or written in JSON or binary.  Nested structures, arrays, and struct inheritance and nullable variants are supported.  By default, STL container types are used, but that can be configured in Config.h. STL is not a requirement.
+Minimal header only C++ library that allows you to define data schemas which then can be read or written in JSON or binary.  Nested structures, arrays, struct inheritance and nullable variants are supported.  By default, STL container types are used, but that can be configured in Config.h. STL is not a requirement.
 
 The test project shows how to use the library.
 
 Schemas are defined in header files using C++ macros, like the below.
 
 ```c++
-SCHEMA_BEGIN(Lifeforms, Plant, "A plant based life form")
-    SCHEMA_FIELD(std::string, name, "", "The name of the plant.")
-    SCHEMA_FIELD(std::string, description, "", "A description of the plant.")
-    SCHEMA_FIELD(float, edibleMatter, 1.0f, "The number of kilograms of edible matter on the plant.")
-    SCHEMA_FIELD(bool, poisonous, false, "Whether the plant is poisonous")
-SCHEMA_END()
+STRUCT_BEGIN(Lifeforms, Plant, "A plant based life form")
+    STRUCT_FIELD(std::string, name, "", "The name of the plant.")
+    STRUCT_FIELD(std::string, description, "", "A description of the plant.")
+    STRUCT_FIELD(float, edibleMatter, 1.0f, "The number of kilograms of edible matter on the plant.")
+    STRUCT_FIELD(bool, poisonous, false, "Whether the plant is poisonous")
+STRUCT_END()
 ```
 
 You define schemas in header files.  Multiple schemas can exist per header file, and you can have multiple header files with schemas in them.
@@ -86,27 +86,27 @@ if (!WriteToBinaryFile.(plant, "plant.dat"))
 The "Description" field in all the macros below are useful for reflection to documentation, or tooltips in
 editors and similar.  Normal serialization operations ignore them.
 
-**`SCHEMA_BEGIN(NameSpace, Name, Description)`**
+**`STRUCT_BEGIN(NameSpace, Name, Description)`**
 
 This makes a struct named "Name" in the namespace "Namespace".
 The example at the top of this file makes a struct named LifeForms::Plant.
 
-**`SCHEMA_INHERIT_BEGIN(NameSpace, Name, Base, Description)`**
+**`STRUCT_INHERIT_BEGIN(NameSpace, Name, Base, Description)`**
 
-Same as SCHEMA_BEGIN but makes the struct derive from Base class.  If the base class is not a type defined
+Same as STRUCT_BEGIN but makes the struct derive from Base class.  If the base class is not a type defined
 in this schema system, it will complain about not knowing how to serialize the base type and give a compile
 error saying "Unsupported type encountered".  If you make a serialization function for that type, even if it
 does nothing, that will satisfy the compiler.  That function doesn't have to be inside of df_serialize code,
 it just has to be defined before df_serialize headers are included.
 
-**`SCHEMA_FIELD(Type, Name, Default, Description)`**
+**`STRUCT_FIELD(Type, Name, Default, Description)`**
 
 This adds a field to the struct of type "Type" with the name "Name" and a default value of "Default".
 The first field in the example names a "std::string name" in the struct.
 Note that the type can be either other schema defined types (they need to be defined above this schema) or
 they can be types defined outside the schema: your own structs or PODs like ints and floats.
 
-**`SCHEMA_DYNAMIC_ARRAY(Type, Name, Description)`**
+**`STRUCT_DYNAMIC_ARRAY(Type, Name, Description)`**
 
 This defines a field as a dynamic sized array of another type.
 Note that the type can be either other schema defined types (they need to be defined above this schema) or
@@ -114,11 +114,11 @@ they can be types defined outside the schema: your own structs or PODs like ints
 When using arrays in schemas, they use a templated type TDYNAMICARRAY for the dynamic array.
 By default it defines this as std::vector, but you can change that in Config.h
 
-**`SCHEMA_STATIC_ARRAY(Type, Name, Size, Default, Description)`**
+**`STRUCT_STATIC_ARRAY(Type, Name, Size, Default, Description)`**
 
 This defines a field as a static sized array of another type, and wants a default value.
 
-**`SCHEMA_END()`**
+**`STRUCT_END()`**
 
 This specifies the end of the schema definition.
 
@@ -142,7 +142,7 @@ possibe for that variant. It can also be none of them, which can be thought of a
 If you are looking to keep a list of unknown size of objects, optionally sharing a base class, a dynamic array of a
 variant type will get you that. The test project shows how to do that.
 
-**`VARIANT_TYPE(_TYPE, _NAME, _DEFAULT, _DESCRIPTION)`**
+**`VARIANT_TYPE(Type, Name, Default, Description)`**
 
 This declares an allowed type for a variant, and the name of the storage for that type, as well as the default value
 for that type.
@@ -189,8 +189,7 @@ read based on the name of their storage.
 JSON Writing
 
 Only fields that are not default value are written out. Enum values are written as strings. Variant types are
-written based on the name of their storage.  The JSON is not minimized, because MakeJSONWriteFooter uses  the
-PrettyWriter instead of the Writer interface.
+written based on the name of their storage.
 
 **`MakeEqualityTest.h`**
 

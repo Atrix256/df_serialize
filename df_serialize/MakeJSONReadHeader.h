@@ -33,26 +33,26 @@
 
 // Structs
 
-#define SCHEMA_BEGIN(_NAMESPACE, _NAME, _DESCRIPTION) \
+#define STRUCT_BEGIN(_NAMESPACE, _NAME, _DESCRIPTION) \
     template <typename DOCUMENT> \
     bool JSONRead(_NAMESPACE::_NAME& value, DOCUMENT& document) \
     {
 
-#define SCHEMA_INHERIT_BEGIN(_NAMESPACE, _NAME, _BASE, _DESCRIPTION) \
+#define STRUCT_INHERIT_BEGIN(_NAMESPACE, _NAME, _BASE, _DESCRIPTION) \
     template <typename DOCUMENT> \
     bool JSONRead(_NAMESPACE::_NAME& value, DOCUMENT& document) \
     { \
         if (!JSONRead(*(_BASE*)&value, document)) \
             return false;
 
-#define SCHEMA_FIELD(_TYPE, _NAME, _DEFAULT, _DESCRIPTION) \
+#define STRUCT_FIELD(_TYPE, _NAME, _DEFAULT, _DESCRIPTION) \
         if (document.HasMember(#_NAME) && !JSONRead(value.##_NAME, document[#_NAME])) \
         { \
             DFS_LOG("Could not read member " #_NAME "\n"); \
             return false; \
         }
 
-#define SCHEMA_DYNAMIC_ARRAY(_TYPE, _NAME, _DESCRIPTION) \
+#define STRUCT_DYNAMIC_ARRAY(_TYPE, _NAME, _DESCRIPTION) \
         if (document.HasMember(#_NAME)) \
         { \
             if (!document[#_NAME].IsArray()) \
@@ -71,7 +71,7 @@
             } \
         }
 
-#define SCHEMA_STATIC_ARRAY(_TYPE, _NAME, _SIZE, _DEFAULT, _DESCRIPTION) \
+#define STRUCT_STATIC_ARRAY(_TYPE, _NAME, _SIZE, _DEFAULT, _DESCRIPTION) \
         if (document.HasMember(#_NAME)) \
         { \
             if (!document[#_NAME].IsArray()) \
@@ -94,7 +94,7 @@
             } \
         }
 
-#define SCHEMA_END() \
+#define STRUCT_END() \
         return true; \
     }
 

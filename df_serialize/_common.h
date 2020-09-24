@@ -2,28 +2,28 @@
 
 // Undefine any macros that may be defined, so they can safely be defined. Lazy define cleanup.
 
-#ifdef SCHEMA_BEGIN
-#undef SCHEMA_BEGIN
+#ifdef STRUCT_BEGIN
+#undef STRUCT_BEGIN
 #endif
 
-#ifdef SCHEMA_INHERIT_BEGIN
-#undef SCHEMA_INHERIT_BEGIN
+#ifdef STRUCT_INHERIT_BEGIN
+#undef STRUCT_INHERIT_BEGIN
 #endif
 
-#ifdef SCHEMA_FIELD
-#undef SCHEMA_FIELD
+#ifdef STRUCT_FIELD
+#undef STRUCT_FIELD
 #endif
 
-#ifdef SCHEMA_END
-#undef SCHEMA_END
+#ifdef STRUCT_END
+#undef STRUCT_END
 #endif
 
-#ifdef SCHEMA_DYNAMIC_ARRAY
-#undef SCHEMA_DYNAMIC_ARRAY
+#ifdef STRUCT_DYNAMIC_ARRAY
+#undef STRUCT_DYNAMIC_ARRAY
 #endif
 
-#ifdef SCHEMA_STATIC_ARRAY
-#undef SCHEMA_STATIC_ARRAY
+#ifdef STRUCT_STATIC_ARRAY
+#undef STRUCT_STATIC_ARRAY
 #endif
 
 #ifdef ENUM_BEGIN

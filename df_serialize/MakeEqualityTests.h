@@ -12,9 +12,9 @@
 
 #define ENUM_END()
 
-// Schemas
+// Structs
 
-#define SCHEMA_BEGIN(_NAMESPACE, _NAME, _DESCRIPTION) \
+#define STRUCT_BEGIN(_NAMESPACE, _NAME, _DESCRIPTION) \
     bool operator == (const _NAMESPACE::_NAME& A, const _NAMESPACE::_NAME& B); \
     bool operator != (const _NAMESPACE::_NAME& A, const _NAMESPACE::_NAME& B) \
     { \
@@ -23,7 +23,7 @@
     bool operator == (const _NAMESPACE::_NAME& A, const _NAMESPACE::_NAME& B) \
     {
 
-#define SCHEMA_INHERIT_BEGIN(_NAMESPACE, _NAME, _BASE, _DESCRIPTION) \
+#define STRUCT_INHERIT_BEGIN(_NAMESPACE, _NAME, _BASE, _DESCRIPTION) \
     bool operator == (const _NAMESPACE::_NAME& A, const _NAMESPACE::_NAME& B); \
     bool operator != (const _NAMESPACE::_NAME& A, const _NAMESPACE::_NAME& B) \
     { \
@@ -34,11 +34,11 @@
         if (*(const _BASE*)&A != *(const _BASE*)&B) \
             return false;
 
-#define SCHEMA_FIELD(_TYPE, _NAME, _DEFAULT, _DESCRIPTION) \
+#define STRUCT_FIELD(_TYPE, _NAME, _DEFAULT, _DESCRIPTION) \
         if (A._NAME != B._NAME) \
             return false;
 
-#define SCHEMA_DYNAMIC_ARRAY(_TYPE, _NAME, _DESCRIPTION) \
+#define STRUCT_DYNAMIC_ARRAY(_TYPE, _NAME, _DESCRIPTION) \
         if (A._NAME.size() != B._NAME.size()) \
             return false; \
         for (size_t index = 0; index < A._NAME.size(); ++index) \
@@ -47,14 +47,14 @@
                 return false; \
         }
 
-#define SCHEMA_STATIC_ARRAY(_TYPE, _NAME, _SIZE, _DEFAULT, _DESCRIPTION) \
+#define STRUCT_STATIC_ARRAY(_TYPE, _NAME, _SIZE, _DEFAULT, _DESCRIPTION) \
         for (size_t index = 0; index < _SIZE; ++index) \
         { \
             if (A._NAME[index] != B._NAME[index]) \
                 return false; \
         }
 
-#define SCHEMA_END() \
+#define STRUCT_END() \
         return true; \
     }
 

@@ -21,13 +21,13 @@
 
 // Structs
 
-#define SCHEMA_BEGIN(_NAMESPACE, _NAME, _DESCRIPTION) \
+#define STRUCT_BEGIN(_NAMESPACE, _NAME, _DESCRIPTION) \
     rapidjson::Value MakeJSONValue(const _NAMESPACE::_NAME& value, rapidjson::Document::AllocatorType& allocator) \
     { \
         rapidjson::Value ret; \
         ret.SetObject();
 
-#define SCHEMA_INHERIT_BEGIN(_NAMESPACE, _NAME, _BASE, _DESCRIPTION) \
+#define STRUCT_INHERIT_BEGIN(_NAMESPACE, _NAME, _BASE, _DESCRIPTION) \
     rapidjson::Value MakeJSONValue(const _NAMESPACE::_NAME& value, rapidjson::Document::AllocatorType& allocator) \
     { \
         rapidjson::Value ret; \
@@ -36,11 +36,11 @@
         for (auto member = inheritedValues.MemberBegin(); member != inheritedValues.MemberEnd(); ++member) \
             ret.AddMember(member->name, member->value, allocator);
 
-#define SCHEMA_FIELD(_TYPE, _NAME, _DEFAULT, _DESCRIPTION) \
+#define STRUCT_FIELD(_TYPE, _NAME, _DEFAULT, _DESCRIPTION) \
         if (value._NAME != _DEFAULT) \
             ret.AddMember(#_NAME, MakeJSONValue(value._NAME, allocator), allocator);
 
-#define SCHEMA_DYNAMIC_ARRAY(_TYPE, _NAME, _DESCRIPTION) \
+#define STRUCT_DYNAMIC_ARRAY(_TYPE, _NAME, _DESCRIPTION) \
         if (value._NAME.size() > 0) \
         { \
             rapidjson::Value arr; \
@@ -50,7 +50,7 @@
             ret.AddMember(#_NAME, arr, allocator); \
         }
 
-#define SCHEMA_STATIC_ARRAY(_TYPE, _NAME, _SIZE, _DEFAULT, _DESCRIPTION) \
+#define STRUCT_STATIC_ARRAY(_TYPE, _NAME, _SIZE, _DEFAULT, _DESCRIPTION) \
         { \
             static const TSTATICARRAY<_TYPE, _SIZE> c_default = _DEFAULT; \
             bool different = false; \
@@ -72,7 +72,7 @@
             } \
         }
 
-#define SCHEMA_END() \
+#define STRUCT_END() \
         return ret; \
     }
 

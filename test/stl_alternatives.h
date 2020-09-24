@@ -13,6 +13,41 @@ struct MyVector
         clear();
     }
 
+    MyVector()
+        : m_array(nullptr)
+        , m_size(0)
+    {
+
+    }
+
+    MyVector(const MyVector& other)
+        : m_array(nullptr)
+        , m_size(0)
+    {
+        resize(other.size());
+        for (size_t index = 0; index < m_size; ++index)
+            m_array[index] = other[index];
+    }
+
+    MyVector(MyVector&& other)
+        : m_array(nullptr)
+        , m_size(0)
+    {
+        m_array = other.m_array;
+        m_size = other.m_size;
+
+        other.m_array = nullptr;
+        other.m_size = 0;
+    }
+
+    void operator = (const MyVector& other)
+    {
+        clear();
+        resize(other.size());
+        for (size_t index = 0; index < m_size; ++index)
+            m_array[index] = other[index];
+    }
+
     void clear()
     {
         if (m_array)
@@ -37,6 +72,12 @@ struct MyVector
         clear();
         m_array = newArray;
         m_size = n;
+    }
+
+    void push_back(const T& newItem)
+    {
+        resize(m_size + 1);
+        m_array[m_size - 1] = newItem;
     }
 
     size_t size() const
@@ -113,6 +154,19 @@ private:
 
 struct MyString
 {
+    MyString(MyString&& other)
+        : m_string(nullptr)
+    {
+        m_string = other.m_string;
+
+        other.m_string = nullptr;
+    }
+
+    MyString(const MyString& s)
+    {
+        set(s.c_str());
+    }
+
     MyString(const char* s = nullptr)
     {
         set(s);
@@ -149,6 +203,11 @@ struct MyString
     const char* c_str() const
     {
         return m_string;
+    }
+
+    void operator = (const MyString& other)
+    {
+        set(other.c_str());
     }
 
     void operator = (const char* s)
