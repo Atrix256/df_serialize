@@ -1,4 +1,4 @@
-bool WriteBinaryFile(const char* fileName, std::vector<char>& data)
+bool WriteBinaryFile(const char* fileName, TDYNAMICARRAY<char>& data)
 {
     FILE* file = nullptr;
     fopen_s(&file, fileName, "w+b");
@@ -10,21 +10,21 @@ bool WriteBinaryFile(const char* fileName, std::vector<char>& data)
 }
 
 template<typename TROOT>
-void WriteToBinary(TROOT& root, std::vector<char>& output)
+void WriteToBinaryBuffer(TROOT& root, TDYNAMICARRAY<char>& output)
 {
     BinaryWrite(root, output);
 }
 
 // Write a structure to a binary file
 template<typename TROOT>
-bool WriteToBinary(TROOT& root, const char* fileName)
+bool WriteToBinaryFile(TROOT& root, const char* fileName)
 {
-    std::vector<char> out;
-    WriteToBinary(root, out);
+    TDYNAMICARRAY<char> out;
+    WriteToBinaryBuffer(root, out);
 
     if (!WriteBinaryFile(fileName, out))
     {
-        MAKE_BINARY_LOG("Could not write file %s", fileName);
+        DFS_LOG("Could not write file %s", fileName);
         return false;
     }
 

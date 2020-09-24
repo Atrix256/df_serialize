@@ -1,4 +1,4 @@
-inline bool LoadBinaryFile(const char* fileName, std::vector<char>& data)
+inline bool LoadBinaryFile(const char* fileName, TDYNAMICARRAY<char>& data)
 {
     // open the file if we can
     FILE* file = nullptr;
@@ -20,7 +20,7 @@ inline bool LoadBinaryFile(const char* fileName, std::vector<char>& data)
 
 // Read a structure from a binary string
 template<typename TROOT>
-bool ReadFromBinary(TROOT& root, std::vector<char>& data)
+bool ReadFromBinaryBuffer(TROOT& root, TDYNAMICARRAY<char>& data)
 {
     size_t offset = 0;
     return BinaryRead(root, data, offset);
@@ -28,14 +28,14 @@ bool ReadFromBinary(TROOT& root, std::vector<char>& data)
 
 // Read a structure from a binary file
 template<typename TROOT>
-bool ReadFromBinary(TROOT& root, const char* fileName)
+bool ReadFromBinaryFile(TROOT& root, const char* fileName)
 {
-    std::vector<char> fileData;
+    TDYNAMICARRAY<char> fileData;
     if (!LoadBinaryFile(fileName, fileData))
     {
-        MAKE_BINARY_LOG("Could not read file %s", fileName);
+        DFS_LOG("Could not read file %s", fileName);
         return false;
     }
 
-    return ReadFromBinary(root, fileData);
+    return ReadFromBinaryBuffer(root, fileData);
 }

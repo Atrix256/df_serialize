@@ -8,6 +8,7 @@ table, th, td, tr
 </style>
 
 <h1>Enums</h1>
+<b>DietType : The type of diets life forms can have</b><br/><br/>
 <table>
 <tr><th colspan=2>Lifeforms::DietType</th></tr>
 <tr><td>Herbivore</td><td>Eats plants</td></tr>
@@ -18,25 +19,29 @@ table, th, td, tr
 <br/>
 
 <h1>Structs</h1>
+<b>Lifeform : The base class for all life forms</b><br/><br/>
 <table>
 <tr><th colspan=3>Lifeforms::Lifeform</th></tr>
-<tr><td>std::string name</td><td>""</td><td>The name of the life form.</td></tr>
-<tr><td>std::string description</td><td>""</td><td>A description of the life form.</td></tr>
+<tr><td>TSTRING name</td><td>""</td><td>The name of the life form.</td></tr>
+<tr><td>TSTRING description</td><td>""</td><td>A description of the life form.</td></tr>
 <tr><td>uint64_t uniqueID</td><td>0</td><td>A unique identifier for the life form.</td></tr>
 </table>
 <br/>
 
+<b>Plant : A plant based life form</b><br/><br/>
 <table>
 <tr><th colspan=3>Lifeforms::Plant - Inherits from Lifeforms::Lifeform</th></tr>
 <tr><td>DietType dietType</td><td>Lifeforms::DietType::Photosynthesis</td><td>What type of food the plant eats.</td></tr>
 <tr><td>float edibleMatter</td><td>1.0f</td><td>The number of kilograms of edible matter on the plant.</td></tr>
 <tr><td>bool poisonous</td><td>false</td><td>Whether the plant is poisonous</td></tr>
+<tr><td>float albedo[3]</td><td>{ 0.23f , 0.27f , 0.04f }</td><td>RGB albedo of the plant</td></tr>
 </table>
 <br/>
 
+<b>Animal : An animal based life form</b><br/><br/>
 <table>
 <tr><th colspan=3>Lifeforms::Animal - Inherits from Lifeforms::Lifeform</th></tr>
-<tr><td>DietType dietType</td><td>Lifeforms::DietType::Herbivore</td><td>What type of food the plant eats.</td></tr>
+<tr><td>DietType dietType</td><td>Lifeforms::DietType::Herbivore</td><td>What type of food the animal eats.</td></tr>
 <tr><td>float aggression</td><td>0.5f</td><td>The probability of the animal to attack an animal it sees as equal.</td></tr>
 <tr><td>float meat</td><td>1.0f</td><td>The number of kilograms of meat on the animal.</td></tr>
 <tr><td>int litterMin</td><td>1</td><td>The minimum number of babies in a litter.</td></tr>
@@ -44,6 +49,7 @@ table, th, td, tr
 </table>
 <br/>
 
+<b>Root : The base document type of lifeform descriptions</b><br/><br/>
 <table>
 <tr><th colspan=3>Lifeforms::Root</th></tr>
 <tr><td>LifeformVariant lifeForms[]</td><td></td><td>The full list of life forms</td></tr>
@@ -52,10 +58,11 @@ table, th, td, tr
 
 
 <h1>Variants</h1>
+<b>LifeformVariant : A lifeform of any type</b><br/><br/>
 <table>
 <tr><th colspan=3>Lifeforms::LifeformVariant</th></tr>
-<tr><td>Plant plant</td><td>Plant{}</td><td>a plant</td></tr>
-<tr><td>Animal animal</td><td>Animal{}</td><td>an animal</td></tr>
+<tr><td>Lifeforms::Plant plant</td><td>Lifeforms::Plant{}</td><td>a plant</td></tr>
+<tr><td>Lifeforms::Animal animal</td><td>Lifeforms::Animal{}</td><td>an animal</td></tr>
 </table>
 <br/>
 

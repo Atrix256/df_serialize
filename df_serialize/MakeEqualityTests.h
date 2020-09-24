@@ -4,9 +4,9 @@
 
 #include "_common.h"
 
-// Enums (they already have a == operator)
+// Enums - they already have a == operator built in
 
-#define ENUM_BEGIN(_NAMESPACE, _NAME)
+#define ENUM_BEGIN(_NAMESPACE, _NAME, _DESCRIPTION)
 
 #define ENUM_ITEM(_NAME, _DESCRIPTION)
 
@@ -14,7 +14,7 @@
 
 // Schemas
 
-#define SCHEMA_BEGIN(_NAMESPACE, _NAME) \
+#define SCHEMA_BEGIN(_NAMESPACE, _NAME, _DESCRIPTION) \
     bool operator == (const _NAMESPACE::_NAME& A, const _NAMESPACE::_NAME& B); \
     bool operator != (const _NAMESPACE::_NAME& A, const _NAMESPACE::_NAME& B) \
     { \
@@ -23,7 +23,7 @@
     bool operator == (const _NAMESPACE::_NAME& A, const _NAMESPACE::_NAME& B) \
     {
 
-#define SCHEMA_INHERIT_BEGIN(_NAMESPACE, _NAME, _BASE) \
+#define SCHEMA_INHERIT_BEGIN(_NAMESPACE, _NAME, _BASE, _DESCRIPTION) \
     bool operator == (const _NAMESPACE::_NAME& A, const _NAMESPACE::_NAME& B); \
     bool operator != (const _NAMESPACE::_NAME& A, const _NAMESPACE::_NAME& B) \
     { \
@@ -38,10 +38,17 @@
         if (A._NAME != B._NAME) \
             return false;
 
-#define SCHEMA_ARRAY(_TYPE, _NAME, _DESCRIPTION) \
+#define SCHEMA_DYNAMIC_ARRAY(_TYPE, _NAME, _DESCRIPTION) \
         if (A._NAME.size() != B._NAME.size()) \
             return false; \
         for (size_t index = 0; index < A._NAME.size(); ++index) \
+        { \
+            if (A._NAME[index] != B._NAME[index]) \
+                return false; \
+        }
+
+#define SCHEMA_STATIC_ARRAY(_TYPE, _NAME, _SIZE, _DEFAULT, _DESCRIPTION) \
+        for (size_t index = 0; index < _SIZE; ++index) \
         { \
             if (A._NAME[index] != B._NAME[index]) \
                 return false; \
@@ -53,7 +60,7 @@
 
 // Variants
 
-#define VARIANT_BEGIN(_NAMESPACE, _NAME) \
+#define VARIANT_BEGIN(_NAMESPACE, _NAME, _DESCRIPTION) \
     bool operator == (const _NAMESPACE::_NAME& A, const _NAMESPACE::_NAME& B); \
     bool operator != (const _NAMESPACE::_NAME& A, const _NAMESPACE::_NAME& B) \
     { \
@@ -61,12 +68,12 @@
     } \
     bool operator == (const _NAMESPACE::_NAME& A, const _NAMESPACE::_NAME& B) \
     { \
-        using namespace _NAMESPACE; \
-        if (A._type != B._type) \
+        typedef _NAMESPACE::_NAME ThisType; \
+        if (A._index != B._index) \
             return false;
 
 #define VARIANT_TYPE(_TYPE, _NAME, _DEFAULT, _DESCRIPTION) \
-        if (A._type == c_type_##_TYPE) \
+        if (A._index == ThisType::c_index_##_NAME) \
             return  A._NAME == B._NAME;
 
 #define VARIANT_END() \

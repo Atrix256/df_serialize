@@ -1,22 +1,17 @@
 // Generates code to read binary data from memory and files
 
 #include "_common.h"
-#include <vector>
-
-#ifndef MAKE_BINARY_LOG
-#define MAKE_BINARY_LOG(...)
-#endif
 
 // Enums
 
-#define ENUM_BEGIN(_NAMESPACE, _NAME) \
-    bool BinaryRead(_NAMESPACE::_NAME& value, const std::vector<char>& data, size_t& offset) \
+#define ENUM_BEGIN(_NAMESPACE, _NAME, _DESCRIPTION) \
+    bool BinaryRead(_NAMESPACE::_NAME& value, const TDYNAMICARRAY<char>& data, size_t& offset) \
     { \
         typedef _NAMESPACE::_NAME EnumType; \
-        std::string stringValue; \
+        TSTRING stringValue; \
         if(!BinaryRead(stringValue, data, offset)) \
         { \
-            MAKE_BINARY_LOG("Trying to read a " #_NAMESPACE "::" #_NAME " as a string, but we couldn't\n"); \
+            DFS_LOG("Trying to read a " #_NAMESPACE "::" #_NAME " as a string, but we couldn't\n"); \
             return false; \
         }
 
@@ -28,18 +23,18 @@
         }
 
 #define ENUM_END() \
-        MAKE_BINARY_LOG("Unknown Enum Value: \"%s\"", stringValue.c_str()); \
+        DFS_LOG("Unknown Enum Value: \"%s\"", stringValue.c_str()); \
         return false; \
     }
 
 // Structs
 
-#define SCHEMA_BEGIN(_NAMESPACE, _NAME) \
-    bool BinaryRead(_NAMESPACE::_NAME& value, const std::vector<char>& data, size_t& offset) \
+#define SCHEMA_BEGIN(_NAMESPACE, _NAME, _DESCRIPTION) \
+    bool BinaryRead(_NAMESPACE::_NAME& value, const TDYNAMICARRAY<char>& data, size_t& offset) \
     {
 
-#define SCHEMA_INHERIT_BEGIN(_NAMESPACE, _NAME, _BASE) \
-    bool BinaryRead(_NAMESPACE::_NAME& value, const std::vector<char>& data, size_t& offset) \
+#define SCHEMA_INHERIT_BEGIN(_NAMESPACE, _NAME, _BASE, _DESCRIPTION) \
+    bool BinaryRead(_NAMESPACE::_NAME& value, const TDYNAMICARRAY<char>& data, size_t& offset) \
     { \
         if (!BinaryRead(*(_BASE*)&value, data, offset)) \
             return false;
@@ -47,16 +42,16 @@
 #define SCHEMA_FIELD(_TYPE, _NAME, _DEFAULT, _DESCRIPTION) \
         if (!BinaryRead(value.##_NAME, data, offset)) \
         { \
-            MAKE_BINARY_LOG("Could not read member " #_NAME "\n"); \
+            DFS_LOG("Could not read member " #_NAME "\n"); \
             return false; \
         }
 
-#define SCHEMA_ARRAY(_TYPE, _NAME, _DESCRIPTION) \
+#define SCHEMA_DYNAMIC_ARRAY(_TYPE, _NAME, _DESCRIPTION) \
         { \
             int arrayCount = 0; \
             if (!BinaryRead(arrayCount, data, offset)) \
             { \
-                MAKE_BINARY_LOG("Could not read array count of array " #_NAME "\n"); \
+                DFS_LOG("Could not read array count of array " #_NAME "\n"); \
                 return false; \
             } \
             value._NAME.resize(arrayCount); \
@@ -64,7 +59,19 @@
             { \
                 if(!BinaryRead(item, data, offset)) \
                 { \
-                    MAKE_BINARY_LOG("Could not read an array item for array " #_NAME "\n"); \
+                    DFS_LOG("Could not read an array item for array " #_NAME "\n"); \
+                    return false; \
+                } \
+            } \
+        }
+
+#define SCHEMA_STATIC_ARRAY(_TYPE, _NAME, _SIZE, _DEFAULT, _DESCRIPTION) \
+        { \
+            for (auto& item : value._NAME) \
+            { \
+                if(!BinaryRead(item, data, offset)) \
+                { \
+                    DFS_LOG("Could not read an array item for array " #_NAME "\n"); \
                     return false; \
                 } \
             } \
@@ -76,15 +83,15 @@
 
 // Variants
 
-#define VARIANT_BEGIN(_NAMESPACE, _NAME) \
-    bool BinaryRead(_NAMESPACE::_NAME& value, const std::vector<char>& data, size_t& offset) \
+#define VARIANT_BEGIN(_NAMESPACE, _NAME, _DESCRIPTION) \
+    bool BinaryRead(_NAMESPACE::_NAME& value, const TDYNAMICARRAY<char>& data, size_t& offset) \
     { \
-        using namespace _NAMESPACE; \
-        if(!BinaryRead(value._type, data, offset)) \
+        typedef _NAMESPACE::_NAME ThisType; \
+        if(!BinaryRead(value._index, data, offset)) \
             return false;
 
 #define VARIANT_TYPE(_TYPE, _NAME, _DEFAULT, _DESCRIPTION) \
-        if (value._type == c_type_##_TYPE && !BinaryRead(value._NAME, data, offset)) \
+        if (value._index == ThisType::c_index_##_NAME && !BinaryRead(value._NAME, data, offset)) \
             return false;
 
 #define VARIANT_END() \
@@ -94,7 +101,7 @@
 // A catch all template type to make compile errors about unsupported types easier to understand
 
 template <typename T>
-bool BinaryRead(T& value, const std::vector<char>& data, size_t& offset)
+bool BinaryRead(T& value, const TDYNAMICARRAY<char>& data, size_t& offset)
 {
     static_assert(false, __FUNCSIG__ ": Unsupported type encountered!");
     return false;
@@ -102,7 +109,7 @@ bool BinaryRead(T& value, const std::vector<char>& data, size_t& offset)
 
 // Built in types
 
-bool BinaryRead(uint8_t& value, const std::vector<char>& data, size_t& offset)
+bool BinaryRead(uint8_t& value, const TDYNAMICARRAY<char>& data, size_t& offset)
 {
     if (offset + sizeof(value) > data.size())
         return false;
@@ -113,7 +120,7 @@ bool BinaryRead(uint8_t& value, const std::vector<char>& data, size_t& offset)
     return true;
 }
 
-bool BinaryRead(uint16_t& value, const std::vector<char>& data, size_t& offset)
+bool BinaryRead(uint16_t& value, const TDYNAMICARRAY<char>& data, size_t& offset)
 {
     if (offset + sizeof(value) > data.size())
         return false;
@@ -124,7 +131,7 @@ bool BinaryRead(uint16_t& value, const std::vector<char>& data, size_t& offset)
     return true;
 }
 
-bool BinaryRead(uint32_t& value, const std::vector<char>& data, size_t& offset)
+bool BinaryRead(uint32_t& value, const TDYNAMICARRAY<char>& data, size_t& offset)
 {
     if (offset + sizeof(value) > data.size())
         return false;
@@ -135,7 +142,7 @@ bool BinaryRead(uint32_t& value, const std::vector<char>& data, size_t& offset)
     return true;
 }
 
-bool BinaryRead(uint64_t& value, const std::vector<char>& data, size_t& offset)
+bool BinaryRead(uint64_t& value, const TDYNAMICARRAY<char>& data, size_t& offset)
 {
     if (offset + sizeof(value) > data.size())
         return false;
@@ -146,7 +153,7 @@ bool BinaryRead(uint64_t& value, const std::vector<char>& data, size_t& offset)
     return true;
 }
 
-bool BinaryRead(int8_t& value, const std::vector<char>& data, size_t& offset)
+bool BinaryRead(int8_t& value, const TDYNAMICARRAY<char>& data, size_t& offset)
 {
     if (offset + sizeof(value) > data.size())
         return false;
@@ -157,7 +164,7 @@ bool BinaryRead(int8_t& value, const std::vector<char>& data, size_t& offset)
     return true;
 }
 
-bool BinaryRead(int16_t& value, const std::vector<char>& data, size_t& offset)
+bool BinaryRead(int16_t& value, const TDYNAMICARRAY<char>& data, size_t& offset)
 {
     if (offset + sizeof(value) > data.size())
         return false;
@@ -168,7 +175,7 @@ bool BinaryRead(int16_t& value, const std::vector<char>& data, size_t& offset)
     return true;
 }
 
-bool BinaryRead(int32_t& value, const std::vector<char>& data, size_t& offset)
+bool BinaryRead(int32_t& value, const TDYNAMICARRAY<char>& data, size_t& offset)
 {
     if (offset + sizeof(value) > data.size())
         return false;
@@ -179,7 +186,7 @@ bool BinaryRead(int32_t& value, const std::vector<char>& data, size_t& offset)
     return true;
 }
 
-bool BinaryRead(int64_t& value, const std::vector<char>& data, size_t& offset)
+bool BinaryRead(int64_t& value, const TDYNAMICARRAY<char>& data, size_t& offset)
 {
     if (offset + sizeof(value) > data.size())
         return false;
@@ -190,7 +197,7 @@ bool BinaryRead(int64_t& value, const std::vector<char>& data, size_t& offset)
     return true;
 }
 
-bool BinaryRead(float& value, const std::vector<char>& data, size_t& offset)
+bool BinaryRead(float& value, const TDYNAMICARRAY<char>& data, size_t& offset)
 {
     if (offset + sizeof(value) > data.size())
         return false;
@@ -201,7 +208,7 @@ bool BinaryRead(float& value, const std::vector<char>& data, size_t& offset)
     return true;
 }
 
-bool BinaryRead(bool& value, const std::vector<char>& data, size_t& offset)
+bool BinaryRead(bool& value, const TDYNAMICARRAY<char>& data, size_t& offset)
 {
     int intValue = 0;
     if (!BinaryRead(intValue, data, offset))
@@ -212,7 +219,7 @@ bool BinaryRead(bool& value, const std::vector<char>& data, size_t& offset)
     return true;
 }
 
-bool BinaryRead(std::string& value, const std::vector<char>& data, size_t& offset)
+bool BinaryRead(TSTRING& value, const TDYNAMICARRAY<char>& data, size_t& offset)
 {
     // Yes, the strings are null terminated in the binary file
     value = (const char*)&data[offset];

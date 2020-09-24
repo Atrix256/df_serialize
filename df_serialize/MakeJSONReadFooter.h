@@ -1,4 +1,4 @@
-inline bool LoadTextFile(const char* fileName, std::vector<char>& data)
+inline bool LoadTextFile(const char* fileName, TDYNAMICARRAY<char>& data)
 {
     // open the file if we can
     FILE* file = nullptr;
@@ -22,7 +22,7 @@ inline bool LoadTextFile(const char* fileName, std::vector<char>& data)
 
 // Read a structure from a JSON string
 template<typename TROOT>
-bool ReadFromJSON(TROOT& root, std::vector<char>& data)
+bool ReadFromJSONBuffer(TROOT& root, TDYNAMICARRAY<char>& data)
 {
     rapidjson::Document document;
     rapidjson::ParseResult ok = document.Parse<rapidjson::kParseCommentsFlag | rapidjson::kParseTrailingCommasFlag>(data.data());
@@ -57,10 +57,12 @@ bool ReadFromJSON(TROOT& root, std::vector<char>& data)
                 end++;
         }
 
-        std::string s(end - errorOffset + 1, 0);
+        TSTRING s;
+        s.resize(end - errorOffset + 1);
         memcpy(&s[0], &data[errorOffset], end - errorOffset);
+        s[end - errorOffset] = 0;
 
-        MAKE_JSON_LOG("JSON parse error line %i\n%s\n%s\n", lineNumber, GetParseError_En(ok.Code()), s.c_str());
+        DFS_LOG("JSON parse error line %i\n%s\n%s\n", lineNumber, GetParseError_En(ok.Code()), s.c_str());
         return false;
     }
 
@@ -69,14 +71,14 @@ bool ReadFromJSON(TROOT& root, std::vector<char>& data)
 
 // Read a structure from a JSON file
 template<typename TROOT>
-bool ReadFromJSON(TROOT& root, const char* fileName)
+bool ReadFromJSONFile(TROOT& root, const char* fileName)
 {
-    std::vector<char> fileData;
+    TDYNAMICARRAY<char> fileData;
     if (!LoadTextFile(fileName, fileData))
     {
-        MAKE_JSON_LOG("Could not read file %s", fileName);
+        DFS_LOG("Could not read file %s", fileName);
         return false;
     }
 
-    return ReadFromJSON(root, fileData);
+    return ReadFromJSONBuffer(root, fileData);
 }

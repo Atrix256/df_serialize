@@ -3,7 +3,6 @@
 
 #include "_common.h"
 #include <stdio.h>
-#include <sstream>
 
 inline bool WriteHTML(const char* fileName)
 {
@@ -12,20 +11,21 @@ inline bool WriteHTML(const char* fileName)
     if (!file)
         return false;
 
-    std::stringstream enums, structs, variants;
+    TSTRING enums, structs, variants;
 
 // Enums
 
-#define ENUM_BEGIN(_NAMESPACE, _NAME) enums << \
+#define ENUM_BEGIN(_NAMESPACE, _NAME, _DESCRIPTION) enums += \
+    "<b>" #_NAME " : " _DESCRIPTION "</b><br/><br/>\n" \
     "<table>\n" \
     "<tr><th colspan=2>" #_NAMESPACE "::" #_NAME "</th></tr>\n" \
     ;
 
-#define ENUM_ITEM(_NAME, _DESCRIPTION) enums << \
+#define ENUM_ITEM(_NAME, _DESCRIPTION) enums += \
     "<tr><td>" #_NAME "</td><td>" _DESCRIPTION "</td></tr>\n" \
     ;
 
-#define ENUM_END() enums << \
+#define ENUM_END() enums += \
     "</table>\n" \
     "<br/>\n" \
     "\n" \
@@ -33,25 +33,31 @@ inline bool WriteHTML(const char* fileName)
 
 // Structs
 
-#define SCHEMA_BEGIN(_NAMESPACE, _NAME) structs << \
+#define SCHEMA_BEGIN(_NAMESPACE, _NAME, _DESCRIPTION) structs += \
+    "<b>" #_NAME " : " _DESCRIPTION "</b><br/><br/>\n" \
     "<table>\n" \
     "<tr><th colspan=3>" #_NAMESPACE "::" #_NAME "</th></tr>\n" \
     ;
 
-#define SCHEMA_INHERIT_BEGIN(_NAMESPACE, _NAME, _BASE) structs << \
+#define SCHEMA_INHERIT_BEGIN(_NAMESPACE, _NAME, _BASE, _DESCRIPTION) structs += \
+    "<b>" #_NAME " : " _DESCRIPTION "</b><br/><br/>\n" \
     "<table>\n" \
     "<tr><th colspan=3>" #_NAMESPACE "::" #_NAME " - Inherits from " #_BASE "</th></tr>\n" \
     ;
 
-#define SCHEMA_FIELD(_TYPE, _NAME, _DEFAULT, _DESCRIPTION) structs << \
+#define SCHEMA_FIELD(_TYPE, _NAME, _DEFAULT, _DESCRIPTION) structs += \
     "<tr><td>" #_TYPE " " #_NAME "</td><td>" #_DEFAULT "</td><td>" _DESCRIPTION "</td></tr>\n" \
     ;
 
-#define SCHEMA_ARRAY(_TYPE, _NAME, _DESCRIPTION) structs << \
+#define SCHEMA_DYNAMIC_ARRAY(_TYPE, _NAME, _DESCRIPTION) structs += \
     "<tr><td>" #_TYPE " " #_NAME "[]</td><td></td><td>" _DESCRIPTION "</td></tr>\n" \
     ;
 
-#define SCHEMA_END() structs << \
+#define SCHEMA_STATIC_ARRAY(_TYPE, _NAME, _SIZE, _DEFAULT, _DESCRIPTION) structs += \
+    "<tr><td>" #_TYPE " " #_NAME "[" #_SIZE "]</td><td>" STRIPCOMMASTRING(_DEFAULT) "</td><td>" _DESCRIPTION "</td></tr>\n" \
+    ;
+
+#define SCHEMA_END() structs += \
     "</table>\n" \
     "<br/>\n" \
     "\n" \
@@ -59,16 +65,17 @@ inline bool WriteHTML(const char* fileName)
 
 // Variants
 
-#define VARIANT_BEGIN(_NAMESPACE, _NAME) variants << \
+#define VARIANT_BEGIN(_NAMESPACE, _NAME, _DESCRIPTION) variants += \
+    "<b>" #_NAME " : " _DESCRIPTION "</b><br/><br/>\n" \
     "<table>\n" \
     "<tr><th colspan=3>" #_NAMESPACE "::" #_NAME "</th></tr>\n" \
     ;
 
-#define VARIANT_TYPE(_TYPE, _NAME, _DEFAULT, _DESCRIPTION) variants << \
+#define VARIANT_TYPE(_TYPE, _NAME, _DEFAULT, _DESCRIPTION) variants += \
     "<tr><td>" #_TYPE " " #_NAME "</td><td>" #_DEFAULT "</td><td>" _DESCRIPTION "</td></tr>\n" \
     ;
 
-#define VARIANT_END() variants << \
+#define VARIANT_END() variants += \
     "</table>\n" \
     "<br/>\n" \
     "\n" \

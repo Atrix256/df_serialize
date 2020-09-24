@@ -1,12 +1,5 @@
-// All the schemas are included into this file.
-// This way, different schemas can be defined in different files for organization purposes.
-
-// Make sure that any types the schemas represent are defined
-#include <string> // needed for names
-#include <vector> // needed for arrays
-
 // An enum used by both plants and animals.
-ENUM_BEGIN(Lifeforms, DietType)
+ENUM_BEGIN(Lifeforms, DietType, "The type of diets life forms can have")
     ENUM_ITEM(Herbivore, "Eats plants")
     ENUM_ITEM(Carnivore, "Eats animals")
     ENUM_ITEM(Omnivore, "Eats both plants and animals")
@@ -14,23 +7,23 @@ ENUM_BEGIN(Lifeforms, DietType)
 ENUM_END()
 
 // Basic info about any life form. Plants and animals inherit this.
-SCHEMA_BEGIN(Lifeforms, Lifeform)
-    SCHEMA_FIELD(std::string, name, "", "The name of the life form.")
-    SCHEMA_FIELD(std::string, description, "", "A description of the life form.")
+SCHEMA_BEGIN(Lifeforms, Lifeform, "The base class for all life forms")
+    SCHEMA_FIELD(TSTRING, name, "", "The name of the life form.")
+    SCHEMA_FIELD(TSTRING, description, "", "A description of the life form.")
     SCHEMA_FIELD(uint64_t, uniqueID, 0, "A unique identifier for the life form.")
 SCHEMA_END()
 
-// Other Schemas
+// Schemas defined in different files
 #include "schema_plant.h"
 #include "schema_animal.h"
 
 // A variant which can be a plant, an animal, or nothing
-VARIANT_BEGIN(Lifeforms, LifeformVariant)
-    VARIANT_TYPE(Plant, plant, Plant{}, "a plant")
-    VARIANT_TYPE(Animal, animal, Animal{}, "an animal")
+VARIANT_BEGIN(Lifeforms, LifeformVariant, "A lifeform of any type")
+    VARIANT_TYPE(Lifeforms::Plant, plant, Lifeforms::Plant{}, "a plant")
+    VARIANT_TYPE(Lifeforms::Animal, animal, Lifeforms::Animal{}, "an animal")
 VARIANT_END()
 
 // A schema to unify the list of plants and animals into a single thing
-SCHEMA_BEGIN(Lifeforms, Root)
-    SCHEMA_ARRAY(LifeformVariant, lifeForms, "The full list of life forms")
+SCHEMA_BEGIN(Lifeforms, Root, "The base document type of lifeform descriptions")
+    SCHEMA_DYNAMIC_ARRAY(LifeformVariant, lifeForms, "The full list of life forms")
 SCHEMA_END()

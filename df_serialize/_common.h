@@ -1,4 +1,6 @@
-// undefine anything schema macros that may be defined, so they can safely be defined
+#include "Config.h"
+
+// Undefine any macros that may be defined, so they can safely be defined. Lazy define cleanup.
 
 #ifdef SCHEMA_BEGIN
 #undef SCHEMA_BEGIN
@@ -16,8 +18,12 @@
 #undef SCHEMA_END
 #endif
 
-#ifdef SCHEMA_ARRAY
-#undef SCHEMA_ARRAY
+#ifdef SCHEMA_DYNAMIC_ARRAY
+#undef SCHEMA_DYNAMIC_ARRAY
+#endif
+
+#ifdef SCHEMA_STATIC_ARRAY
+#undef SCHEMA_STATIC_ARRAY
 #endif
 
 #ifdef ENUM_BEGIN
@@ -44,8 +50,11 @@
 #undef VARIANT_END
 #endif
 
-// By default, use a std::vector as the dynamic array type. You can define TDYNAMICARRAY
-// to another templated dynamic array type if you wish.
-#ifndef TDYNAMICARRAY
-#define TDYNAMICARRAY std::vector
+// Needed to be able to provide defaults for fixed sized arrays
+#ifndef COMMA
+#define COMMA ,
+#endif
+
+#ifndef STRIPCOMMASTRING
+#define STRIPCOMMASTRING(x) #x
 #endif
