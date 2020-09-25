@@ -71,13 +71,13 @@ bool ReadFromJSONBuffer(TROOT& root, const char* data)
 }
 
 template<typename TROOT>
-bool ReadFromJSONBuffer(TROOT& root, TDYNAMICARRAY<char>& data)
+bool ReadFromJSONBuffer(TROOT& root, const TDYNAMICARRAY<char>& data)
 {
     return ReadFromJSONBuffer(root, data.data());
 }
 
 template<typename TROOT>
-bool ReadFromJSONBuffer(TROOT& root, TSTRING& data)
+bool ReadFromJSONBuffer(TROOT& root, const TSTRING& data)
 {
     return ReadFromJSONBuffer(root, data.c_str());
 }
