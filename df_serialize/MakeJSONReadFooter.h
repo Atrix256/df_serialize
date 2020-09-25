@@ -22,10 +22,10 @@ inline bool LoadTextFile(const char* fileName, TDYNAMICARRAY<char>& data)
 
 // Read a structure from a JSON string
 template<typename TROOT>
-bool ReadFromJSONBuffer(TROOT& root, TDYNAMICARRAY<char>& data)
+bool ReadFromJSONBuffer(TROOT& root, const char* data)
 {
     rapidjson::Document document;
-    rapidjson::ParseResult ok = document.Parse<rapidjson::kParseCommentsFlag | rapidjson::kParseTrailingCommasFlag>(data.data());
+    rapidjson::ParseResult ok = document.Parse<rapidjson::kParseCommentsFlag | rapidjson::kParseTrailingCommasFlag>(data);
     if (!ok)
     {
         size_t errorOffset = ok.Offset();
@@ -68,6 +68,18 @@ bool ReadFromJSONBuffer(TROOT& root, TDYNAMICARRAY<char>& data)
     }
 
     return JSONRead(root, document);
+}
+
+template<typename TROOT>
+bool ReadFromJSONBuffer(TROOT& root, TDYNAMICARRAY<char>& data)
+{
+    return ReadFromJSONBuffer(root, data.data());
+}
+
+template<typename TROOT>
+bool ReadFromJSONBuffer(TROOT& root, TSTRING& data)
+{
+    return ReadFromJSONBuffer(root, data.c_str());
 }
 
 // Read a structure from a JSON file
