@@ -45,7 +45,8 @@ bool ReadFromJSONBuffer(TROOT& root, TDYNAMICARRAY<char>& data)
         // back up to the beginning of the line
         while (errorOffset > 0 && data[errorOffset] != '\n')
             errorOffset--;
-        errorOffset++;
+        if (errorOffset > 0)
+            errorOffset++;
 
         // get the next couple lines from the error
         size_t end = errorOffset;
