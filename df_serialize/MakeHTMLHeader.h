@@ -49,6 +49,10 @@ inline bool WriteHTML(const char* fileName)
     "<tr><td>" #_TYPE " " #_NAME "</td><td>" #_DEFAULT "</td><td>" _DESCRIPTION "</td></tr>\n" \
     ;
 
+#define STRUCT_FIELD_NO_SERIALIZE(_TYPE, _NAME, _DEFAULT, _DESCRIPTION) structs += \
+    "<tr><td><i>" #_TYPE " " #_NAME "</i></td><td>" #_DEFAULT "</td><td>" _DESCRIPTION "</td></tr>\n" \
+    ;
+
 #define STRUCT_DYNAMIC_ARRAY(_TYPE, _NAME, _DESCRIPTION) structs += \
     "<tr><td>" #_TYPE " " #_NAME "[]</td><td></td><td>" _DESCRIPTION "</td></tr>\n" \
     ;

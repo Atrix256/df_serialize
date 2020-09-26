@@ -106,6 +106,11 @@ The first field in the example names a "std::string name" in the struct.
 Note that the type can be either other schema defined types (they need to be defined above this schema) or
 they can be types defined outside the schema: your own structs or PODs like ints and floats.
 
+**`STRUCT_FIELD_NO_SERIALIZE(Type, Name, Default, Description)`**
+
+The same as STRUCT_FIELD but this field doesn't serialize in or out. This is useful for transient storage
+needed at runtime.
+
 **`STRUCT_DYNAMIC_ARRAY(Type, Name, Description)`**
 
 This defines a field as a dynamic sized array of another type.

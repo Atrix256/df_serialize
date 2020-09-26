@@ -19,12 +19,14 @@ table, th, td, tr
 <br/>
 
 <h1>Structs</h1>
+Italicized fields are not serialized, and are just used for runtime storage.<br/>
+<br/>
 <b>Lifeform : The base class for all life forms</b><br/><br/>
 <table>
 <tr><th colspan=3>Lifeforms::Lifeform</th></tr>
 <tr><td>TSTRING name</td><td>""</td><td>The name of the life form.</td></tr>
 <tr><td>TSTRING description</td><td>""</td><td>A description of the life form.</td></tr>
-<tr><td>uint64_t uniqueID</td><td>0</td><td>A unique identifier for the life form.</td></tr>
+<tr><td><i>uint64_t uniqueID</i></td><td>0</td><td>A unique identifier for the life form at runtime.</td></tr>
 </table>
 <br/>
 

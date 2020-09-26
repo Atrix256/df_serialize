@@ -81,7 +81,7 @@ int main(int argc, char** argv)
             newLifeForm.animal.litterMin = 1;
             newLifeForm.animal.litterMax = 5;
             newLifeForm.animal.meat = 0.1f;
-            newLifeForm.animal.uniqueID = 3;
+            newLifeForm.animal.uniqueID = 3;  // Note: this is not serialized
             root.lifeForms.push_back(newLifeForm);
         }
 

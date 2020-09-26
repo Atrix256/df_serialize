@@ -14,6 +14,10 @@
 #undef STRUCT_FIELD
 #endif
 
+#ifdef STRUCT_FIELD_NO_SERIALIZE
+#undef STRUCT_FIELD_NO_SERIALIZE
+#endif
+
 #ifdef STRUCT_END
 #undef STRUCT_END
 #endif

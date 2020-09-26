@@ -31,6 +31,8 @@
 
 #define STRUCT_FIELD(_TYPE, _NAME, _DEFAULT, _DESCRIPTION) BinaryWrite(value._NAME, output);
 
+#define STRUCT_FIELD_NO_SERIALIZE(_TYPE, _NAME, _DEFAULT, _DESCRIPTION)
+
 #define STRUCT_DYNAMIC_ARRAY(_TYPE, _NAME, _DESCRIPTION)\
         BinaryWrite((int32_t)value._NAME.size(), output); \
         for (const auto& item : value._NAME) \

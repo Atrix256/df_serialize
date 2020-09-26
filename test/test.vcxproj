@@ -132,6 +132,7 @@
     <ClInclude Include="..\df_serialize\MakeJSONWriteHeader.h" />
     <ClInclude Include="..\df_serialize\MakeTypes.h" />
     <ClInclude Include="..\df_serialize\_common.h" />
+    <ClInclude Include="..\df_serialize\_fillunsetdefines.h" />
     <ClInclude Include="binary.h" />
     <ClInclude Include="html.h" />
     <ClInclude Include="json.h" />

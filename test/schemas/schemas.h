@@ -10,7 +10,7 @@ ENUM_END()
 STRUCT_BEGIN(Lifeforms, Lifeform, "The base class for all life forms")
     STRUCT_FIELD(TSTRING, name, "", "The name of the life form.")
     STRUCT_FIELD(TSTRING, description, "", "A description of the life form.")
-    STRUCT_FIELD(uint64_t, uniqueID, 0, "A unique identifier for the life form.")
+    STRUCT_FIELD_NO_SERIALIZE(uint64_t, uniqueID, 0, "A unique identifier for the life form at runtime.")
 STRUCT_END()
 
 // Schemas defined in different files

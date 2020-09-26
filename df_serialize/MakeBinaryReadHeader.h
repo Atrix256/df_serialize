@@ -46,6 +46,8 @@
             return false; \
         }
 
+#define STRUCT_FIELD_NO_SERIALIZE(_TYPE, _NAME, _DEFAULT, _DESCRIPTION)
+
 #define STRUCT_DYNAMIC_ARRAY(_TYPE, _NAME, _DESCRIPTION) \
         { \
             int arrayCount = 0; \

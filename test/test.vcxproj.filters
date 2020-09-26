@@ -68,6 +68,9 @@
     <ClInclude Include="schemas\schema_plant.h">
       <Filter>schemas</Filter>
     </ClInclude>
+    <ClInclude Include="..\df_serialize\_fillunsetdefines.h">
+      <Filter>df_serialize</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\README.md" />

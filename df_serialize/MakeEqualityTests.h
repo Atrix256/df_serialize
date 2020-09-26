@@ -38,6 +38,10 @@
         if (A._NAME != B._NAME) \
             return false;
 
+#define STRUCT_FIELD_NO_SERIALIZE(_TYPE, _NAME, _DEFAULT, _DESCRIPTION) \
+        if (A._NAME != B._NAME) \
+            return false;
+
 #define STRUCT_DYNAMIC_ARRAY(_TYPE, _NAME, _DESCRIPTION) \
         if (A._NAME.size() != B._NAME.size()) \
             return false; \

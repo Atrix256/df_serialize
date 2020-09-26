@@ -40,6 +40,8 @@
         if (value._NAME != _DEFAULT) \
             ret.AddMember(#_NAME, MakeJSONValue(value._NAME, allocator), allocator);
 
+#define STRUCT_FIELD_NO_SERIALIZE(_TYPE, _NAME, _DEFAULT, _DESCRIPTION)
+
 #define STRUCT_DYNAMIC_ARRAY(_TYPE, _NAME, _DESCRIPTION) \
         if (value._NAME.size() > 0) \
         { \

@@ -11,6 +11,8 @@
         "<h1>Enums</h1>\n"
         "%s"
         "<h1>Structs</h1>\n"
+        "Italicized fields are not serialized, and are just used for runtime storage.<br/>\n"
+        "<br/>\n"
         "%s\n"
         "<h1>Variants</h1>\n"
         "%s\n"
