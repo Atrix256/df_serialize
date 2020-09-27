@@ -13,7 +13,7 @@ inline bool LoadTextFile(const char* fileName, TDYNAMICARRAY<char>& data)
 
     // read the file into memory and return success.
     // don't forget the null terminator
-    data.resize(size + 1);
+    TDYNAMICARRAY_RESIZE(data, size + 1);
     fread(&data[0], 1, size, file);
     fclose(file);
     data[TDYNAMICARRAY_SIZE(data) - 1] = 0;
@@ -59,7 +59,7 @@ bool ReadFromJSONBuffer(TROOT& root, const char* data)
         }
 
         TSTRING s;
-        s.resize(end - errorOffset + 1);
+        TSTRING_RESIZE(s, end - errorOffset + 1);
         memcpy(&s[0], &data[errorOffset], end - errorOffset);
         s[end - errorOffset] = 0;
 

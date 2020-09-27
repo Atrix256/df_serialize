@@ -56,7 +56,7 @@
                 DFS_LOG("Could not read array count of array " #_NAME "\n"); \
                 return false; \
             } \
-            value._NAME.resize(arrayCount); \
+            TDYNAMICARRAY_RESIZE(value._NAME,arrayCount); \
             for (size_t index = 0; index < TDYNAMICARRAY_SIZE(value._NAME); ++index) \
             { \
                 if(!BinaryRead(value._NAME[index], data, offset)) \

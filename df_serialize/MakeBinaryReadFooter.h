@@ -12,7 +12,7 @@ inline bool LoadBinaryFile(const char* fileName, TDYNAMICARRAY<char>& data)
     fseek(file, 0, SEEK_SET);
 
     // read the file into memory and return success.
-    data.resize(size );
+    TDYNAMICARRAY_RESIZE(data,size);
     fread(&data[0], 1, size, file);
     fclose(file);
     return true;

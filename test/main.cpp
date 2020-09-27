@@ -20,6 +20,9 @@
 #define TSTRING MyString
 
 #define TDYNAMICARRAY_SIZE(x) x.GetSize()
+#define TDYNAMICARRAY_RESIZE(x,y) x.Resize(y)
+#define TDYNAMICARRAY_PUSHBACK(x,y) x.PushBack(y)
+#define TSTRING_RESIZE(x,y) x.Resize(y)
 
 #endif
 
@@ -85,7 +88,7 @@ int main(int argc, char** argv)
             newLifeForm.animal.litterMax = 5;
             newLifeForm.animal.meat = 0.1f;
             newLifeForm.animal.uniqueID = 0;  // Note: this is not serialized so if you set it to non default value, it'll make serialize out/in round trip fail equality test
-            root.lifeForms.push_back(newLifeForm);
+            TDYNAMICARRAY_PUSHBACK(root.lifeForms, newLifeForm);
         }
 
         // write the modified data as JSON

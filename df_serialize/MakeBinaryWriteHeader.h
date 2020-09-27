@@ -74,63 +74,63 @@ bool BinaryWrite(const T& value, TDYNAMICARRAY<char>& output)
 void BinaryWrite(uint8_t value, TDYNAMICARRAY<char>& output)
 {
     size_t offset = TDYNAMICARRAY_SIZE(output);
-    output.resize(offset + sizeof(value));
+    TDYNAMICARRAY_RESIZE(output,offset + sizeof(value));
     *((decltype(&value))(&output[offset])) = value;
 }
 
 void BinaryWrite(uint16_t value, TDYNAMICARRAY<char>& output)
 {
     size_t offset = TDYNAMICARRAY_SIZE(output);
-    output.resize(offset + sizeof(value));
+    TDYNAMICARRAY_RESIZE(output, offset + sizeof(value));
     *((decltype(&value))(&output[offset])) = value;
 }
 
 void BinaryWrite(uint32_t value, TDYNAMICARRAY<char>& output)
 {
     size_t offset = TDYNAMICARRAY_SIZE(output);
-    output.resize(offset + sizeof(value));
+    TDYNAMICARRAY_RESIZE(output, offset + sizeof(value));
     *((decltype(&value))(&output[offset])) = value;
 }
 
 void BinaryWrite(uint64_t value, TDYNAMICARRAY<char>& output)
 {
     size_t offset = TDYNAMICARRAY_SIZE(output);
-    output.resize(offset + sizeof(value));
+    TDYNAMICARRAY_RESIZE(output, offset + sizeof(value));
     *((decltype(&value))(&output[offset])) = value;
 }
 
 void BinaryWrite(int8_t value, TDYNAMICARRAY<char>& output)
 {
     size_t offset = TDYNAMICARRAY_SIZE(output);
-    output.resize(offset + sizeof(value));
+    TDYNAMICARRAY_RESIZE(output, offset + sizeof(value));
     *((decltype(&value))(&output[offset])) = value;
 }
 
 void BinaryWrite(int16_t value, TDYNAMICARRAY<char>& output)
 {
     size_t offset = TDYNAMICARRAY_SIZE(output);
-    output.resize(offset + sizeof(value));
+    TDYNAMICARRAY_RESIZE(output, offset + sizeof(value));
     *((decltype(&value))(&output[offset])) = value;
 }
 
 void BinaryWrite(int32_t value, TDYNAMICARRAY<char>& output)
 {
     size_t offset = TDYNAMICARRAY_SIZE(output);
-    output.resize(offset + sizeof(value));
+    TDYNAMICARRAY_RESIZE(output, offset + sizeof(value));
     *((decltype(&value))(&output[offset])) = value;
 }
 
 void BinaryWrite(int64_t value, TDYNAMICARRAY<char>& output)
 {
     size_t offset = TDYNAMICARRAY_SIZE(output);
-    output.resize(offset + sizeof(value));
+    TDYNAMICARRAY_RESIZE(output, offset + sizeof(value));
     *((decltype(&value))(&output[offset])) = value;
 }
 
 void BinaryWrite(float value, TDYNAMICARRAY<char>& output)
 {
     size_t offset = TDYNAMICARRAY_SIZE(output);
-    output.resize(offset + sizeof(value));
+    TDYNAMICARRAY_RESIZE(output, offset + sizeof(value));
     *((float*)(&output[offset])) = value;
 }
 
@@ -143,7 +143,7 @@ void BinaryWrite(const TSTRING& value, TDYNAMICARRAY<char>& output)
 {
     size_t offset = TDYNAMICARRAY_SIZE(output);
     int len = (int)value.length();
-    output.resize(TDYNAMICARRAY_SIZE(output) + len + 1);
+    TDYNAMICARRAY_RESIZE(output, TDYNAMICARRAY_SIZE(output) + len + 1);
     char* dest = (char*)&output[offset];
     const char* src = value.c_str();
     for (int i = 0; i <= len; ++i)

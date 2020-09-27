@@ -5,14 +5,12 @@
 #include <string.h>
 #include <initializer_list>
 
-// TODO: get rid of as much of this STL interface as possible to make STL truly optional
-
 template <typename T>
 struct MyVector
 {
     ~MyVector()
     {
-        clear();
+        Clear();
     }
 
     MyVector()
@@ -44,13 +42,22 @@ struct MyVector
 
     void operator = (const MyVector& other)
     {
-        clear();
+        Clear();
         resize(other.size());
         for (size_t index = 0; index < m_size; ++index)
             m_array[index] = other[index];
     }
 
-    void clear()
+    T& operator [](size_t i) { return m_array[i]; }
+    const T& operator [](size_t i) const { return m_array[i]; }
+
+public:
+    size_t GetSize() const
+    {
+        return m_size;
+    }
+
+    void Clear()
     {
         if (m_array)
         {
@@ -60,7 +67,7 @@ struct MyVector
         m_size = 0;
     }
 
-    void resize(size_t n)
+    void Resize(size_t n)
     {
         if (n == m_size)
             return;
@@ -71,24 +78,15 @@ struct MyVector
         for (size_t i = 0; i < copyCount; ++i)
             newArray[i] = m_array[i];
 
-        clear();
+        Clear();
         m_array = newArray;
         m_size = n;
     }
 
-    void push_back(const T& newItem)
+    void PushBack(const T& newItem)
     {
-        resize(m_size + 1);
+        Resize(m_size + 1);
         m_array[m_size - 1] = newItem;
-    }
-
-    T& operator [](size_t i) { return m_array[i]; }
-    const T& operator [](size_t i) const { return m_array[i]; }
-
-public:
-    size_t GetSize() const
-    {
-        return m_size;
     }
 
 private:
@@ -151,24 +149,6 @@ struct MyString
     size_t length() const
     {
         return m_string ? strlen(m_string) : 0;
-    }
-
-    void resize(size_t newSize)
-    {
-        if (newSize == 0)
-        {
-            clear();
-            return;
-        }
-
-        char* newString = new char[newSize];
-        memset(newString, 0, newSize);
-        if (m_string)
-        {
-            strcpy(newString, m_string);
-            delete m_string;
-        }
-        m_string = newString;
     }
 
     const char* c_str() const
@@ -234,6 +214,25 @@ struct MyString
 
     char& operator [](size_t i) { return m_string[i]; }
     const char& operator [](size_t i) const { return m_string[i]; }
+
+public:
+    void Resize(size_t newSize)
+    {
+        if (newSize == 0)
+        {
+            clear();
+            return;
+        }
+
+        char* newString = new char[newSize];
+        memset(newString, 0, newSize);
+        if (m_string)
+        {
+            strcpy(newString, m_string);
+            delete m_string;
+        }
+        m_string = newString;
+    }
 
 private:
     void set(const char* s)
