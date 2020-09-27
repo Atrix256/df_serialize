@@ -14,3 +14,7 @@
 #ifndef TSTRING
 #define TSTRING std::string
 #endif
+
+#ifndef TDYNAMICARRAY_SIZE
+#define TDYNAMICARRAY_SIZE(x) x.size()
+#endif

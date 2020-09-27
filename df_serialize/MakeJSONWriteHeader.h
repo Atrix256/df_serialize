@@ -43,7 +43,7 @@
 #define STRUCT_FIELD_NO_SERIALIZE(_TYPE, _NAME, _DEFAULT, _DESCRIPTION)
 
 #define STRUCT_DYNAMIC_ARRAY(_TYPE, _NAME, _DESCRIPTION) \
-        if (value._NAME.size() > 0) \
+        if (TDYNAMICARRAY_SIZE(value._NAME) > 0) \
         { \
             rapidjson::Value arr; \
             arr.SetArray(); \

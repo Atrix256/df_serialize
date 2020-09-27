@@ -5,6 +5,8 @@
 #include <string.h>
 #include <initializer_list>
 
+// TODO: get rid of as much of this STL interface as possible to make STL truly optional
+
 template <typename T>
 struct MyVector
 {
@@ -80,10 +82,6 @@ struct MyVector
         m_array[m_size - 1] = newItem;
     }
 
-    size_t size() const
-    {
-        return m_size;
-    }
 
     T& operator [](size_t i) { return m_array[i]; }
     const T& operator [](size_t i) const { return m_array[i]; }
@@ -102,6 +100,12 @@ struct MyVector
     const T* data() const
     {
         return m_array;
+    }
+
+public:
+    size_t GetSize() const
+    {
+        return m_size;
     }
 
 private:

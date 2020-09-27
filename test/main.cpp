@@ -19,6 +19,8 @@
 #define TSTATICARRAY MyArray
 #define TSTRING MyString
 
+#define TDYNAMICARRAY_SIZE(x) x.GetSize()
+
 #endif
 
 // Expand the schemas
@@ -81,7 +83,7 @@ int main(int argc, char** argv)
             newLifeForm.animal.litterMin = 1;
             newLifeForm.animal.litterMax = 5;
             newLifeForm.animal.meat = 0.1f;
-            newLifeForm.animal.uniqueID = 3;  // Note: this is not serialized
+            newLifeForm.animal.uniqueID = 0;  // Note: this is not serialized so if you set it to non default value, it'll make serialize out/in round trip fail equality test
             root.lifeForms.push_back(newLifeForm);
         }
 

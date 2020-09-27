@@ -16,7 +16,7 @@ inline bool LoadTextFile(const char* fileName, TDYNAMICARRAY<char>& data)
     data.resize(size + 1);
     fread(data.data(), 1, size, file);
     fclose(file);
-    data[data.size() - 1] = 0;
+    data[TDYNAMICARRAY_SIZE(data) - 1] = 0;
     return true;
 }
 

@@ -43,9 +43,9 @@
             return false;
 
 #define STRUCT_DYNAMIC_ARRAY(_TYPE, _NAME, _DESCRIPTION) \
-        if (A._NAME.size() != B._NAME.size()) \
+        if (TDYNAMICARRAY_SIZE(A._NAME) != TDYNAMICARRAY_SIZE(B._NAME)) \
             return false; \
-        for (size_t index = 0; index < A._NAME.size(); ++index) \
+        for (size_t index = 0; index < TDYNAMICARRAY_SIZE(A._NAME); ++index) \
         { \
             if (A._NAME[index] != B._NAME[index]) \
                 return false; \

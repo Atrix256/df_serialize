@@ -113,7 +113,7 @@ bool BinaryRead(T& value, const TDYNAMICARRAY<char>& data, size_t& offset)
 
 bool BinaryRead(uint8_t& value, const TDYNAMICARRAY<char>& data, size_t& offset)
 {
-    if (offset + sizeof(value) > data.size())
+    if (offset + sizeof(value) > TDYNAMICARRAY_SIZE(data))
         return false;
 
     value = *(decltype(&value))&data[offset];
@@ -124,7 +124,7 @@ bool BinaryRead(uint8_t& value, const TDYNAMICARRAY<char>& data, size_t& offset)
 
 bool BinaryRead(uint16_t& value, const TDYNAMICARRAY<char>& data, size_t& offset)
 {
-    if (offset + sizeof(value) > data.size())
+    if (offset + sizeof(value) > TDYNAMICARRAY_SIZE(data))
         return false;
 
     value = *(decltype(&value))&data[offset];
@@ -135,7 +135,7 @@ bool BinaryRead(uint16_t& value, const TDYNAMICARRAY<char>& data, size_t& offset
 
 bool BinaryRead(uint32_t& value, const TDYNAMICARRAY<char>& data, size_t& offset)
 {
-    if (offset + sizeof(value) > data.size())
+    if (offset + sizeof(value) > TDYNAMICARRAY_SIZE(data))
         return false;
 
     value = *(decltype(&value))&data[offset];
@@ -146,7 +146,7 @@ bool BinaryRead(uint32_t& value, const TDYNAMICARRAY<char>& data, size_t& offset
 
 bool BinaryRead(uint64_t& value, const TDYNAMICARRAY<char>& data, size_t& offset)
 {
-    if (offset + sizeof(value) > data.size())
+    if (offset + sizeof(value) > TDYNAMICARRAY_SIZE(data))
         return false;
 
     value = *(decltype(&value))&data[offset];
@@ -157,7 +157,7 @@ bool BinaryRead(uint64_t& value, const TDYNAMICARRAY<char>& data, size_t& offset
 
 bool BinaryRead(int8_t& value, const TDYNAMICARRAY<char>& data, size_t& offset)
 {
-    if (offset + sizeof(value) > data.size())
+    if (offset + sizeof(value) > TDYNAMICARRAY_SIZE(data))
         return false;
 
     value = *(decltype(&value))&data[offset];
@@ -168,7 +168,7 @@ bool BinaryRead(int8_t& value, const TDYNAMICARRAY<char>& data, size_t& offset)
 
 bool BinaryRead(int16_t& value, const TDYNAMICARRAY<char>& data, size_t& offset)
 {
-    if (offset + sizeof(value) > data.size())
+    if (offset + sizeof(value) > TDYNAMICARRAY_SIZE(data))
         return false;
 
     value = *(decltype(&value))&data[offset];
@@ -179,7 +179,7 @@ bool BinaryRead(int16_t& value, const TDYNAMICARRAY<char>& data, size_t& offset)
 
 bool BinaryRead(int32_t& value, const TDYNAMICARRAY<char>& data, size_t& offset)
 {
-    if (offset + sizeof(value) > data.size())
+    if (offset + sizeof(value) > TDYNAMICARRAY_SIZE(data))
         return false;
 
     value = *(decltype(&value))&data[offset];
@@ -190,7 +190,7 @@ bool BinaryRead(int32_t& value, const TDYNAMICARRAY<char>& data, size_t& offset)
 
 bool BinaryRead(int64_t& value, const TDYNAMICARRAY<char>& data, size_t& offset)
 {
-    if (offset + sizeof(value) > data.size())
+    if (offset + sizeof(value) > TDYNAMICARRAY_SIZE(data))
         return false;
 
     value = *(decltype(&value))&data[offset];
@@ -201,7 +201,7 @@ bool BinaryRead(int64_t& value, const TDYNAMICARRAY<char>& data, size_t& offset)
 
 bool BinaryRead(float& value, const TDYNAMICARRAY<char>& data, size_t& offset)
 {
-    if (offset + sizeof(value) > data.size())
+    if (offset + sizeof(value) > TDYNAMICARRAY_SIZE(data))
         return false;
 
     value = *(float*)&data[offset];
