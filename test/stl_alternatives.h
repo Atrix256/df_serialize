@@ -82,7 +82,6 @@ struct MyVector
         m_array[m_size - 1] = newItem;
     }
 
-
     T& operator [](size_t i) { return m_array[i]; }
     const T& operator [](size_t i) const { return m_array[i]; }
 
@@ -119,12 +118,6 @@ struct MyArray
 
     T& operator [](size_t i) { return m_array[i]; }
     const T& operator [](size_t i) const { return m_array[i]; }
-
-    T* begin() { return m_array; }
-    T* end() { return m_array + N; }
-
-    const T* begin() const { return m_array; }
-    const T* end() const { return m_array + N; }
 
 private:
     T m_array[N];
