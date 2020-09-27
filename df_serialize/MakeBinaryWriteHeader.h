@@ -35,12 +35,12 @@
 
 #define STRUCT_DYNAMIC_ARRAY(_TYPE, _NAME, _DESCRIPTION)\
         BinaryWrite((int32_t)TDYNAMICARRAY_SIZE(value._NAME), output); \
-        for (const auto& item : value._NAME) \
-            BinaryWrite(item, output); \
+        for (size_t index = 0; index < TDYNAMICARRAY_SIZE(value._NAME); ++index) \
+            BinaryWrite(value._NAME[index], output); \
 
 #define STRUCT_STATIC_ARRAY(_TYPE, _NAME, _SIZE, _DEFAULT, _DESCRIPTION)\
-        for (const auto& item : value._NAME) \
-            BinaryWrite(item, output); \
+        for (size_t index = 0; index < _SIZE; ++index) \
+            BinaryWrite(value._NAME[index], output); \
 
 #define STRUCT_END() \
     }

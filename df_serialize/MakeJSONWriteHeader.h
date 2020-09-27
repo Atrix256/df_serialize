@@ -47,8 +47,8 @@
         { \
             rapidjson::Value arr; \
             arr.SetArray(); \
-            for (auto& item : value._NAME) \
-                arr.PushBack(MakeJSONValue(item, allocator), allocator); \
+            for (size_t index = 0; index < TDYNAMICARRAY_SIZE(value._NAME); ++index) \
+                arr.PushBack(MakeJSONValue(value._NAME[index], allocator), allocator); \
             ret.AddMember(#_NAME, arr, allocator); \
         }
 

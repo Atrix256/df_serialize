@@ -46,8 +46,9 @@ int main(int argc, char** argv)
         }
 
         // Modify the data
-        for (Lifeforms::LifeformVariant& variant : root.lifeForms)
+        for (size_t index = 0; index < TDYNAMICARRAY_SIZE(root.lifeForms); ++index)
         {
+            Lifeforms::LifeformVariant& variant = root.lifeForms[index];
             switch (variant._index)
             {
                 case Lifeforms::LifeformVariant::c_index_plant:

@@ -86,22 +86,6 @@ struct MyVector
     T& operator [](size_t i) { return m_array[i]; }
     const T& operator [](size_t i) const { return m_array[i]; }
 
-    T* begin() { return m_array; }
-    T* end() { return m_array + m_size; }
-
-    const T* begin() const { return m_array; }
-    const T* end() const { return m_array + m_size; }
-
-    T* data()
-    {
-        return m_array;
-    }
-
-    const T* data() const
-    {
-        return m_array;
-    }
-
 public:
     size_t GetSize() const
     {
@@ -141,16 +125,6 @@ struct MyArray
 
     const T* begin() const { return m_array; }
     const T* end() const { return m_array + N; }
-
-    T* data()
-    {
-        return m_array;
-    }
-
-    const T* data() const
-    {
-        return m_array;
-    }
 
 private:
     T m_array[N];

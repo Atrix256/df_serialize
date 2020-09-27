@@ -14,7 +14,7 @@ inline bool LoadTextFile(const char* fileName, TDYNAMICARRAY<char>& data)
     // read the file into memory and return success.
     // don't forget the null terminator
     data.resize(size + 1);
-    fread(data.data(), 1, size, file);
+    fread(&data[0], 1, size, file);
     fclose(file);
     data[TDYNAMICARRAY_SIZE(data) - 1] = 0;
     return true;
@@ -73,7 +73,7 @@ bool ReadFromJSONBuffer(TROOT& root, const char* data)
 template<typename TROOT>
 bool ReadFromJSONBuffer(TROOT& root, const TDYNAMICARRAY<char>& data)
 {
-    return ReadFromJSONBuffer(root, data.data());
+    return ReadFromJSONBuffer(root, &data[0]);
 }
 
 template<typename TROOT>

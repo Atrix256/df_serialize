@@ -57,9 +57,9 @@
                 return false; \
             } \
             value._NAME.resize(arrayCount); \
-            for (auto& item : value._NAME) \
+            for (size_t index = 0; index < TDYNAMICARRAY_SIZE(value._NAME); ++index) \
             { \
-                if(!BinaryRead(item, data, offset)) \
+                if(!BinaryRead(value._NAME[index], data, offset)) \
                 { \
                     DFS_LOG("Could not read an array item for array " #_NAME "\n"); \
                     return false; \
@@ -69,9 +69,9 @@
 
 #define STRUCT_STATIC_ARRAY(_TYPE, _NAME, _SIZE, _DEFAULT, _DESCRIPTION) \
         { \
-            for (auto& item : value._NAME) \
+            for (size_t index = 0; index < _SIZE; ++index) \
             { \
-                if(!BinaryRead(item, data, offset)) \
+                if(!BinaryRead(value._NAME[index], data, offset)) \
                 { \
                     DFS_LOG("Could not read an array item for array " #_NAME "\n"); \
                     return false; \
