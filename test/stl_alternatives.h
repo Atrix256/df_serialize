@@ -8,6 +8,7 @@
 template <typename T>
 struct MyVector
 {
+public:
     ~MyVector()
     {
         Clear();
@@ -133,7 +134,7 @@ struct MyString
 
     MyString(const MyString& s)
     {
-        set(s.c_str());
+        set(&s[0]);
     }
 
     MyString(const char* s = nullptr)
@@ -143,22 +144,12 @@ struct MyString
 
     ~MyString()
     {
-        clear();
-    }
-
-    size_t length() const
-    {
-        return m_string ? strlen(m_string) : 0;
-    }
-
-    const char* c_str() const
-    {
-        return m_string;
+        Clear();
     }
 
     void operator = (const MyString& other)
     {
-        set(other.c_str());
+        set(&other[0]);
     }
 
     void operator = (const char* s)
@@ -168,8 +159,8 @@ struct MyString
 
     bool operator == (const MyString& other) const
     {
-        size_t thisLen = length();
-        size_t otherLen = other.length();
+        size_t thisLen = Length();
+        size_t otherLen = other.Length();
 
         if (thisLen == 0 && otherLen == 0)
             return true;
@@ -177,7 +168,7 @@ struct MyString
         if (thisLen != otherLen)
             return false;
 
-        return strcmp(m_string, other.c_str()) == 0;
+        return strcmp(m_string, &other[0]) == 0;
     }
 
     bool operator != (const MyString& other) const
@@ -199,11 +190,16 @@ struct MyString
         char* newString = new char[strlen(m_string) + strlen(s) + 1];
         strcpy(newString, m_string);
         strcat(newString, s);
-        clear();
+        Clear();
         m_string = newString;
     }
 
-    void clear()
+    char& operator [](size_t i) { return m_string[i]; }
+    const char& operator [](size_t i) const { return m_string[i]; }
+
+public:
+
+    void Clear()
     {
         if (m_string)
         {
@@ -212,15 +208,16 @@ struct MyString
         }
     }
 
-    char& operator [](size_t i) { return m_string[i]; }
-    const char& operator [](size_t i) const { return m_string[i]; }
+    size_t Length() const
+    {
+        return m_string ? strlen(m_string) : 0;
+    }
 
-public:
     void Resize(size_t newSize)
     {
         if (newSize == 0)
         {
-            clear();
+            Clear();
             return;
         }
 
@@ -237,7 +234,7 @@ public:
 private:
     void set(const char* s)
     {
-        clear();
+        Clear();
         if (s)
         {
             m_string = new char[strlen(s) + 1];

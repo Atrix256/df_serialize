@@ -16,14 +16,14 @@
         }
 
 #define ENUM_ITEM(_NAME, _DESCRIPTION) \
-        if (!_stricmp(stringValue.c_str(), #_NAME)) \
+        if (!_stricmp(&stringValue[0], #_NAME)) \
         { \
             value = EnumType::_NAME; \
             return true; \
         }
 
 #define ENUM_END() \
-        DFS_LOG("Unknown Enum Value: \"%s\"", stringValue.c_str()); \
+        DFS_LOG("Unknown Enum Value: \"%s\"", &stringValue[0]); \
         return false; \
     }
 
@@ -225,6 +225,6 @@ bool BinaryRead(TSTRING& value, const TDYNAMICARRAY<char>& data, size_t& offset)
 {
     // Yes, the strings are null terminated in the binary file
     value = (const char*)&data[offset];
-    offset += value.length() + 1;
+    offset += strlen(&value[0]) + 1;
     return true;
 }

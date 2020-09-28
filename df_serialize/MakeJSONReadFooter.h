@@ -63,7 +63,7 @@ bool ReadFromJSONBuffer(TROOT& root, const char* data)
         memcpy(&s[0], &data[errorOffset], end - errorOffset);
         s[end - errorOffset] = 0;
 
-        DFS_LOG("JSON parse error line %i\n%s\n%s\n", lineNumber, GetParseError_En(ok.Code()), s.c_str());
+        DFS_LOG("JSON parse error line %i\n%s\n%s\n", lineNumber, GetParseError_En(ok.Code()), &s[0]);
         return false;
     }
 
@@ -79,7 +79,7 @@ bool ReadFromJSONBuffer(TROOT& root, const TDYNAMICARRAY<char>& data)
 template<typename TROOT>
 bool ReadFromJSONBuffer(TROOT& root, const TSTRING& data)
 {
-    return ReadFromJSONBuffer(root, data.c_str());
+    return ReadFromJSONBuffer(root, &data[0]);
 }
 
 // Read a structure from a JSON file

@@ -179,6 +179,6 @@ rapidjson::Value MakeJSONValue(const bool& value, rapidjson::Document::Allocator
 rapidjson::Value MakeJSONValue(const TSTRING& value, rapidjson::Document::AllocatorType& allocator)
 {
     rapidjson::Value ret;
-    ret.SetString(value.c_str(), allocator);
+    ret.SetString(&value[0], allocator);
     return ret;
 }

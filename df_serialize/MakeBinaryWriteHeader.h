@@ -142,10 +142,10 @@ void BinaryWrite(bool value, TDYNAMICARRAY<char>& output)
 void BinaryWrite(const TSTRING& value, TDYNAMICARRAY<char>& output)
 {
     size_t offset = TDYNAMICARRAY_SIZE(output);
-    int len = (int)value.length();
+    int len = (int)strlen(&value[0]);
     TDYNAMICARRAY_RESIZE(output, TDYNAMICARRAY_SIZE(output) + len + 1);
     char* dest = (char*)&output[offset];
-    const char* src = value.c_str();
+    const char* src = &value[0];
     for (int i = 0; i <= len; ++i)
         dest[i] = src[i];
 }

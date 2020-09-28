@@ -17,9 +17,9 @@
         "<h1>Variants</h1>\n"
         "%s\n"
         "</html>\n",
-        enums.c_str(),
-        structs.c_str(),
-        variants.c_str()
+        &enums[0],
+        &structs[0],
+        &variants[0]
     );
     fclose(file);
     return true;
