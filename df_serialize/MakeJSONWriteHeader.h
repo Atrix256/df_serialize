@@ -43,12 +43,12 @@
 #define STRUCT_FIELD_NO_SERIALIZE(_TYPE, _NAME, _DEFAULT, _DESCRIPTION)
 
 #define STRUCT_DYNAMIC_ARRAY(_TYPE, _NAME, _DESCRIPTION) \
-        if (value._NAME.size() > 0) \
+        if (TDYNAMICARRAY_SIZE(value._NAME) > 0) \
         { \
             rapidjson::Value arr; \
             arr.SetArray(); \
-            for (auto& item : value._NAME) \
-                arr.PushBack(MakeJSONValue(item, allocator), allocator); \
+            for (size_t index = 0; index < TDYNAMICARRAY_SIZE(value._NAME); ++index) \
+                arr.PushBack(MakeJSONValue(value._NAME[index], allocator), allocator); \
             ret.AddMember(#_NAME, arr, allocator); \
         }
 
@@ -68,8 +68,8 @@
             { \
                 rapidjson::Value arr; \
                 arr.SetArray(); \
-                for (auto& item : value._NAME) \
-                    arr.PushBack(MakeJSONValue(item, allocator), allocator); \
+                for (size_t index = 0; index < _SIZE; ++index) \
+                    arr.PushBack(MakeJSONValue(value._NAME[index], allocator), allocator); \
                 ret.AddMember(#_NAME, arr, allocator); \
             } \
         }
@@ -179,6 +179,6 @@ rapidjson::Value MakeJSONValue(const bool& value, rapidjson::Document::Allocator
 rapidjson::Value MakeJSONValue(const TSTRING& value, rapidjson::Document::AllocatorType& allocator)
 {
     rapidjson::Value ret;
-    ret.SetString(value.c_str(), allocator);
+    ret.SetString(&value[0], allocator);
     return ret;
 }

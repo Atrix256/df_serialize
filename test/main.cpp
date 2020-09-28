@@ -19,6 +19,11 @@
 #define TSTATICARRAY MyArray
 #define TSTRING MyString
 
+#define TDYNAMICARRAY_SIZE(x) x.GetSize()
+#define TDYNAMICARRAY_RESIZE(x,y) x.Resize(y)
+#define TDYNAMICARRAY_PUSHBACK(x,y) x.PushBack(y)
+#define TSTRING_RESIZE(x,y) x.Resize(y)
+
 #endif
 
 // Expand the schemas
@@ -44,8 +49,9 @@ int main(int argc, char** argv)
         }
 
         // Modify the data
-        for (Lifeforms::LifeformVariant& variant : root.lifeForms)
+        for (size_t index = 0; index < TDYNAMICARRAY_SIZE(root.lifeForms); ++index)
         {
+            Lifeforms::LifeformVariant& variant = root.lifeForms[index];
             switch (variant._index)
             {
                 case Lifeforms::LifeformVariant::c_index_plant:
@@ -81,8 +87,8 @@ int main(int argc, char** argv)
             newLifeForm.animal.litterMin = 1;
             newLifeForm.animal.litterMax = 5;
             newLifeForm.animal.meat = 0.1f;
-            newLifeForm.animal.uniqueID = 3;  // Note: this is not serialized
-            root.lifeForms.push_back(newLifeForm);
+            newLifeForm.animal.uniqueID = 0;  // Note: this is not serialized so if you set it to non default value, it'll make serialize out/in round trip fail equality test
+            TDYNAMICARRAY_PUSHBACK(root.lifeForms, newLifeForm);
         }
 
         // write the modified data as JSON

@@ -4,7 +4,7 @@ bool WriteTextFile(const char* fileName, const TSTRING& data)
     fopen_s(&file, fileName, "w+b");
     if (!file)
         return false;
-    fwrite(data.c_str(), data.length(), 1, file);
+    fwrite(&data[0], strlen(&data[0]), 1, file);
     fclose(file);
     return true;
 }

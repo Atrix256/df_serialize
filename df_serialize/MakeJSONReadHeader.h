@@ -63,7 +63,7 @@
                 return false; \
             } \
             auto arr = document[#_NAME].GetArray(); \
-            value._NAME.resize(arr.Size()); \
+            TDYNAMICARRAY_RESIZE(value._NAME, arr.Size()); \
             int index = 0; \
             for (const rapidjson::Value& item : arr) \
             { \

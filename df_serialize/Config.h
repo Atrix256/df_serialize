@@ -14,3 +14,19 @@
 #ifndef TSTRING
 #define TSTRING std::string
 #endif
+
+#ifndef TDYNAMICARRAY_SIZE
+#define TDYNAMICARRAY_SIZE(x) x.size()
+#endif
+
+#ifndef TDYNAMICARRAY_RESIZE
+#define TDYNAMICARRAY_RESIZE(x,y) x.resize(y)
+#endif
+
+#ifndef TDYNAMICARRAY_PUSHBACK
+#define TDYNAMICARRAY_PUSHBACK(x,y) x.push_back(y)
+#endif
+
+#ifndef TSTRING_RESIZE
+#define TSTRING_RESIZE(x,y) x.resize(y)
+#endif

@@ -8,9 +8,10 @@
 template <typename T>
 struct MyVector
 {
+public:
     ~MyVector()
     {
-        clear();
+        Clear();
     }
 
     MyVector()
@@ -42,13 +43,22 @@ struct MyVector
 
     void operator = (const MyVector& other)
     {
-        clear();
+        Clear();
         resize(other.size());
         for (size_t index = 0; index < m_size; ++index)
             m_array[index] = other[index];
     }
 
-    void clear()
+    T& operator [](size_t i) { return m_array[i]; }
+    const T& operator [](size_t i) const { return m_array[i]; }
+
+public:
+    size_t GetSize() const
+    {
+        return m_size;
+    }
+
+    void Clear()
     {
         if (m_array)
         {
@@ -58,7 +68,7 @@ struct MyVector
         m_size = 0;
     }
 
-    void resize(size_t n)
+    void Resize(size_t n)
     {
         if (n == m_size)
             return;
@@ -69,39 +79,15 @@ struct MyVector
         for (size_t i = 0; i < copyCount; ++i)
             newArray[i] = m_array[i];
 
-        clear();
+        Clear();
         m_array = newArray;
         m_size = n;
     }
 
-    void push_back(const T& newItem)
+    void PushBack(const T& newItem)
     {
-        resize(m_size + 1);
+        Resize(m_size + 1);
         m_array[m_size - 1] = newItem;
-    }
-
-    size_t size() const
-    {
-        return m_size;
-    }
-
-    T& operator [](size_t i) { return m_array[i]; }
-    const T& operator [](size_t i) const { return m_array[i]; }
-
-    T* begin() { return m_array; }
-    T* end() { return m_array + m_size; }
-
-    const T* begin() const { return m_array; }
-    const T* end() const { return m_array + m_size; }
-
-    T* data()
-    {
-        return m_array;
-    }
-
-    const T* data() const
-    {
-        return m_array;
     }
 
 private:
@@ -132,22 +118,6 @@ struct MyArray
     T& operator [](size_t i) { return m_array[i]; }
     const T& operator [](size_t i) const { return m_array[i]; }
 
-    T* begin() { return m_array; }
-    T* end() { return m_array + N; }
-
-    const T* begin() const { return m_array; }
-    const T* end() const { return m_array + N; }
-
-    T* data()
-    {
-        return m_array;
-    }
-
-    const T* data() const
-    {
-        return m_array;
-    }
-
 private:
     T m_array[N];
 };
@@ -164,7 +134,7 @@ struct MyString
 
     MyString(const MyString& s)
     {
-        set(s.c_str());
+        set(&s[0]);
     }
 
     MyString(const char* s = nullptr)
@@ -174,40 +144,12 @@ struct MyString
 
     ~MyString()
     {
-        clear();
-    }
-
-    size_t length() const
-    {
-        return m_string ? strlen(m_string) : 0;
-    }
-
-    void resize(size_t newSize)
-    {
-        if (newSize == 0)
-        {
-            clear();
-            return;
-        }
-
-        char* newString = new char[newSize];
-        memset(newString, 0, newSize);
-        if (m_string)
-        {
-            strcpy(newString, m_string);
-            delete m_string;
-        }
-        m_string = newString;
-    }
-
-    const char* c_str() const
-    {
-        return m_string;
+        Clear();
     }
 
     void operator = (const MyString& other)
     {
-        set(other.c_str());
+        set(&other[0]);
     }
 
     void operator = (const char* s)
@@ -217,8 +159,8 @@ struct MyString
 
     bool operator == (const MyString& other) const
     {
-        size_t thisLen = length();
-        size_t otherLen = other.length();
+        size_t thisLen = Length();
+        size_t otherLen = other.Length();
 
         if (thisLen == 0 && otherLen == 0)
             return true;
@@ -226,7 +168,7 @@ struct MyString
         if (thisLen != otherLen)
             return false;
 
-        return strcmp(m_string, other.c_str()) == 0;
+        return strcmp(m_string, &other[0]) == 0;
     }
 
     bool operator != (const MyString& other) const
@@ -248,11 +190,16 @@ struct MyString
         char* newString = new char[strlen(m_string) + strlen(s) + 1];
         strcpy(newString, m_string);
         strcat(newString, s);
-        clear();
+        Clear();
         m_string = newString;
     }
 
-    void clear()
+    char& operator [](size_t i) { return m_string[i]; }
+    const char& operator [](size_t i) const { return m_string[i]; }
+
+public:
+
+    void Clear()
     {
         if (m_string)
         {
@@ -261,13 +208,33 @@ struct MyString
         }
     }
 
-    char& operator [](size_t i) { return m_string[i]; }
-    const char& operator [](size_t i) const { return m_string[i]; }
+    size_t Length() const
+    {
+        return m_string ? strlen(m_string) : 0;
+    }
+
+    void Resize(size_t newSize)
+    {
+        if (newSize == 0)
+        {
+            Clear();
+            return;
+        }
+
+        char* newString = new char[newSize];
+        memset(newString, 0, newSize);
+        if (m_string)
+        {
+            strcpy(newString, m_string);
+            delete m_string;
+        }
+        m_string = newString;
+    }
 
 private:
     void set(const char* s)
     {
-        clear();
+        Clear();
         if (s)
         {
             m_string = new char[strlen(s) + 1];

@@ -4,7 +4,7 @@ bool WriteBinaryFile(const char* fileName, TDYNAMICARRAY<char>& data)
     fopen_s(&file, fileName, "w+b");
     if (!file)
         return false;
-    fwrite(data.data(), data.size(), 1, file);
+    fwrite(&data[0], TDYNAMICARRAY_SIZE(data), 1, file);
     fclose(file);
     return true;
 }
