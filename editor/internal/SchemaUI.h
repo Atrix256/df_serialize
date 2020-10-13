@@ -6,19 +6,6 @@
 
 // Enums 
 
-#if 1
-
-#define ENUM_BEGIN(_NAMESPACE, _NAME, _DESCRIPTION) \
-	void ShowUI(_NAMESPACE::_NAME& value) \
-	{ \
-
-#define ENUM_ITEM(_NAME, _DESCRIPTION)
-
-#define ENUM_END() \
-    }
-
-#else
-
 #define ENUM_BEGIN(_NAMESPACE, _NAME, _DESCRIPTION) \
 	void ShowUI(_NAMESPACE::_NAME& value) \
 	{ \
@@ -33,8 +20,6 @@
         )) \
             value = (ThisType)v; \
     }
-
-#endif
 
 // Structs
 
@@ -113,13 +98,9 @@
         ImGui::PopID(); \
 	}
 
-// TODO: enums! need to drop down w/ their items in them. also push / pop id
-// TODO: variants probably need to be clearer about their type. maybe have a tree control for that?\
-// push id for array index!
-// TODO: be able to set variant type!
-// TODO: "add item" button for dynamic arrays. a delete button too
-// TODO: why is it only showing one of the two items in the dynamic array?
-// TODO: the problem has to do with the variant being empty. i think it might not be saving it out, but we want to save the label out so that it knows what _index is. binary file has no problems with this.
+// TODO: add delete button for dynamic arrays
+// TODO: be able to change / set variant type somehow (button?)
+// TODO: does all the editing work? liter min/max didn't seem to change!
 
 // Built in types
 
