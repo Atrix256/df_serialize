@@ -34,5 +34,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="schemas.h" />
+    <ClInclude Include="internal\SchemaUI.h" />
   </ItemGroup>
 </Project>

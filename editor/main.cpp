@@ -42,6 +42,11 @@
 
 // --------------------------- DF_SERIALIZE expansion ---------------------------
 
+#include "internal/SchemaUI.h"
+#include "schemas.h"
+
+// custom expansion above
+
 #ifdef _DEBUG
 #define DX12_ENABLE_DEBUG_LAYER
 #endif
@@ -229,12 +234,8 @@ INT WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine, INT nC
                         nfdchar_t* output = nullptr;
                         if (NFD_SaveDialog("json", currentDirectory, &output) == NFD_OKAY)
                         {
-                            g_rootDocument = RootDocumentType{};
                             if (!WriteToJSONFile(g_rootDocument, output))
-                            {
-                                g_rootDocument = RootDocumentType{};
                                 MessageBoxA(nullptr, "Could not save JSON file", "Error", MB_OK);
-                            }
                         }
                     }
                     if (ImGui::MenuItem("Save As Binary"))
@@ -242,12 +243,8 @@ INT WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine, INT nC
                         nfdchar_t* output = nullptr;
                         if (NFD_SaveDialog("bin", currentDirectory, &output) == NFD_OKAY)
                         {
-                            g_rootDocument = RootDocumentType{};
                             if (!WriteToBinaryFile(g_rootDocument, output))
-                            {
-                                g_rootDocument = RootDocumentType{};
                                 MessageBoxA(nullptr, "Could not save binary file", "Error", MB_OK);
-                            }
                         }
                     }
                     if (ImGui::MenuItem("Exit")) { ::PostQuitMessage(0); }
@@ -255,6 +252,8 @@ INT WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine, INT nC
                 }
                 ImGui::EndMenuBar();
             }
+
+            ShowUI(g_rootDocument);
 
             ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
 

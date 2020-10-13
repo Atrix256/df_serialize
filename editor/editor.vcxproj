@@ -165,6 +165,7 @@
     <ClCompile Include="nfd\nfd_win.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="internal\SchemaUI.h" />
     <ClInclude Include="schemas.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
