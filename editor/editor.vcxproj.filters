@@ -23,6 +23,9 @@
     <ClCompile Include="nfd\nfd_common.c">
       <Filter>nfd</Filter>
     </ClCompile>
+    <ClCompile Include="..\imgui\imgui_demo.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="imgui">

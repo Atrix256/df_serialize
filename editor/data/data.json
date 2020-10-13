@@ -1,10 +1,10 @@
 {
-  "lifeForms": [
-    {
-      "animal": {}
-    },
-    {
-      "plant": {}
-    }
-  ]
+    "lifeForms": [
+        {},
+        {
+            "plant": {
+                "poisonous": true
+            }
+        }
+    ]
 }

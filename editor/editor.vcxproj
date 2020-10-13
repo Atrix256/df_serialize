@@ -158,6 +158,7 @@
     <ClCompile Include="..\imgui\examples\imgui_impl_dx12.cpp" />
     <ClCompile Include="..\imgui\examples\imgui_impl_win32.cpp" />
     <ClCompile Include="..\imgui\imgui.cpp" />
+    <ClCompile Include="..\imgui\imgui_demo.cpp" />
     <ClCompile Include="..\imgui\imgui_draw.cpp" />
     <ClCompile Include="..\imgui\imgui_widgets.cpp" />
     <ClCompile Include="main.cpp" />
