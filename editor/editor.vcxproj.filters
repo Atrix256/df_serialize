@@ -24,6 +24,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="schema.h" />
+    <ClInclude Include="schemas.h" />
   </ItemGroup>
 </Project>

@@ -9,6 +9,38 @@
 #include <dxgi1_4.h>
 #include <tchar.h>
 
+// --------------------------- DF_SERIALIZE expansion ---------------------------
+
+#include "../df_serialize/MakeTypes.h"
+#include "schemas.h"
+
+#include "../df_serialize/MakeBinaryReadHeader.h"
+#include "schemas.h"
+#include "../df_serialize/MakeBinaryReadFooter.h"
+
+#include "../df_serialize/MakeBinaryWriteHeader.h"
+#include "schemas.h"
+#include "../df_serialize/MakeBinaryWriteFooter.h"
+
+#include "../df_serialize/MakeEqualityTests.h"
+#include "schemas.h"
+
+#include "../rapidjson/document.h"
+#include "../rapidjson/error/en.h"
+#include "../rapidjson/writer.h"
+#include "../rapidjson/prettywriter.h"
+#include "../rapidjson/stringbuffer.h"
+
+#include "../df_serialize/MakeJSONReadHeader.h"
+#include "schemas.h"
+#include "../df_serialize/MakeJSONReadFooter.h"
+
+#include "../df_serialize/MakeJSONWriteHeader.h"
+#include "schemas.h"
+#include "../df_serialize/MakeJSONWriteFooter.h"
+
+// --------------------------- DF_SERIALIZE expansion ---------------------------
+
 #ifdef _DEBUG
 #define DX12_ENABLE_DEBUG_LAYER
 #endif
@@ -20,6 +52,8 @@
 
 int g_width = 0;
 int g_height = 0;
+
+Lifeforms::Root g_rootDocument;
 
 struct FrameContext
 {
@@ -494,8 +528,10 @@ TODO:
 - command line interface to cook a file. load up the json and save as binary.
 - need a file open dialog. what did you use for that again? i think your siege engine uses it...  https://github.com/Atrix256/Siege/tree/master/nfd
 - make all the file options work!
+- should we let you save/load binary and save/load json? might be nice to be able to load cooked data to see what's inside & verify...
 
 NOTE:
 - as part of the instructions. schema.h needs to include your schemas
+- also need to set g_rootDocument type! Lifeforms::Root g_rootDocument;
 
 */
