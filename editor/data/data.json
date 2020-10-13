@@ -1,6 +1,8 @@
 {
     "lifeForms": [
-        {},
+        {
+            "animal": {}
+        },
         {
             "plant": {
                 "poisonous": true

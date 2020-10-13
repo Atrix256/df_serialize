@@ -41,11 +41,13 @@
 #define STRUCT_BEGIN(_NAMESPACE, _NAME, _DESCRIPTION) \
 	void ShowUI(_NAMESPACE::_NAME& value) \
 	{ \
+        using namespace _NAMESPACE; \
         ImGui::PushID(#_NAME); \
 
 #define STRUCT_INHERIT_BEGIN(_NAMESPACE, _NAME, _BASE, _DESCRIPTION) \
 	void ShowUI(_NAMESPACE::_NAME& value) \
 	{ \
+        using namespace _NAMESPACE; \
         ImGui::PushID(#_NAME); \
         ShowUI(*(_BASE*)&value); \
 
@@ -60,7 +62,6 @@
 #define STRUCT_FIELD_NO_SERIALIZE(_TYPE, _NAME, _DEFAULT, _DESCRIPTION)
 
 #define STRUCT_DYNAMIC_ARRAY(_TYPE, _NAME, _DESCRIPTION) \
-        ImGui::PushID(#_NAME); \
         if (ImGui::TreeNode(#_NAME)) \
         { \
             for (size_t index = 0; index < TDYNAMICARRAY_SIZE(value._NAME); ++index) \
@@ -70,11 +71,11 @@
                 ImGui::PopID(); \
             } \
             ImGui::TreePop(); \
-        } \
-        ImGui::PopID();
+            if (ImGui::Button("Add")) \
+                value._NAME.push_back(_TYPE{}); \
+        }
 
 #define STRUCT_STATIC_ARRAY(_TYPE, _NAME, _SIZE, _DEFAULT, _DESCRIPTION) \
-        ImGui::PushID(#_NAME); \
         if (ImGui::TreeNode(#_NAME)) \
         { \
             for (size_t index = 0; index < _SIZE; ++index) \
@@ -84,8 +85,7 @@
                 ImGui::PopID(); \
             } \
             ImGui::TreePop(); \
-        } \
-        ImGui::PopID();
+        }
 
 #define STRUCT_END() \
         ImGui::PopID(); \
@@ -102,13 +102,11 @@
 #define VARIANT_TYPE(_TYPE, _NAME, _DEFAULT, _DESCRIPTION) \
         if (value._index == ThisType::c_index_##_NAME) \
         { \
-            ImGui::PushID(#_NAME); \
             if (ImGui::TreeNode(#_NAME)) \
             { \
                 ShowUI(value._NAME); \
                 ImGui::TreePop(); \
             } \
-            ImGui::PopID(); \
         }
 
 #define VARIANT_END() \
@@ -121,6 +119,7 @@
 // TODO: be able to set variant type!
 // TODO: "add item" button for dynamic arrays. a delete button too
 // TODO: why is it only showing one of the two items in the dynamic array?
+// TODO: the problem has to do with the variant being empty. i think it might not be saving it out, but we want to save the label out so that it knows what _index is. binary file has no problems with this.
 
 // Built in types
 

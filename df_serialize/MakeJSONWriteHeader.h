@@ -87,8 +87,9 @@
         rapidjson::Value ret; \
         ret.SetObject(); \
 
+// NOTE: always save out the variant object, so we know what _index is!
 #define VARIANT_TYPE(_TYPE, _NAME, _DEFAULT, _DESCRIPTION) \
-        if (value._index == ThisType::c_index_##_NAME && value._NAME != _DEFAULT) \
+        if (value._index == ThisType::c_index_##_NAME /*&& value._NAME != _DEFAULT*/) \
             ret.AddMember(#_NAME, MakeJSONValue(value._NAME, allocator), allocator);
 
 #define VARIANT_END() \
