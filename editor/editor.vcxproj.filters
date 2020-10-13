@@ -17,10 +17,19 @@
     <ClCompile Include="..\imgui\imgui_widgets.cpp">
       <Filter>imgui</Filter>
     </ClCompile>
+    <ClCompile Include="nfd\nfd_win.cpp">
+      <Filter>nfd</Filter>
+    </ClCompile>
+    <ClCompile Include="nfd\nfd_common.c">
+      <Filter>nfd</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="imgui">
       <UniqueIdentifier>{e20324b4-3bbc-4477-80ff-e3a5baa5fc0c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="nfd">
+      <UniqueIdentifier>{0f0cc4c1-3097-402a-bd3d-7d9cbfb6f67d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

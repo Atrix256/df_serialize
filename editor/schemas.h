@@ -3,3 +3,5 @@
 #include <array>
 #include <vector>
 #include "../test/schemas/schemas.h"
+
+#define RootDocumentType Lifeforms::Root

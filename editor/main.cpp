@@ -8,6 +8,7 @@
 #include <d3d12.h>
 #include <dxgi1_4.h>
 #include <tchar.h>
+#include "nfd.h"
 
 // --------------------------- DF_SERIALIZE expansion ---------------------------
 
@@ -53,7 +54,7 @@
 int g_width = 0;
 int g_height = 0;
 
-Lifeforms::Root g_rootDocument;
+RootDocumentType g_rootDocument;
 
 struct FrameContext
 {
@@ -93,11 +94,14 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 // Main code
 INT WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine, INT nCmdShow)
 {
+    char currentDirectory[1024];
+    GetCurrentDirectoryA(1024, currentDirectory);
+
     // Create application window
     //ImGui_ImplWin32_EnableDpiAwareness();
-    WNDCLASSEX wc = { sizeof(WNDCLASSEX), CS_CLASSDC, WndProc, 0L, 0L, GetModuleHandle(NULL), NULL, NULL, NULL, NULL, _T("ImGui Example"), NULL };
+    WNDCLASSEX wc = { sizeof(WNDCLASSEX), CS_CLASSDC, WndProc, 0L, 0L, GetModuleHandle(NULL), NULL, NULL, NULL, NULL, _T("Editor"), NULL };
     ::RegisterClassEx(&wc);
-    HWND hwnd = ::CreateWindow(wc.lpszClassName, _T("Dear ImGui DirectX12 Example"), WS_OVERLAPPEDWINDOW, 100, 100, 1280, 800, NULL, NULL, wc.hInstance, NULL);
+    HWND hwnd = ::CreateWindow(wc.lpszClassName, _T("Editor"), WS_OVERLAPPEDWINDOW, 100, 100, 1280, 800, NULL, NULL, wc.hInstance, NULL);
 
     // Initialize Direct3D
     if (!CreateDeviceD3D(hwnd))
@@ -186,11 +190,66 @@ INT WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine, INT nC
             {
                 if (ImGui::BeginMenu("File"))
                 {
-                    if (ImGui::MenuItem("New")) {}
-                    if (ImGui::MenuItem("Open")) {}
-                    if (ImGui::MenuItem("Save")) {}
-                    if (ImGui::MenuItem("Save As...")) {}
-                    if (ImGui::MenuItem("Cook")) {}
+                    if (ImGui::MenuItem("New"))
+                    {
+                        g_rootDocument = RootDocumentType{};
+                    }
+
+                    if (ImGui::MenuItem("Load JSON File"))
+                    {
+                        nfdchar_t* output = nullptr;
+                        if (NFD_OpenDialog("json", currentDirectory, &output) == NFD_OKAY)
+                        {
+                            g_rootDocument = RootDocumentType{};
+                            if (!ReadFromJSONFile(g_rootDocument, output))
+                            {
+                                g_rootDocument = RootDocumentType{};
+                                MessageBoxA(nullptr, "Could not load JSON file", "Error", MB_OK);
+                            }
+                        }
+                    }
+
+                    if (ImGui::MenuItem("Load Binary File"))
+                    {
+                        nfdchar_t* output = nullptr;
+                        if (NFD_OpenDialog("bin", currentDirectory, &output) == NFD_OKAY)
+                        {
+                            g_rootDocument = RootDocumentType{};
+                            if (!ReadFromBinaryFile(g_rootDocument, output))
+                            {
+                                g_rootDocument = RootDocumentType{};
+                                MessageBoxA(nullptr, "Could not load binary file", "Error", MB_OK);
+                            }
+                        }
+                    }
+                    if (ImGui::MenuItem("Save")) {} // save whatever the source file was, in the source file type
+
+                    if (ImGui::MenuItem("Save As JSON"))
+                    {
+                        nfdchar_t* output = nullptr;
+                        if (NFD_SaveDialog("json", currentDirectory, &output) == NFD_OKAY)
+                        {
+                            g_rootDocument = RootDocumentType{};
+                            if (!WriteToJSONFile(g_rootDocument, output))
+                            {
+                                g_rootDocument = RootDocumentType{};
+                                MessageBoxA(nullptr, "Could not save JSON file", "Error", MB_OK);
+                            }
+                        }
+                    }
+                    if (ImGui::MenuItem("Save As Binary"))
+                    {
+                        nfdchar_t* output = nullptr;
+                        if (NFD_SaveDialog("bin", currentDirectory, &output) == NFD_OKAY)
+                        {
+                            g_rootDocument = RootDocumentType{};
+                            if (!WriteToBinaryFile(g_rootDocument, output))
+                            {
+                                g_rootDocument = RootDocumentType{};
+                                MessageBoxA(nullptr, "Could not save binary file", "Error", MB_OK);
+                            }
+                        }
+                    }
                     if (ImGui::MenuItem("Exit")) { ::PostQuitMessage(0); }
                     ImGui::EndMenu();
                 }
@@ -523,15 +582,16 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 /*
 
 TODO:
-- what's a clean way to specify the schema include? maybe put this stuff above into a different file, and have main.cpp be real lean and clear what it's doing? (or a config.h?)
-- how do you specify what is the root level document type? probably same way.
+- need to reflect the document and let people edit it
 - command line interface to cook a file. load up the json and save as binary.
-- need a file open dialog. what did you use for that again? i think your siege engine uses it...  https://github.com/Atrix256/Siege/tree/master/nfd
-- make all the file options work!
+- make the "save" file option work.
+- when editing, mark the document as dirty and confirm on new / exit?
 - should we let you save/load binary and save/load json? might be nice to be able to load cooked data to see what's inside & verify...
+- can we prepoluate save as file names? like data.bin, data.json.
 
 NOTE:
 - as part of the instructions. schema.h needs to include your schemas
 - also need to set g_rootDocument type! Lifeforms::Root g_rootDocument;
+- maybe make this a config.h file?
 
 */
