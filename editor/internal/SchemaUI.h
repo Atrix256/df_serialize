@@ -83,10 +83,21 @@
 	{ \
 		typedef _NAMESPACE::_NAME ThisType; \
         ImGui::PushID(#_NAME); \
+        struct TypeInfo \
+        { \
+            std::string name; \
+            uint32_t _index; \
+        }; \
+        std::vector<TypeInfo> typesInfo; \
+        int selectedIndex = -1; \
+        int currentIndex = -1;
 
 #define VARIANT_TYPE(_TYPE, _NAME, _DEFAULT, _DESCRIPTION) \
+        currentIndex++; \
+        typesInfo.push_back({#_NAME, ThisType::c_index_##_NAME}); \
         if (value._index == ThisType::c_index_##_NAME) \
         { \
+            selectedIndex = currentIndex; \
             if (ImGui::TreeNode(#_NAME)) \
             { \
                 ShowUI(value._NAME); \
@@ -95,11 +106,27 @@
         }
 
 #define VARIANT_END() \
+        ImGui::PushID("_type"); \
+        ImGui::Text("Type"); \
+        ImGui::SameLine(); \
+        if (ImGui::BeginCombo("", selectedIndex < typesInfo.size() ? typesInfo[selectedIndex].name.c_str() : "", 0)) \
+        { \
+            for (int n = 0; n < (int)typesInfo.size(); ++n) \
+            { \
+                const bool selected = (selectedIndex == n); \
+                if (ImGui::Selectable(typesInfo[n].name.c_str(), selected)) \
+                    value._index = typesInfo[n]._index; \
+                /* Set the initial focus when opening the combo (scrolling + keyboard navigation focus) */ \
+                if (selected) \
+                    ImGui::SetItemDefaultFocus(); \
+            } \
+            ImGui::EndCombo(); \
+        } \
+        ImGui::PopID(); \
         ImGui::PopID(); \
 	}
 
 // TODO: add delete button for dynamic arrays
-// TODO: be able to change / set variant type somehow (button?)
 // TODO: does all the editing work? liter min/max didn't seem to change!
 
 // Built in types
@@ -108,56 +135,56 @@ void ShowUI(uint8_t& value)
 {
     int v = (int)value;
     if (ImGui::InputInt("", &v))
-        v = (uint8_t)value;
+        value = (uint8_t)v;
 }
 
 void ShowUI(uint16_t& value)
 {
     int v = (int)value;
     if (ImGui::InputInt("", &v))
-        v = (uint16_t)value;
+        value = (uint16_t)v;
 }
 
 void ShowUI(uint32_t& value)
 {
     int v = (int)value;
     if (ImGui::InputInt("", &v))
-        v = (uint32_t)value;
+        value = (uint32_t)v;
 }
 
 void ShowUI(uint64_t& value)
 {
     int v = (int)value;
     if (ImGui::InputInt("", &v))
-        v = (uint64_t)value;
+        value = (uint64_t)v;
 }
 
 void ShowUI(int8_t& value)
 {
     int v = (int)value;
     if (ImGui::InputInt("", &v))
-        v = (int8_t)value;
+        value = (int8_t)v;
 }
 
 void ShowUI(int16_t& value)
 {
     int v = (int)value;
     if (ImGui::InputInt("", &v))
-        v = (int16_t)value;
+        value = (int16_t)v;
 }
 
 void ShowUI(int32_t& value)
 {
     int v = (int)value;
     if (ImGui::InputInt("", &v))
-        v = (int32_t)value;
+        value = (int32_t)v;
 }
 
 void ShowUI(int64_t& value)
 {
     int v = (int)value;
     if (ImGui::InputInt("", &v))
-        v = (int64_t)value;
+        value = (int64_t)v;
 }
 
 void ShowUI(float& value)

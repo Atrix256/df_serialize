@@ -1,11 +1,27 @@
 {
     "lifeForms": [
         {
-            "animal": {}
+            "animal": {
+                "name": "hey",
+                "description": "it's me",
+                "dietType": "Carnivore",
+                "aggression": 0.699999988079071,
+                "meat": 2.0,
+                "litterMin": 4,
+                "litterMax": 17
+            }
         },
         {
             "plant": {
-                "poisonous": true
+                "name": "yo",
+                "description": "it's another guy",
+                "dietType": "Omnivore",
+                "edibleMatter": 3.0,
+                "albedo": [
+                    0.800000011920929,
+                    0.27000001072883608,
+                    0.03999999910593033
+                ]
             }
         }
     ]

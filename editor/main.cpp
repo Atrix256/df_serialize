@@ -573,7 +573,8 @@ TODO:
 - make the "save" file option work.
 - when editing, mark the document as dirty and confirm on new / exit?
 - should we let you save/load binary and save/load json? might be nice to be able to load cooked data to see what's inside & verify...
-- can we prepoluate save as file names? like data.bin, data.json.
+- can we prepoluate save as file names when we open the dialog? like data.bin, data.json.
+- can we make it so all the text and edit boxes line up? use a table maybe? i dunno
 
 NOTE:
 - as part of the instructions. schema.h needs to include your schemas
