@@ -1,5 +1,9 @@
 # df_serialize
 
+Folders:
+1. **df_serialize** - this is the library.
+2. **test** - this is a test program which also serves as an example for how to use the library.
+
 **Demofox Serialization Library**
 
 Minimal header only C++ library that allows you to define data schemas which then can be read or written in JSON or binary.  Nested structures, arrays, struct inheritance and nullable variants are supported.  By default, STL container types are used, but that can be configured in Config.h. STL is not a requirement.
