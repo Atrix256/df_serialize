@@ -6,14 +6,35 @@
 
 // Enums 
 
+#if 1
+
 #define ENUM_BEGIN(_NAMESPACE, _NAME, _DESCRIPTION) \
 	void ShowUI(_NAMESPACE::_NAME& value) \
-	{
+	{ \
 
 #define ENUM_ITEM(_NAME, _DESCRIPTION)
 
 #define ENUM_END() \
     }
+
+#else
+
+#define ENUM_BEGIN(_NAMESPACE, _NAME, _DESCRIPTION) \
+	void ShowUI(_NAMESPACE::_NAME& value) \
+	{ \
+        typedef _NAMESPACE::_NAME ThisType; \
+        int v = (int)value; \
+        if(ImGui::Combo("", &v,
+
+#define ENUM_ITEM(_NAME, _DESCRIPTION) \
+        #_NAME "\0"
+
+#define ENUM_END() \
+        )) \
+            value = (ThisType)v; \
+    }
+
+#endif
 
 // Structs
 
@@ -39,24 +60,32 @@
 #define STRUCT_FIELD_NO_SERIALIZE(_TYPE, _NAME, _DEFAULT, _DESCRIPTION)
 
 #define STRUCT_DYNAMIC_ARRAY(_TYPE, _NAME, _DESCRIPTION) \
+        ImGui::PushID(#_NAME); \
         if (ImGui::TreeNode(#_NAME)) \
         { \
-            ImGui::PushID(#_NAME); \
             for (size_t index = 0; index < TDYNAMICARRAY_SIZE(value._NAME); ++index) \
+            { \
+                ImGui::PushID((int)index); \
                 ShowUI(value._NAME[index]); \
+                ImGui::PopID(); \
+            } \
             ImGui::TreePop(); \
-            ImGui::PopID(); \
-        }
+        } \
+        ImGui::PopID();
 
 #define STRUCT_STATIC_ARRAY(_TYPE, _NAME, _SIZE, _DEFAULT, _DESCRIPTION) \
+        ImGui::PushID(#_NAME); \
         if (ImGui::TreeNode(#_NAME)) \
         { \
-            ImGui::PushID(#_NAME); \
             for (size_t index = 0; index < _SIZE; ++index) \
+            { \
+                ImGui::PushID((int)index); \
                 ShowUI(value._NAME[index]); \
+                ImGui::PopID(); \
+            } \
             ImGui::TreePop(); \
-            ImGui::PopID(); \
-        }
+        } \
+        ImGui::PopID();
 
 #define STRUCT_END() \
         ImGui::PopID(); \
@@ -74,7 +103,11 @@
         if (value._index == ThisType::c_index_##_NAME) \
         { \
             ImGui::PushID(#_NAME); \
-            ShowUI(value._NAME); \
+            if (ImGui::TreeNode(#_NAME)) \
+            { \
+                ShowUI(value._NAME); \
+                ImGui::TreePop(); \
+            } \
             ImGui::PopID(); \
         }
 
@@ -83,54 +116,73 @@
 	}
 
 // TODO: enums! need to drop down w/ their items in them. also push / pop id
-// TODO: built in types!
-// TODO: variants probably need to be clearer about their type. maybe have a tree control for that?
+// TODO: variants probably need to be clearer about their type. maybe have a tree control for that?\
+// push id for array index!
+// TODO: be able to set variant type!
+// TODO: "add item" button for dynamic arrays. a delete button too
+// TODO: why is it only showing one of the two items in the dynamic array?
 
 // Built in types
 
 void ShowUI(uint8_t& value)
 {
-    int ijkl = 0;
+    int v = (int)value;
+    if (ImGui::InputInt("", &v))
+        v = (uint8_t)value;
 }
 
 void ShowUI(uint16_t& value)
 {
-    int ijkl = 0;
+    int v = (int)value;
+    if (ImGui::InputInt("", &v))
+        v = (uint16_t)value;
 }
 
 void ShowUI(uint32_t& value)
 {
-    int ijkl = 0;
+    int v = (int)value;
+    if (ImGui::InputInt("", &v))
+        v = (uint32_t)value;
 }
 
 void ShowUI(uint64_t& value)
 {
-    int ijkl = 0;
+    int v = (int)value;
+    if (ImGui::InputInt("", &v))
+        v = (uint64_t)value;
 }
 
 void ShowUI(int8_t& value)
 {
-    int ijkl = 0;
+    int v = (int)value;
+    if (ImGui::InputInt("", &v))
+        v = (int8_t)value;
 }
 
 void ShowUI(int16_t& value)
 {
-    int ijkl = 0;
+    int v = (int)value;
+    if (ImGui::InputInt("", &v))
+        v = (int16_t)value;
 }
 
 void ShowUI(int32_t& value)
 {
-    int ijkl = 0;
+    int v = (int)value;
+    if (ImGui::InputInt("", &v))
+        v = (int32_t)value;
 }
 
 void ShowUI(int64_t& value)
 {
-    int ijkl = 0;
+    int v = (int)value;
+    if (ImGui::InputInt("", &v))
+        v = (int64_t)value;
 }
 
 void ShowUI(float& value)
 {
-    int ijkl = 0;
+    ImGui::InputFloat("", &value);
 }
 
 void ShowUI(bool& value)
