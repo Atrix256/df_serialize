@@ -55,15 +55,20 @@
                 { \
                     ImGui::PushID((int)index); \
                     ShowUI(value._NAME[index]); \
-                    ImGui::PopID(); \
                     if (ImGui::Button("Delete")) \
                         deleteIndex = (int)index; \
+                    ImGui::PopID(); \
                 } \
                 ImGui::TreePop(); \
                 if (ImGui::Button("Add")) \
                     value._NAME.push_back(_TYPE{}); \
                 if (deleteIndex != -1) \
+                { \
+                    char buffer[256];\
+                    sprintf_s(buffer, "deleteIndex = %i\n", deleteIndex); \
+                    OutputDebugStringA(buffer); \
                     value._NAME.erase(value._NAME.begin() + deleteIndex); \
+                }   \
             } \
         }
 
@@ -105,11 +110,7 @@
         if (value._index == ThisType::c_index_##_NAME) \
         { \
             selectedIndex = currentIndex; \
-            if (ImGui::TreeNode(#_NAME)) \
-            { \
-                ShowUI(value._NAME); \
-                ImGui::TreePop(); \
-            } \
+            ShowUI(value._NAME); \
         }
 
 #define VARIANT_END() \
