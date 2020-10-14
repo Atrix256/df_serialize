@@ -68,10 +68,16 @@
             } \
             ImGui::Separator(); \
             if (ImGui::Button("Add")) \
+            { \
+                ret = true; \
                 value._NAME.push_back(_TYPE{}); \
+            } \
             ImGui::TreePop(); \
             if (deleteIndex != -1) \
+            { \
+                ret = true; \
                 value._NAME.erase(value._NAME.begin() + deleteIndex); \
+            } \
         } \
         else \
         { \
