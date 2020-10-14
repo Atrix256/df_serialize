@@ -1,8 +1,11 @@
 # df_serialize
 
 Folders:
-1. **df_serialize** - this is the library.
-2. **test** - this is a test program which also serves as an example for how to use the library.
+1. **df_serialize** - this is the library.  This is all you need.
+2. **editor** - an editor which can save/load json files of the schema type, and can also save binary files or "cook" json files to binary via the command line.
+3. **imgui** - imgui submodule, used by the editor.
+4. **rapidjson** - used by the editor and the test app both
+4. **test** - this is a test program which also serves as an example for how to use the library.
 
 **Demofox Serialization Library**
 
