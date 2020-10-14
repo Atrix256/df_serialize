@@ -2,7 +2,6 @@
 
 ## Folders
 
-Folders:
 1. **df_serialize** - this is the library.  This is all you need.
 2. **editor** - an editor which can save/load json files of the schema type, and can also save binary files or "cook" json files to binary via the command line.
 3. **imgui** - imgui submodule, used by the editor.
