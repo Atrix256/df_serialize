@@ -48,9 +48,7 @@
 
 #define STRUCT_DYNAMIC_ARRAY(_TYPE, _NAME, _DESCRIPTION) \
         { \
-            char buffer[256]; \
-            sprintf_s(buffer, #_NAME "[%i]", (int)TDYNAMICARRAY_SIZE(value._NAME)); \
-            if (ImGui::TreeNode(buffer)) \
+            if (ImGui::TreeNode(#_NAME)) \
             { \
                 int deleteIndex = -1; \
                 for (size_t index = 0; index < TDYNAMICARRAY_SIZE(value._NAME); ++index) \

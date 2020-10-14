@@ -568,14 +568,12 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 /*
 
 TODO:
-- need to reflect the document and let people edit it
-- command line interface to cook a file. load up the json and save as binary.
+- command line interface to cook a file. load up the json and save as binary. possibly also uncook? dunno
 - make the "save" file option work.
 - when editing, mark the document as dirty and confirm on new / exit?
-- should we let you save/load binary and save/load json? might be nice to be able to load cooked data to see what's inside & verify...
 - can we prepoluate save as file names when we open the dialog? like data.bin, data.json.
 - can we make it so all the text and edit boxes line up? use a table maybe? i dunno
-- when adding a lifeform, it closes it. i think it's cause the text doesn't match the ID. how to fix that?
+- deleting the last item in an array doesn't seem to work until there's only 1 item there?
 
 NOTE:
 - as part of the instructions. schema.h needs to include your schemas
