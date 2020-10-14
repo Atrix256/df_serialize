@@ -36,7 +36,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="schemas.h" />
     <ClInclude Include="internal\SchemaUI.h" />
+    <ClInclude Include="config.h" />
   </ItemGroup>
 </Project>

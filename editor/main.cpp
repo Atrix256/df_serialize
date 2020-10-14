@@ -13,18 +13,18 @@
 // --------------------------- DF_SERIALIZE expansion ---------------------------
 
 #include "../df_serialize/MakeTypes.h"
-#include "schemas.h"
+#include "config.h"
 
 #include "../df_serialize/MakeBinaryReadHeader.h"
-#include "schemas.h"
+#include "config.h"
 #include "../df_serialize/MakeBinaryReadFooter.h"
 
 #include "../df_serialize/MakeBinaryWriteHeader.h"
-#include "schemas.h"
+#include "config.h"
 #include "../df_serialize/MakeBinaryWriteFooter.h"
 
 #include "../df_serialize/MakeEqualityTests.h"
-#include "schemas.h"
+#include "config.h"
 
 #include "../rapidjson/document.h"
 #include "../rapidjson/error/en.h"
@@ -33,17 +33,17 @@
 #include "../rapidjson/stringbuffer.h"
 
 #include "../df_serialize/MakeJSONReadHeader.h"
-#include "schemas.h"
+#include "config.h"
 #include "../df_serialize/MakeJSONReadFooter.h"
 
 #include "../df_serialize/MakeJSONWriteHeader.h"
-#include "schemas.h"
+#include "config.h"
 #include "../df_serialize/MakeJSONWriteFooter.h"
 
 // --------------------------- DF_SERIALIZE expansion ---------------------------
 
 #include "internal/SchemaUI.h"
-#include "schemas.h"
+#include "config.h"
 
 // custom expansion above
 
@@ -56,10 +56,20 @@
 #pragma comment(lib, "dxguid.lib")
 #endif
 
+enum class ERootDocumentLoadedAs
+{
+    JSON,
+    Binary,
+    Unknown
+};
+
 int g_width = 0;
 int g_height = 0;
 
 RootDocumentType g_rootDocument;
+std::string g_rootDocumentFileName = "";
+ERootDocumentLoadedAs g_rootDocumentLoadedAs = ERootDocumentLoadedAs::Unknown;
+bool g_rootDocumentDirty = false;
 
 struct FrameContext
 {
@@ -96,6 +106,26 @@ FrameContext* WaitForNextFrameResources();
 void ResizeSwapChain(HWND hWnd, int width, int height);
 LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
+HWND g_hwnd;
+
+void UpdateWindowTitle()
+{
+    char buffer[1024];
+    if (g_rootDocumentFileName.empty())
+        sprintf_s(buffer, "<untitled>%s - Editor", g_rootDocumentDirty ? "*" : "");
+    else
+        sprintf_s(buffer, "%s (%s)%s - Editor", g_rootDocumentFileName.c_str(), g_rootDocumentLoadedAs == ERootDocumentLoadedAs::JSON ? "JSON" : "Binary", g_rootDocumentDirty ? "*" : "");
+
+    bool ret = SetWindowTextA(g_hwnd, buffer);
+}
+
+bool ConfirmLoseChanges()
+{
+    if (!g_rootDocumentDirty)
+        return true;
+    return MessageBoxA(nullptr, "Your current document is not saved and all changes will be lost. Continue?", "Warning", MB_OKCANCEL) == IDOK;
+}
+
 // Main code
 INT WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine, INT nCmdShow)
 {
@@ -107,6 +137,7 @@ INT WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine, INT nC
     WNDCLASSEX wc = { sizeof(WNDCLASSEX), CS_CLASSDC, WndProc, 0L, 0L, GetModuleHandle(NULL), NULL, NULL, NULL, NULL, _T("Editor"), NULL };
     ::RegisterClassEx(&wc);
     HWND hwnd = ::CreateWindow(wc.lpszClassName, _T("Editor"), WS_OVERLAPPEDWINDOW, 100, 100, 1280, 800, NULL, NULL, wc.hInstance, NULL);
+    g_hwnd = hwnd;
 
     // Initialize Direct3D
     if (!CreateDeviceD3D(hwnd))
@@ -156,6 +187,8 @@ INT WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine, INT nC
     // Our state
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
+    UpdateWindowTitle();
+
     // Main loop
     MSG msg;
     ZeroMemory(&msg, sizeof(msg));
@@ -193,39 +226,72 @@ INT WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine, INT nC
             {
                 if (ImGui::BeginMenu("File"))
                 {
-                    if (ImGui::MenuItem("New"))
+                    if (ImGui::MenuItem("New") && ConfirmLoseChanges())
                     {
                         g_rootDocument = RootDocumentType{};
+                        g_rootDocumentFileName = "";
+                        g_rootDocumentLoadedAs = ERootDocumentLoadedAs::Unknown;
+                        g_rootDocumentDirty = false;
+                        UpdateWindowTitle();
                     }
 
-                    if (ImGui::MenuItem("Load JSON File"))
+                    if (ImGui::MenuItem("Load JSON File") && ConfirmLoseChanges())
                     {
                         nfdchar_t* output = nullptr;
                         if (NFD_OpenDialog("json", currentDirectory, &output) == NFD_OKAY)
                         {
+                            g_rootDocumentDirty = false;
                             g_rootDocument = RootDocumentType{};
                             if (!ReadFromJSONFile(g_rootDocument, output))
                             {
                                 g_rootDocument = RootDocumentType{};
                                 MessageBoxA(nullptr, "Could not load JSON file", "Error", MB_OK);
                             }
+                            else
+                            {
+                                g_rootDocumentFileName = output;
+                                g_rootDocumentLoadedAs = ERootDocumentLoadedAs::JSON;
+                                UpdateWindowTitle();
+                            }
                         }
                     }
 
-                    if (ImGui::MenuItem("Load Binary File"))
+                    if (ImGui::MenuItem("Load Binary File") && ConfirmLoseChanges())
                     {
                         nfdchar_t* output = nullptr;
                         if (NFD_OpenDialog("bin", currentDirectory, &output) == NFD_OKAY)
                         {
+                            g_rootDocumentDirty = false;
                             g_rootDocument = RootDocumentType{};
                             if (!ReadFromBinaryFile(g_rootDocument, output))
                             {
                                 g_rootDocument = RootDocumentType{};
                                 MessageBoxA(nullptr, "Could not load binary file", "Error", MB_OK);
                             }
+                            else
+                            {
+                                g_rootDocumentFileName = output;
+                                g_rootDocumentLoadedAs = ERootDocumentLoadedAs::Binary;
+                                UpdateWindowTitle();
+                            }
                         }
                     }
-                    if (ImGui::MenuItem("Save")) {} // save whatever the source file was, in the source file type
+
+                    if (g_rootDocumentLoadedAs != ERootDocumentLoadedAs::Unknown && ImGui::MenuItem("Save", "Ctrl+S"))
+                    {
+                        if (g_rootDocumentLoadedAs == ERootDocumentLoadedAs::JSON)
+                        {
+                            if (!WriteToJSONFile(g_rootDocument, g_rootDocumentFileName.c_str()))
+                                MessageBoxA(nullptr, "Could not save JSON file", "Error", MB_OK);
+                        }
+                        else
+                        {
+                            if (!WriteToBinaryFile(g_rootDocument, g_rootDocumentFileName.c_str()))
+                                MessageBoxA(nullptr, "Could not save binary file", "Error", MB_OK);
+                        }
+                        g_rootDocumentDirty = false;
+                        UpdateWindowTitle();
+                    }
 
                     if (ImGui::MenuItem("Save As JSON"))
                     {
@@ -234,6 +300,13 @@ INT WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine, INT nC
                         {
                             if (!WriteToJSONFile(g_rootDocument, output))
                                 MessageBoxA(nullptr, "Could not save JSON file", "Error", MB_OK);
+                            else
+                            {
+                                g_rootDocumentFileName = output;
+                                g_rootDocumentLoadedAs = ERootDocumentLoadedAs::JSON;
+                                g_rootDocumentDirty = false;
+                                UpdateWindowTitle();
+                            }
                         }
                     }
                     if (ImGui::MenuItem("Save As Binary"))
@@ -243,6 +316,13 @@ INT WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine, INT nC
                         {
                             if (!WriteToBinaryFile(g_rootDocument, output))
                                 MessageBoxA(nullptr, "Could not save binary file", "Error", MB_OK);
+                            else
+                            {
+                                g_rootDocumentFileName = output;
+                                g_rootDocumentLoadedAs = ERootDocumentLoadedAs::Binary;
+                                g_rootDocumentDirty = false;
+                                UpdateWindowTitle();
+                            }
                         }
                     }
                     if (ImGui::MenuItem("Exit")) { ::PostQuitMessage(0); }
@@ -251,7 +331,12 @@ INT WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine, INT nC
                 ImGui::EndMenuBar();
             }
 
-            ShowUI(g_rootDocument);
+            bool changed = ShowUI(g_rootDocument);
+            if (changed && !g_rootDocumentDirty)
+            {
+                g_rootDocumentDirty = true;
+                UpdateWindowTitle();
+            }
 
             ImGui::End();
         }
@@ -568,15 +653,15 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 /*
 
 TODO:
+- put the "type" for variants at the top of the variant
 - command line interface to cook a file. load up the json and save as binary. possibly also uncook? dunno
-- make the "save" file option work.
-- when editing, mark the document as dirty and confirm on new / exit?
 - can we prepoluate save as file names when we open the dialog? like data.bin, data.json.
 - can we make it so all the text and edit boxes line up? use a table maybe? i dunno. check out "borders" in the imgui demo code
+- can we make keyboard shortcuts work, like control+s to save?
+- look at other editors / property grids and try to improve yours
 
 NOTE:
-- as part of the instructions. schema.h needs to include your schemas
-- also need to set g_rootDocument type! Lifeforms::Root g_rootDocument;
-- maybe make this a config.h file?
+- as part of the instructions. config.h needs to include your schemas
+- also need to set g_rootDocument type!
 
 */
