@@ -809,7 +809,6 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 TODO:
 - put the "type" for variants at the top of the variant. might need another macro expansion to be able to iterate the types in a variant or something
-- make imgui be in .gitignore after you delete it! (next checkin)
 
 NOTE:
 - as part of the instructions. config.h needs to include your schemas
