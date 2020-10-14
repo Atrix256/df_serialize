@@ -71,6 +71,8 @@ std::string g_rootDocumentFileName = "";
 ERootDocumentLoadedAs g_rootDocumentLoadedAs = ERootDocumentLoadedAs::Unknown;
 bool g_rootDocumentDirty = false;
 
+bool g_ctrl_s = false;
+
 struct FrameContext
 {
     ID3D12CommandAllocator* CommandAllocator;
@@ -211,6 +213,23 @@ INT WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine, INT nC
         ImGui_ImplWin32_NewFrame();
         ImGui::NewFrame();
 
+        // Save hotkey
+        if (g_rootDocumentLoadedAs != ERootDocumentLoadedAs::Unknown && g_ctrl_s && g_rootDocumentDirty)
+        {
+            if (g_rootDocumentLoadedAs == ERootDocumentLoadedAs::JSON)
+            {
+                if (!WriteToJSONFile(g_rootDocument, g_rootDocumentFileName.c_str()))
+                    MessageBoxA(nullptr, "Could not save JSON file", "Error", MB_OK);
+            }
+            else
+            {
+                if (!WriteToBinaryFile(g_rootDocument, g_rootDocumentFileName.c_str()))
+                    MessageBoxA(nullptr, "Could not save binary file", "Error", MB_OK);
+            }
+            g_rootDocumentDirty = false;
+            UpdateWindowTitle();
+        }
+
         // Our editor UI
         {
             // take up the whole screen
@@ -277,7 +296,7 @@ INT WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine, INT nC
                         }
                     }
 
-                    if (g_rootDocumentLoadedAs != ERootDocumentLoadedAs::Unknown && ImGui::MenuItem("Save", "Ctrl+S"))
+                    if (g_rootDocumentLoadedAs != ERootDocumentLoadedAs::Unknown && ImGui::MenuItem("Save", "Ctrl+S") && g_rootDocumentDirty)
                     {
                         if (g_rootDocumentLoadedAs == ERootDocumentLoadedAs::JSON)
                         {
@@ -325,7 +344,7 @@ INT WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine, INT nC
                             }
                         }
                     }
-                    if (ImGui::MenuItem("Exit")) { ::PostQuitMessage(0); }
+                    if (ImGui::MenuItem("Exit") && ConfirmLoseChanges()) { ::PostQuitMessage(0); }
                     ImGui::EndMenu();
                 }
                 ImGui::EndMenuBar();
@@ -339,6 +358,8 @@ INT WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine, INT nC
             }
 
             ImGui::End();
+
+            g_ctrl_s = false;
         }
 
         // Rendering
@@ -627,6 +648,15 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
     switch (msg)
     {
+    case WM_KEYDOWN:
+    {
+        if (GetKeyState(VK_CONTROL) & 0x8000)
+        {
+            if ((char)wParam == 'S')
+                g_ctrl_s = true;
+        }
+        return 0;
+    }
     case WM_SIZE:
         if (g_pd3dDevice != NULL && wParam != SIZE_MINIMIZED)
         {
@@ -642,6 +672,14 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
         if ((wParam & 0xfff0) == SC_KEYMENU) // Disable ALT application menu
             return 0;
         break;
+    case WM_CLOSE:
+    {
+        if (ConfirmLoseChanges())
+        {
+            DestroyWindow(g_hwnd);
+        }
+        return 0;
+    }
     case WM_DESTROY:
         ::PostQuitMessage(0);
         return 0;
@@ -653,13 +691,12 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 /*
 
 TODO:
-- confirm exit when document dirty?
 - put the "type" for variants at the top of the variant
 - command line interface to cook a file. load up the json and save as binary. possibly also uncook? dunno
 - can we prepoluate save as file names when we open the dialog? like data.bin, data.json.
 - can we make it so all the text and edit boxes line up? use a table maybe? i dunno. check out "borders" in the imgui demo code
-- can we make keyboard shortcuts work, like control+s to save?
 - look at other editors / property grids and try to improve yours
+ * left side indents but right side is all in a line.
 
 NOTE:
 - as part of the instructions. config.h needs to include your schemas
