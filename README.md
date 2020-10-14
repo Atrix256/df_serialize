@@ -251,6 +251,8 @@ Run the editor with the first argument being the file to load, and the second ar
 
 It is assumed that json files will end in .json, and binary files will end in .bin, but either argument can be a binary or json file.
 
+Thoughts or pull requests on improving the editor or user experience welcomed!
+
 ![Editor Screenshot 1](editor/screenshot1.png)
 
 ![Editor Screenshot 2](editor/screenshot2.png)
