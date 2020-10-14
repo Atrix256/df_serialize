@@ -249,4 +249,8 @@ The editor also has command line options to load up one file and save it as anot
 
 Run the editor with the first argument being the file to load, and the second argument being the file to save as.
 
-It is assumed that json files will end in .json, and binary files will end in .bin.
+It is assumed that json files will end in .json, and binary files will end in .bin, but either argument can be a binary or json file.
+
+![Editor Screenshot 1](editor/screenshot1.png)
+
+![Editor Screenshot 2](editor/screenshot2.png)
