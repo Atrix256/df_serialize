@@ -236,7 +236,7 @@ INT WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine, INT nC
             ImGui::SetNextWindowPos(ImVec2{ 0.0f, 0.0f });
             ImGui::SetNextWindowSize(ImVec2{ float(g_width), float(g_height) });
             
-            ImGui::Begin("Hello, world!", nullptr, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
+            ImGui::Begin("df_serialize editor", nullptr, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
 
             //ImGui::ShowDemoWindow();
 
@@ -350,12 +350,15 @@ INT WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine, INT nC
                 ImGui::EndMenuBar();
             }
 
+            ImGui::Columns(2);
             bool changed = ShowUI(g_rootDocument);
             if (changed && !g_rootDocumentDirty)
             {
                 g_rootDocumentDirty = true;
                 UpdateWindowTitle();
             }
+            ImGui::Separator();
+            ImGui::Columns(1);
 
             ImGui::End();
 
@@ -693,9 +696,6 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 TODO:
 - put the "type" for variants at the top of the variant. might need another macro expansion to be able to iterate the types in a variant or something
 - command line interface to cook a file. load up the json and save as binary. possibly also uncook? dunno
-- can we make it so all the text and edit boxes line up? use a table maybe? i dunno. check out "borders" in the imgui demo code
-- look at other editors / property grids and try to improve yours
- * left side indents but right side is all in a line.
 
 NOTE:
 - as part of the instructions. config.h needs to include your schemas

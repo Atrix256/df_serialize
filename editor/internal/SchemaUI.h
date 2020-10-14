@@ -10,19 +10,19 @@
 	bool ShowUI(_NAMESPACE::_NAME& value) \
 	{ \
         typedef _NAMESPACE::_NAME ThisType; \
+        ImGui::NextColumn(); \
         int v = (int)value; \
-        if(ImGui::Combo("", &v,
+        bool ret = ImGui::Combo("", &v,
 
 #define ENUM_ITEM(_NAME, _DESCRIPTION) \
         #_NAME "\0"
 
 #define ENUM_END() \
-        )) \
-        { \
+        ); \
+        if (ret) \
             value = (ThisType)v; \
-            return true; \
-        } \
-        return false; \
+        ImGui::NextColumn(); \
+        return ret; \
     }
 
 // Structs
@@ -44,7 +44,6 @@
 #define STRUCT_FIELD(_TYPE, _NAME, _DEFAULT, _DESCRIPTION) \
         ImGui::PushID(#_NAME); \
         ImGui::Text(#_NAME); \
-        ImGui::SameLine(); \
 		ret |= ShowUI(value._NAME); \
         ImGui::PopID(); \
 
@@ -62,6 +61,8 @@
                 ImGui::Separator(); \
                 sprintf_s(buffer, #_NAME "[%i]", (int)index); \
                 ImGui::Text(buffer); \
+                ImGui::NextColumn(); \
+                ImGui::NextColumn(); \
                 ImGui::PushID((int)index); \
                 ret |= ShowUI(value._NAME[index]); \
                 if (ImGui::Button("Delete")) \
@@ -69,11 +70,16 @@
                 ImGui::PopID(); \
             } \
             ImGui::Separator(); \
-            ImGui::TreePop(); \
             if (ImGui::Button("Add")) \
                 value._NAME.push_back(_TYPE{}); \
+            ImGui::TreePop(); \
             if (deleteIndex != -1) \
                 value._NAME.erase(value._NAME.begin() + deleteIndex); \
+        } \
+        else \
+        { \
+            ImGui::NextColumn(); \
+            ImGui::NextColumn(); \
         }
 
 #define STRUCT_STATIC_ARRAY(_TYPE, _NAME, _SIZE, _DEFAULT, _DESCRIPTION) \
@@ -86,6 +92,11 @@
                 ImGui::PopID(); \
             } \
             ImGui::TreePop(); \
+        } \
+        else \
+        { \
+            ImGui::NextColumn(); \
+            ImGui::NextColumn(); \
         }
 
 #define STRUCT_END() \
@@ -123,6 +134,7 @@
         ImGui::PushID("_type"); \
         ImGui::Text("Type"); \
         ImGui::SameLine(); \
+        ImGui::NextColumn(); \
         if (ImGui::BeginCombo("", selectedIndex < typesInfo.size() ? typesInfo[selectedIndex].name.c_str() : "", 0)) \
         { \
             for (int n = 0; n < (int)typesInfo.size(); ++n) \
@@ -139,6 +151,7 @@
             } \
             ImGui::EndCombo(); \
         } \
+        ImGui::NextColumn(); \
         ImGui::PopID(); \
         ImGui::PopID(); \
         return ret; \
@@ -148,110 +161,144 @@
 
 bool ShowUI(uint8_t& value)
 {
+    bool ret = false;
+    ImGui::NextColumn();
     int v = (int)value;
     if (ImGui::InputInt("", &v))
     {
         value = (uint8_t)v;
-        return true;
+        ret = true;
     }
-    return false;
+    ImGui::NextColumn();
+    return ret;
 }
 
 bool ShowUI(uint16_t& value)
 {
+    bool ret = false;
+    ImGui::NextColumn();
     int v = (int)value;
     if (ImGui::InputInt("", &v))
     {
         value = (uint16_t)v;
-        return true;
+        ret = true;
     }
-    return false;
+    ImGui::NextColumn();
+    return ret;
 }
 
 bool ShowUI(uint32_t& value)
 {
+    bool ret = false;
+    ImGui::NextColumn();
     int v = (int)value;
     if (ImGui::InputInt("", &v))
     {
         value = (uint32_t)v;
-        return true;
+        ret = true;
     }
-    return false;
+    ImGui::NextColumn();
+    return ret;
 }
 
 bool ShowUI(uint64_t& value)
 {
+    bool ret = false;
+    ImGui::NextColumn();
     int v = (int)value;
     if (ImGui::InputInt("", &v))
     {
         value = (uint64_t)v;
-        return true;
+        ret = true;
     }
-    return false;
+    ImGui::NextColumn();
+    return ret;
 }
 
 bool ShowUI(int8_t& value)
 {
+    bool ret = false;
+    ImGui::NextColumn();
     int v = (int)value;
     if (ImGui::InputInt("", &v))
     {
         value = (int8_t)v;
-        return true;
+        ret = true;
     }
-    return false;
+    ImGui::NextColumn();
+    return ret;
 }
 
 bool ShowUI(int16_t& value)
 {
+    bool ret = false;
+    ImGui::NextColumn();
     int v = (int)value;
     if (ImGui::InputInt("", &v))
     {
         value = (int16_t)v;
-        return true;
+        ret = true;
     }
-    return false;
+    ImGui::NextColumn();
+    return ret;
 }
 
 bool ShowUI(int32_t& value)
 {
+    bool ret = false;
+    ImGui::NextColumn();
     int v = (int)value;
     if (ImGui::InputInt("", &v))
     {
         value = (int32_t)v;
-        return true;
+        ret = true;
     }
-    return false;
+    ImGui::NextColumn();
+    return ret;
 }
 
 bool ShowUI(int64_t& value)
 {
+    bool ret = false;
+    ImGui::NextColumn();
     int v = (int)value;
     if (ImGui::InputInt("", &v))
     {
         value = (int64_t)v;
-        return true;
+        ret = true;
     }
-    return false;
+    ImGui::NextColumn();
+    return ret;
 }
 
 bool ShowUI(float& value)
 {
-    return ImGui::InputFloat("", &value);
+    ImGui::NextColumn();
+    bool ret = ImGui::InputFloat("", &value);
+    ImGui::NextColumn();
+    return ret;
 }
 
 bool ShowUI(bool& value)
 {
-    return ImGui::Checkbox("", &value);
+    ImGui::NextColumn();
+    bool ret = ImGui::Checkbox("", &value);
+    ImGui::NextColumn();
+    return ret;
 }
 
 bool ShowUI(std::string& value)
 {
+    bool ret = false;
+    ImGui::NextColumn();
+
     char buffer[1024];
     strcpy_s(buffer, value.c_str());
     if (ImGui::InputText("", buffer, 1024))
     {
         value = buffer;
-        return true;
+        ret = true;
     }
-    return false;
+    ImGui::NextColumn();
+    return ret;
 }
