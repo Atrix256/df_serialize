@@ -42,6 +42,9 @@
 
 // --------------------------- DF_SERIALIZE expansion ---------------------------
 
+#include "internal/VariantTypeInfo.h"
+#include "config.h"
+
 #include "internal/SchemaUI.h"
 #include "config.h"
 
@@ -803,16 +806,3 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
     }
     return ::DefWindowProc(hWnd, msg, wParam, lParam);
 }
-
-
-/*
-
-TODO:
-- put the "type" for variants at the top of the variant. might need another macro expansion to be able to iterate the types in a variant or something
-
-NOTE:
-- as part of the instructions. config.h needs to include your schemas
-- also need to set g_rootDocument type!
-- mention the command line option to load and save files (cook!)
-
-*/

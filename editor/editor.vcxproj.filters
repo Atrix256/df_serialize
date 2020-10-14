@@ -38,5 +38,6 @@
   <ItemGroup>
     <ClInclude Include="internal\SchemaUI.h" />
     <ClInclude Include="config.h" />
+    <ClInclude Include="internal\VariantTypeInfo.h" />
   </ItemGroup>
 </Project>

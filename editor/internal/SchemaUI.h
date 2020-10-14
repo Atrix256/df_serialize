@@ -54,13 +54,10 @@
         ImGui::Separator(); \
         if (ImGui::TreeNode(#_NAME)) \
         { \
-            char buffer[256]; \
             int deleteIndex = -1; \
             for (size_t index = 0; index < TDYNAMICARRAY_SIZE(value._NAME); ++index) \
             { \
                 ImGui::Separator(); \
-                sprintf_s(buffer, #_NAME "[%i]", (int)index); \
-                ImGui::Text(buffer); \
                 ImGui::NextColumn(); \
                 ImGui::NextColumn(); \
                 ImGui::PushID((int)index); \
@@ -111,38 +108,26 @@
 	{ \
 		typedef _NAMESPACE::_NAME ThisType; \
         ImGui::PushID(#_NAME); \
-        struct TypeInfo \
-        { \
-            std::string name; \
-            uint32_t _index; \
-        }; \
-        std::vector<TypeInfo> typesInfo; \
         int selectedIndex = -1; \
-        int currentIndex = -1; \
-        bool ret = false;
-
-#define VARIANT_TYPE(_TYPE, _NAME, _DEFAULT, _DESCRIPTION) \
-        currentIndex++; \
-        typesInfo.push_back({#_NAME, ThisType::c_index_##_NAME}); \
-        if (value._index == ThisType::c_index_##_NAME) \
+        bool ret = false; \
+        const auto& typeInfo = g_variantTypeInfo_##_NAMESPACE##_##_NAME; \
+        for (int i = 0; i < sizeof(typeInfo) / sizeof(typeInfo[0]); ++i) \
         { \
-            selectedIndex = currentIndex; \
-            ret |= ShowUI(value._NAME); \
-        }
-
-#define VARIANT_END() \
+            if(value._index == typeInfo[i]._index) \
+                selectedIndex = i; \
+        } \
         ImGui::PushID("_type"); \
-        ImGui::Text("Type"); \
+        ImGui::Text("Object Type"); \
         ImGui::SameLine(); \
         ImGui::NextColumn(); \
-        if (ImGui::BeginCombo("", selectedIndex < typesInfo.size() ? typesInfo[selectedIndex].name.c_str() : "", 0)) \
+        if (ImGui::BeginCombo("", selectedIndex < sizeof(typeInfo) / sizeof(typeInfo[0]) ? typeInfo[selectedIndex].name.c_str() : "", 0)) \
         { \
-            for (int n = 0; n < (int)typesInfo.size(); ++n) \
+            for (int n = 0; n < sizeof(typeInfo) / sizeof(typeInfo[0]); ++n) \
             { \
                 const bool selected = (selectedIndex == n); \
-                if (ImGui::Selectable(typesInfo[n].name.c_str(), selected)) \
+                if (ImGui::Selectable(typeInfo[n].name.c_str(), selected)) \
                 { \
-                    value._index = typesInfo[n]._index; \
+                    value._index = typeInfo[n]._index; \
                     ret = true; \
                 } \
                 /* Set the initial focus when opening the combo (scrolling + keyboard navigation focus) */ \
@@ -152,7 +137,13 @@
             ImGui::EndCombo(); \
         } \
         ImGui::NextColumn(); \
-        ImGui::PopID(); \
+        ImGui::PopID();
+
+#define VARIANT_TYPE(_TYPE, _NAME, _DEFAULT, _DESCRIPTION) \
+        if (value._index == ThisType::c_index_##_NAME) \
+            ret |= ShowUI(value._NAME);
+
+#define VARIANT_END() \
         ImGui::PopID(); \
         return ret; \
 	}
