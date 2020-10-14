@@ -56,7 +56,7 @@
 #pragma comment(lib, "dxguid.lib")
 #endif
 
-enum class ERootDocumentLoadedAs
+enum class EDocumentType
 {
     JSON,
     Binary,
@@ -68,7 +68,7 @@ int g_height = 0;
 
 RootDocumentType g_rootDocument;
 std::string g_rootDocumentFileName = "";
-ERootDocumentLoadedAs g_rootDocumentLoadedAs = ERootDocumentLoadedAs::Unknown;
+EDocumentType g_rootDocumentLoadedAs = EDocumentType::Unknown;
 bool g_rootDocumentDirty = false;
 
 bool g_ctrl_s = false;
@@ -116,7 +116,7 @@ void UpdateWindowTitle()
     if (g_rootDocumentFileName.empty())
         sprintf_s(buffer, "<untitled>%s - Editor", g_rootDocumentDirty ? "*" : "");
     else
-        sprintf_s(buffer, "%s (%s)%s - Editor", g_rootDocumentFileName.c_str(), g_rootDocumentLoadedAs == ERootDocumentLoadedAs::JSON ? "JSON" : "Binary", g_rootDocumentDirty ? "*" : "");
+        sprintf_s(buffer, "%s (%s)%s - Editor", g_rootDocumentFileName.c_str(), g_rootDocumentLoadedAs == EDocumentType::JSON ? "JSON" : "Binary", g_rootDocumentDirty ? "*" : "");
 
     bool ret = SetWindowTextA(g_hwnd, buffer);
 }
@@ -128,9 +128,114 @@ bool ConfirmLoseChanges()
     return MessageBoxA(nullptr, "Your current document is not saved and all changes will be lost. Continue?", "Warning", MB_OKCANCEL) == IDOK;
 }
 
+bool HasFileExtension(const char* fileName, const char* extension)
+{
+    int fileNameLen = (int)strlen(fileName);
+    int extensionLen = (int)strlen(extension);
+    if (fileNameLen < extensionLen)
+        return false;
+
+    return !_stricmp(&fileName[fileNameLen - extensionLen], extension);
+}
+
+EDocumentType GetDocumentType(const char* fileName)
+{
+    if (HasFileExtension(fileName, ".json"))
+        return EDocumentType::JSON;
+    else if (HasFileExtension(fileName, ".bin"))
+        return EDocumentType::Binary;
+    else
+        return EDocumentType::Unknown;
+}
+
+bool Load(const char* load)
+{
+    switch (GetDocumentType(load))
+    {
+        case EDocumentType::JSON:
+        {
+            if (!ReadFromJSONFile(g_rootDocument, load))
+            {
+                printf("Could not load JSON file %s\n", load);
+                return false;
+            }
+            break;
+        }
+        case EDocumentType::Binary:
+        {
+            if (!ReadFromBinaryFile(g_rootDocument, load))
+            {
+                printf("Could not load binary file %s\n", load);
+                return false;
+            }
+            break;
+        }
+        default:
+        {
+            printf("Unknown document type: %s\n", load);
+            return false;
+        }
+    }
+
+    return true;
+}
+
+bool LoadAndSave(const char* load, const char* save)
+{
+    if (!Load(load))
+        return false;
+
+    switch (GetDocumentType(save))
+    {
+        case EDocumentType::JSON:
+        {
+            if (!WriteToJSONFile(g_rootDocument, save))
+            {
+                printf("Could not write JSON file %s\n", save);
+                return false;
+            }
+            break;
+        }
+        case EDocumentType::Binary:
+        {
+            if (!WriteToBinaryFile(g_rootDocument, save))
+            {
+                printf("Could not write binary file %s\n", save);
+                return false;
+            }
+            break;
+        }
+        default:
+        {
+            printf("Unknown document type: %s\n", save);
+            return false;
+        }
+    }
+    return true;
+}
+
 // Main code
 INT WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine, INT nCmdShow)
 {
+    if (__argc == 3)
+    {
+        LoadAndSave(__argv[1], __argv[2]);
+        printf("Loaded %s and saved it as %s\n", __argv[1], __argv[2]);
+        return 0;
+    }
+    else if (__argc == 2)
+    {
+        if (!Load(__argv[1]))
+        {
+            printf("could not load file %s\n", __argv[1]);
+        }
+        else
+        {
+            g_rootDocumentFileName = __argv[1];
+            g_rootDocumentLoadedAs = GetDocumentType(__argv[1]);
+        }
+    }
+
     char currentDirectory[1024];
     GetCurrentDirectoryA(1024, currentDirectory);
 
@@ -214,9 +319,9 @@ INT WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine, INT nC
         ImGui::NewFrame();
 
         // Save hotkey
-        if (g_rootDocumentLoadedAs != ERootDocumentLoadedAs::Unknown && g_ctrl_s && g_rootDocumentDirty)
+        if (g_rootDocumentLoadedAs != EDocumentType::Unknown && g_ctrl_s && g_rootDocumentDirty)
         {
-            if (g_rootDocumentLoadedAs == ERootDocumentLoadedAs::JSON)
+            if (g_rootDocumentLoadedAs == EDocumentType::JSON)
             {
                 if (!WriteToJSONFile(g_rootDocument, g_rootDocumentFileName.c_str()))
                     MessageBoxA(nullptr, "Could not save JSON file", "Error", MB_OK);
@@ -249,7 +354,7 @@ INT WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine, INT nC
                     {
                         g_rootDocument = RootDocumentType{};
                         g_rootDocumentFileName = "";
-                        g_rootDocumentLoadedAs = ERootDocumentLoadedAs::Unknown;
+                        g_rootDocumentLoadedAs = EDocumentType::Unknown;
                         g_rootDocumentDirty = false;
                         UpdateWindowTitle();
                     }
@@ -269,7 +374,7 @@ INT WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine, INT nC
                             else
                             {
                                 g_rootDocumentFileName = output;
-                                g_rootDocumentLoadedAs = ERootDocumentLoadedAs::JSON;
+                                g_rootDocumentLoadedAs = EDocumentType::JSON;
                                 UpdateWindowTitle();
                             }
                         }
@@ -290,15 +395,15 @@ INT WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine, INT nC
                             else
                             {
                                 g_rootDocumentFileName = output;
-                                g_rootDocumentLoadedAs = ERootDocumentLoadedAs::Binary;
+                                g_rootDocumentLoadedAs = EDocumentType::Binary;
                                 UpdateWindowTitle();
                             }
                         }
                     }
 
-                    if (g_rootDocumentLoadedAs != ERootDocumentLoadedAs::Unknown && ImGui::MenuItem("Save", "Ctrl+S") && g_rootDocumentDirty)
+                    if (g_rootDocumentLoadedAs != EDocumentType::Unknown && ImGui::MenuItem("Save", "Ctrl+S") && g_rootDocumentDirty)
                     {
-                        if (g_rootDocumentLoadedAs == ERootDocumentLoadedAs::JSON)
+                        if (g_rootDocumentLoadedAs == EDocumentType::JSON)
                         {
                             if (!WriteToJSONFile(g_rootDocument, g_rootDocumentFileName.c_str()))
                                 MessageBoxA(nullptr, "Could not save JSON file", "Error", MB_OK);
@@ -322,7 +427,7 @@ INT WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine, INT nC
                             else
                             {
                                 g_rootDocumentFileName = output;
-                                g_rootDocumentLoadedAs = ERootDocumentLoadedAs::JSON;
+                                g_rootDocumentLoadedAs = EDocumentType::JSON;
                                 g_rootDocumentDirty = false;
                                 UpdateWindowTitle();
                             }
@@ -338,7 +443,7 @@ INT WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine, INT nC
                             else
                             {
                                 g_rootDocumentFileName = output;
-                                g_rootDocumentLoadedAs = ERootDocumentLoadedAs::Binary;
+                                g_rootDocumentLoadedAs = EDocumentType::Binary;
                                 g_rootDocumentDirty = false;
                                 UpdateWindowTitle();
                             }
@@ -350,15 +455,24 @@ INT WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine, INT nC
                 ImGui::EndMenuBar();
             }
 
-            ImGui::Columns(2);
-            bool changed = ShowUI(g_rootDocument);
-            if (changed && !g_rootDocumentDirty)
+            // Document UI
             {
-                g_rootDocumentDirty = true;
-                UpdateWindowTitle();
+                ImGui::Columns(2);
+                static bool haveSetColumnWidth = false;
+                if (!haveSetColumnWidth)
+                {
+                    ImGui::SetColumnWidth(0, 200.0f);
+                    haveSetColumnWidth = true;
+                }
+                bool changed = ShowUI(g_rootDocument);
+                if (changed && !g_rootDocumentDirty)
+                {
+                    g_rootDocumentDirty = true;
+                    UpdateWindowTitle();
+                }
+                ImGui::Separator();
+                ImGui::Columns(1);
             }
-            ImGui::Separator();
-            ImGui::Columns(1);
 
             ImGui::End();
 
@@ -695,10 +809,11 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 TODO:
 - put the "type" for variants at the top of the variant. might need another macro expansion to be able to iterate the types in a variant or something
-- command line interface to cook a file. load up the json and save as binary. possibly also uncook? dunno
+- make imgui be in .gitignore after you delete it! (next checkin)
 
 NOTE:
 - as part of the instructions. config.h needs to include your schemas
 - also need to set g_rootDocument type!
+- mention the command line option to load and save files (cook!)
 
 */
