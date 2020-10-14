@@ -47,29 +47,33 @@
 #define STRUCT_FIELD_NO_SERIALIZE(_TYPE, _NAME, _DEFAULT, _DESCRIPTION)
 
 #define STRUCT_DYNAMIC_ARRAY(_TYPE, _NAME, _DESCRIPTION) \
+        ImGui::Separator(); \
+        if (ImGui::TreeNode(#_NAME)) \
         { \
-            if (ImGui::TreeNode(#_NAME)) \
+            char buffer[256]; \
+            int deleteIndex = -1; \
+            for (size_t index = 0; index < TDYNAMICARRAY_SIZE(value._NAME); ++index) \
             { \
-                int deleteIndex = -1; \
-                for (size_t index = 0; index < TDYNAMICARRAY_SIZE(value._NAME); ++index) \
-                { \
-                    ImGui::PushID((int)index); \
-                    ShowUI(value._NAME[index]); \
-                    if (ImGui::Button("Delete")) \
-                        deleteIndex = (int)index; \
-                    ImGui::PopID(); \
-                } \
-                ImGui::TreePop(); \
-                if (ImGui::Button("Add")) \
-                    value._NAME.push_back(_TYPE{}); \
-                if (deleteIndex != -1) \
-                { \
-                    char buffer[256];\
-                    sprintf_s(buffer, "deleteIndex = %i\n", deleteIndex); \
-                    OutputDebugStringA(buffer); \
-                    value._NAME.erase(value._NAME.begin() + deleteIndex); \
-                }   \
+                ImGui::Separator(); \
+                sprintf_s(buffer, #_NAME "[%i]", (int)index); \
+                ImGui::Text(buffer); \
+                ImGui::PushID((int)index); \
+                ShowUI(value._NAME[index]); \
+                if (ImGui::Button("Delete")) \
+                    deleteIndex = (int)index; \
+                ImGui::PopID(); \
             } \
+            ImGui::Separator(); \
+            ImGui::TreePop(); \
+            if (ImGui::Button("Add")) \
+                value._NAME.push_back(_TYPE{}); \
+            if (deleteIndex != -1) \
+            { \
+                char buffer[256];\
+                sprintf_s(buffer, "deleteIndex = %i\n", deleteIndex); \
+                OutputDebugStringA(buffer); \
+                value._NAME.erase(value._NAME.begin() + deleteIndex); \
+            }   \
         }
 
 #define STRUCT_STATIC_ARRAY(_TYPE, _NAME, _SIZE, _DEFAULT, _DESCRIPTION) \

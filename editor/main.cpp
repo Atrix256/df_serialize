@@ -568,12 +568,11 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 /*
 
 TODO:
-- put a horizontal rule between array items (and top and bottom?)
 - command line interface to cook a file. load up the json and save as binary. possibly also uncook? dunno
 - make the "save" file option work.
 - when editing, mark the document as dirty and confirm on new / exit?
 - can we prepoluate save as file names when we open the dialog? like data.bin, data.json.
-- can we make it so all the text and edit boxes line up? use a table maybe? i dunno
+- can we make it so all the text and edit boxes line up? use a table maybe? i dunno. check out "borders" in the imgui demo code
 
 NOTE:
 - as part of the instructions. schema.h needs to include your schemas
