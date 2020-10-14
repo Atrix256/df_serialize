@@ -254,7 +254,7 @@ INT WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine, INT nC
                         UpdateWindowTitle();
                     }
 
-                    if (ImGui::MenuItem("Load JSON File") && ConfirmLoseChanges())
+                    if (ImGui::MenuItem("Open JSON File") && ConfirmLoseChanges())
                     {
                         nfdchar_t* output = nullptr;
                         if (NFD_OpenDialog("json", currentDirectory, &output) == NFD_OKAY)
@@ -275,7 +275,7 @@ INT WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine, INT nC
                         }
                     }
 
-                    if (ImGui::MenuItem("Load Binary File") && ConfirmLoseChanges())
+                    if (ImGui::MenuItem("Open Binary File") && ConfirmLoseChanges())
                     {
                         nfdchar_t* output = nullptr;
                         if (NFD_OpenDialog("bin", currentDirectory, &output) == NFD_OKAY)
@@ -691,9 +691,8 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 /*
 
 TODO:
-- put the "type" for variants at the top of the variant
+- put the "type" for variants at the top of the variant. might need another macro expansion to be able to iterate the types in a variant or something
 - command line interface to cook a file. load up the json and save as binary. possibly also uncook? dunno
-- can we prepoluate save as file names when we open the dialog? like data.bin, data.json.
 - can we make it so all the text and edit boxes line up? use a table maybe? i dunno. check out "borders" in the imgui demo code
 - look at other editors / property grids and try to improve yours
  * left side indents but right side is all in a line.
