@@ -1,5 +1,7 @@
 # df_serialize
 
+## Folders
+
 Folders:
 1. **df_serialize** - this is the library.  This is all you need.
 2. **editor** - an editor which can save/load json files of the schema type, and can also save binary files or "cook" json files to binary via the command line.
@@ -7,9 +9,11 @@ Folders:
 4. **rapidjson** - used by the editor and the test app both
 4. **test** - this is a test program which also serves as an example for how to use the library.
 
-**Demofox Serialization Library**
+## Using The Demofox Serialization Library
 
 Minimal header only C++ library that allows you to define data schemas which then can be read or written in JSON or binary.  Nested structures, arrays, struct inheritance and nullable variants are supported.  By default, STL container types are used, but that can be configured in Config.h. STL is not a requirement.
+
+the df_serialize folder is the minimum of what you need, but if you are planning on doing json reading and writing, you will also want the rapidjson folder.
 
 The test project shows how to use the library.
 
@@ -228,3 +232,22 @@ and put their binary representation into the buffer.  When this is done, that bi
 in a single `fwrite()`. Enum values are written as null terminated strings. `std::string` is written as null
 terminated strings. Variants write their "type index" and then the data for that type index if the type is not null.
 All fields are written.
+
+## The Editor
+
+The editor lives in the "editor" folder, within the root folder of this repo.  After cloning the repo you must init and update the submodules to get imgui, before editor will build in visual studio:
+
+```
+git submodule init
+git submodule update
+```
+
+You must modify the editor's config.h file to include your schemas instead of the test schemas, and also to specify which type is the root document.
+
+After that, the editor will compile and run, allowing you to load/save json/binary files.
+
+The editor also has command line options to load up one file and save it as another, which is useful for "cooking" json files to binary.
+
+Run the editor with the first argument being the file to load, and the second argument being the file to save as.
+
+It is assumed that json files will end in .json, and binary files will end in .bin.
