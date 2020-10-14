@@ -653,6 +653,7 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 /*
 
 TODO:
+- confirm exit when document dirty?
 - put the "type" for variants at the top of the variant
 - command line interface to cook a file. load up the json and save as binary. possibly also uncook? dunno
 - can we prepoluate save as file names when we open the dialog? like data.bin, data.json.
