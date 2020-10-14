@@ -47,21 +47,30 @@
 #define STRUCT_FIELD_NO_SERIALIZE(_TYPE, _NAME, _DEFAULT, _DESCRIPTION)
 
 #define STRUCT_DYNAMIC_ARRAY(_TYPE, _NAME, _DESCRIPTION) \
-        if (ImGui::TreeNode(#_NAME)) \
         { \
-            for (size_t index = 0; index < TDYNAMICARRAY_SIZE(value._NAME); ++index) \
+            char buffer[256]; \
+            sprintf_s(buffer, #_NAME "[%i]", (int)TDYNAMICARRAY_SIZE(value._NAME)); \
+            if (ImGui::TreeNode(buffer)) \
             { \
-                ImGui::PushID((int)index); \
-                ShowUI(value._NAME[index]); \
-                ImGui::PopID(); \
+                int deleteIndex = -1; \
+                for (size_t index = 0; index < TDYNAMICARRAY_SIZE(value._NAME); ++index) \
+                { \
+                    ImGui::PushID((int)index); \
+                    ShowUI(value._NAME[index]); \
+                    ImGui::PopID(); \
+                    if (ImGui::Button("Delete")) \
+                        deleteIndex = (int)index; \
+                } \
+                ImGui::TreePop(); \
+                if (ImGui::Button("Add")) \
+                    value._NAME.push_back(_TYPE{}); \
+                if (deleteIndex != -1) \
+                    value._NAME.erase(value._NAME.begin() + deleteIndex); \
             } \
-            ImGui::TreePop(); \
-            if (ImGui::Button("Add")) \
-                value._NAME.push_back(_TYPE{}); \
         }
 
 #define STRUCT_STATIC_ARRAY(_TYPE, _NAME, _SIZE, _DEFAULT, _DESCRIPTION) \
-        if (ImGui::TreeNode(#_NAME)) \
+        if (ImGui::TreeNode(#_NAME "[" #_SIZE "]")) \
         { \
             for (size_t index = 0; index < _SIZE; ++index) \
             { \
@@ -125,9 +134,6 @@
         ImGui::PopID(); \
         ImGui::PopID(); \
 	}
-
-// TODO: add delete button for dynamic arrays
-// TODO: does all the editing work? liter min/max didn't seem to change!
 
 // Built in types
 
