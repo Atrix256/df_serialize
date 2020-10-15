@@ -167,7 +167,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="internal\SchemaUI.h" />
-    <ClInclude Include="config.h" />
+    <ClInclude Include="editor_config.h" />
     <ClInclude Include="internal\VariantTypeInfo.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

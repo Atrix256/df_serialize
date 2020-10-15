@@ -38,9 +38,8 @@
         if (A._NAME != B._NAME) \
             return false;
 
-#define STRUCT_FIELD_NO_SERIALIZE(_TYPE, _NAME, _DEFAULT, _DESCRIPTION) \
-        if (A._NAME != B._NAME) \
-            return false;
+// No serialize also means no equality test
+#define STRUCT_FIELD_NO_SERIALIZE(_TYPE, _NAME, _DEFAULT, _DESCRIPTION)
 
 #define STRUCT_DYNAMIC_ARRAY(_TYPE, _NAME, _DESCRIPTION) \
         if (TDYNAMICARRAY_SIZE(A._NAME) != TDYNAMICARRAY_SIZE(B._NAME)) \

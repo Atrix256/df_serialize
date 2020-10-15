@@ -13,18 +13,18 @@
 // --------------------------- DF_SERIALIZE expansion ---------------------------
 
 #include "../df_serialize/MakeTypes.h"
-#include "config.h"
+#include "editor_config.h"
 
 #include "../df_serialize/MakeBinaryReadHeader.h"
-#include "config.h"
+#include "editor_config.h"
 #include "../df_serialize/MakeBinaryReadFooter.h"
 
 #include "../df_serialize/MakeBinaryWriteHeader.h"
-#include "config.h"
+#include "editor_config.h"
 #include "../df_serialize/MakeBinaryWriteFooter.h"
 
 #include "../df_serialize/MakeEqualityTests.h"
-#include "config.h"
+#include "editor_config.h"
 
 #include "../rapidjson/document.h"
 #include "../rapidjson/error/en.h"
@@ -33,20 +33,20 @@
 #include "../rapidjson/stringbuffer.h"
 
 #include "../df_serialize/MakeJSONReadHeader.h"
-#include "config.h"
+#include "editor_config.h"
 #include "../df_serialize/MakeJSONReadFooter.h"
 
 #include "../df_serialize/MakeJSONWriteHeader.h"
-#include "config.h"
+#include "editor_config.h"
 #include "../df_serialize/MakeJSONWriteFooter.h"
 
 // --------------------------- DF_SERIALIZE expansion ---------------------------
 
 #include "internal/VariantTypeInfo.h"
-#include "config.h"
+#include "editor_config.h"
 
 #include "internal/SchemaUI.h"
-#include "config.h"
+#include "editor_config.h"
 
 // custom expansion above
 
