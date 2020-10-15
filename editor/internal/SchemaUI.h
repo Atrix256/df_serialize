@@ -30,6 +30,9 @@
 #define STRUCT_BEGIN(_NAMESPACE, _NAME, _DESCRIPTION) \
 	bool ShowUI(_NAMESPACE::_NAME& value) \
 	{ \
+        ImGui::NextColumn(); \
+        ImGui::NextColumn(); \
+        ImGui::Indent(); \
         using namespace _NAMESPACE; \
         ImGui::PushID(#_NAME); \
         bool ret = false;
@@ -37,6 +40,9 @@
 #define STRUCT_INHERIT_BEGIN(_NAMESPACE, _NAME, _BASE, _DESCRIPTION) \
 	bool ShowUI(_NAMESPACE::_NAME& value) \
 	{ \
+        ImGui::NextColumn(); \
+        ImGui::NextColumn(); \
+        ImGui::Indent(); \
         using namespace _NAMESPACE; \
         ImGui::PushID(#_NAME); \
         bool ret = ShowUI(*(_BASE*)&value); \
@@ -104,6 +110,7 @@
 
 #define STRUCT_END() \
         ImGui::PopID(); \
+        ImGui::Unindent(); \
         return ret; \
 	}
 
@@ -112,6 +119,9 @@
 #define VARIANT_BEGIN(_NAMESPACE, _NAME, _DESCRIPTION) \
 	bool ShowUI(_NAMESPACE::_NAME& value) \
 	{ \
+        ImGui::NextColumn(); \
+        ImGui::NextColumn(); \
+        ImGui::Indent(); \
 		typedef _NAMESPACE::_NAME ThisType; \
         ImGui::PushID(#_NAME); \
         int selectedIndex = -1; \
@@ -151,6 +161,7 @@
 
 #define VARIANT_END() \
         ImGui::PopID(); \
+        ImGui::Unindent(); \
         return ret; \
 	}
 
