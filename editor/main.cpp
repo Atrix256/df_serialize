@@ -473,7 +473,6 @@ INT WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine, INT nC
                     g_rootDocumentDirty = true;
                     UpdateWindowTitle();
                 }
-                ImGui::Separator();
                 ImGui::Columns(1);
             }
 

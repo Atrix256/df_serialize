@@ -57,15 +57,14 @@
 #define STRUCT_FIELD_NO_SERIALIZE(_TYPE, _NAME, _DEFAULT, _DESCRIPTION)
 
 #define STRUCT_DYNAMIC_ARRAY(_TYPE, _NAME, _DESCRIPTION) \
-        ImGui::Separator(); \
         if (ImGui::TreeNode(#_NAME)) \
         { \
+            ImGui::NextColumn(); \
+            ImGui::NextColumn(); \
             int deleteIndex = -1; \
             for (size_t index = 0; index < TDYNAMICARRAY_SIZE(value._NAME); ++index) \
             { \
                 ImGui::Separator(); \
-                ImGui::NextColumn(); \
-                ImGui::NextColumn(); \
                 ImGui::PushID((int)index); \
                 ret |= ShowUI(value._NAME[index]); \
                 if (ImGui::Button("Delete")) \
@@ -78,6 +77,7 @@
                 ret = true; \
                 value._NAME.push_back(_TYPE{}); \
             } \
+            ImGui::Separator(); \
             ImGui::TreePop(); \
             if (deleteIndex != -1) \
             { \
@@ -94,6 +94,8 @@
 #define STRUCT_STATIC_ARRAY(_TYPE, _NAME, _SIZE, _DEFAULT, _DESCRIPTION) \
         if (ImGui::TreeNode(#_NAME "[" #_SIZE "]")) \
         { \
+            ImGui::NextColumn(); \
+            ImGui::NextColumn(); \
             for (size_t index = 0; index < _SIZE; ++index) \
             { \
                 ImGui::PushID((int)index); \
