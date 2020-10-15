@@ -2,9 +2,9 @@
 
 #include "df_serialize_editor_config.h"
 
-#elif __has_include("../df_serialize_editor_config.h")
+#elif __has_include("../../df_serialize_editor_config.h")
 
-#include "../df_serialize_editor_config.h"
+#include "../../df_serialize_editor_config.h"
 
 #else
 
