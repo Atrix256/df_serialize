@@ -241,7 +241,7 @@ git submodule init
 git submodule update
 ```
 
-You must modify the editor's config.h file to include your schemas instead of the test schemas, and also to specify which type is the root document.
+You must modify editor_config.h to include your schemas instead of the test schemas, and also to specify which type is the root document. Alternately you can put a file named "df_serialize_editor_config.h" in the include path and it will use that instead.
 
 After that, the editor will compile and run, allowing you to load/save json/binary files.
 
