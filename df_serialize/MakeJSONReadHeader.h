@@ -36,12 +36,16 @@
 #define STRUCT_BEGIN(_NAMESPACE, _NAME, _DESCRIPTION) \
     template <typename DOCUMENT> \
     bool JSONRead(_NAMESPACE::_NAME& value, DOCUMENT& document) \
-    {
+    { \
+        if (!document.IsObject()) \
+            return false;
 
 #define STRUCT_INHERIT_BEGIN(_NAMESPACE, _NAME, _BASE, _DESCRIPTION) \
     template <typename DOCUMENT> \
     bool JSONRead(_NAMESPACE::_NAME& value, DOCUMENT& document) \
     { \
+        if (!document.IsObject()) \
+            return false; \
         if (!JSONRead(*(_BASE*)&value, document)) \
             return false;
 
@@ -107,6 +111,8 @@
     bool JSONRead(_NAMESPACE::_NAME& value, DOCUMENT& document) \
     { \
         typedef _NAMESPACE::_NAME ThisType; \
+        if (!document.IsObject()) \
+            return false;
 
 #define VARIANT_TYPE(_TYPE, _NAME, _DEFAULT, _DESCRIPTION) \
         if (document.HasMember(#_NAME)) \
